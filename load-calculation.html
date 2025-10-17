@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PV Calculator - حساب الحمل الكهربائي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #005a8c;
+            --secondary-color: #008ecc;
+            --accent-color: #e74c3c;
+            --light-color: #f8fafb;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        
+        .logo img {
+            height: 45px;
+        }
+        
+        .logo h1 {
+            font-size: 1.3rem;
+            margin: 8px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            margin: 12px auto;
+            max-width: 95%;
+            border-radius: 30px;
+            gap: 6px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 20px 0;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .page-header h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Form Styles */
+        .form-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+        
+        .form-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
+        }
+        
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary:active {
+            background: linear-gradient(to right, #0077b3, #004a7a);
+        }
+        
+        /* Device List */
+        .device-list {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .device-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .device-list-title {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .device-count {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .device-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s;
+        }
+        
+        .device-item:last-child {
+            border-bottom: none;
+        }
+        
+        .device-item:active {
+            background-color: #f9f9f9;
+        }
+        
+        .device-info {
+            flex: 1;
+        }
+        
+        .device-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .device-details {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .device-consumption {
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .device-actions {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+        
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-edit {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .btn-delete {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--accent-color);
+        }
+        
+        .btn-icon:active {
+            transform: scale(0.9);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        /* Result Card */
+        .result-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: none;
+            border-right: 4px solid var(--success-color);
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .result-header h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .result-item {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .result-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .consumption-chart {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .chart-title {
+            color: var(--primary-color);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .chart-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chart-label {
+            width: 120px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .chart-bar-container {
+            flex: 1;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .chart-bar-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .chart-value {
+            width: 80px;
+            text-align: left;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Media Queries for Larger Screens */
+        @media (min-width: 768px) {
+            header {
+                padding: 20px 0;
+            }
+            
+            .logo img {
+                height: 50px;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-links {
+                padding: 12px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 8px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            .page-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .form-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .btn {
+                width: auto;
+                padding: 12px 28px;
+            }
+            
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .btn-primary:hover {
+                background: linear-gradient(to right, #0077b3, #004a7a);
+            }
+            
+            .device-item:hover {
+                background-color: #f9f9f9;
+            }
+            
+            .btn-icon:hover {
+                transform: scale(1.1);
+            }
+            
+            .btn-icon:active {
+                transform: scale(0.9);
+            }
+        }
+        
+        /* Landscape Mode for Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 10px 0;
+            }
+            
+            .logo img {
+                height: 35px;
+            }
+            
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+            
+            .nav-links {
+                padding: 6px;
+                margin: 8px auto;
+            }
+            
+            .main-content {
+                padding: 15px 0;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="PV Calculator Logo">
+                <h1>حساب الحمل الكهربائي</h1>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="engineering.html"><i class="fas fa-arrow-right"></i> رجوع للخدمات الهندسية</a>
+                <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h2><i class="fas fa-bolt"></i> حساب الحمل الكهربائي</h2>
+                <p>أضف الأجهزة الكهربائية لحساب إجمالي استهلاك الطاقة اليومي وتصميم النظام الشمسي المناسب</p>
+            </div>
+
+            <div class="form-card">
+                <h3 class="form-title"><i class="fas fa-plus-circle"></i> إضافة جهاز جديد</h3>
+                
+                <form id="add-device-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="device-name"><i class="fas fa-plug"></i> اسم الجهاز:</label>
+                            <input type="text" id="device-name" placeholder="مثال: ثلاجة، تلفاز، مكيف..." required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="device-wattage"><i class="fas fa-bolt"></i> القدرة (واط):</label>
+                            <input type="number" id="device-wattage" min="1" placeholder="200" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="device-hours"><i class="fas fa-clock"></i> ساعات التشغيل اليومية:</label>
+                            <input type="number" id="device-hours" min="0.1" step="0.1" max="24" placeholder="8" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="device-quantity"><i class="fas fa-calculator"></i> الكمية:</label>
+                            <input type="number" id="device-quantity" min="1" value="1" required>
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="add-btn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> إضافة جهاز
+                    </button>
+                </form>
+            </div>
+            
+            <div class="device-list" id="device-list">
+                <div class="device-list-header">
+                    <div class="device-list-title">
+                        <i class="fas fa-list"></i> قائمة الأجهزة
+                    </div>
+                    <div class="device-count" id="device-count">0 جهاز</div>
+                </div>
+                
+                <div id="devices-container">
+                    <div class="empty-state">
+                        <i class="fas fa-plug"></i>
+                        <h3>لا توجد أجهزة مضافة</h3>
+                        <p>قم بإضافة الأجهزة الكهربائية لبدء الحساب</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="calculate-btn" class="btn btn-success">
+                <i class="fas fa-calculator"></i> حساب الحمل الكلي
+            </button>
+            
+            <div class="result-card" id="results">
+                <div class="result-header">
+                    <i class="fas fa-chart-pie"></i>
+                    <h3>نتائج حساب الحمل الكهربائي</h3>
+                </div>
+                
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-value" id="total-consumption">0</div>
+                        <div class="result-label">واط/ساعة يومياً</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="monthly-consumption">0</div>
+                        <div class="result-label">كيلوواط/ساعة شهرياً</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="yearly-consumption">0</div>
+                        <div class="result-label">كيلوواط/ساعة سنوياً</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="system-size">0</div>
+                        <div class="result-label">كيلوواط نظام شمسي</div>
+                    </div>
+                </div>
+                
+                <div class="consumption-chart">
+                    <h4 class="chart-title"><i class="fas fa-chart-bar"></i> توزيع الاستهلاك</h4>
+                    <div class="chart-bars" id="consumption-chart">
+                        <!-- سيتم ملؤها بالجافاسكريبت -->
+                    </div>
+                </div>
+                
+                <button id="reset-btn" class="btn btn-danger" style="margin-top: 20px;">
+                    <i class="fas fa-redo"></i> بدء حساب جديد
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 PV Calculator. جميع الحقوق محفوظة.</p>
+            <p>أداة متكاملة لحساب الأحمال الكهربائية وتصميم أنظمة الطاقة الشمسية</p>
+        </div>
+    </footer>
+
+    <script>
+        // بيانات الأجهزة
+        let devices = [];
+        let editIndex = -1;
+
+        // إضافة جهاز جديد
+        document.getElementById('add-btn').addEventListener('click', function() {
+            const name = document.getElementById('device-name').value.trim();
+            const wattage = parseFloat(document.getElementById('device-wattage').value);
+            const hours = parseFloat(document.getElementById('device-hours').value);
+            const quantity = parseInt(document.getElementById('device-quantity').value);
+            
+            if (!name || !wattage || !hours || !quantity) {
+                alert('الرجاء ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            const device = {
+                name,
+                wattage,
+                hours,
+                quantity,
+                dailyConsumption: wattage * hours * quantity
+            };
+            
+            if (editIndex === -1) {
+                // إضافة جهاز جديد
+                devices.push(device);
+            } else {
+                // تعديل جهاز موجود
+                devices[editIndex] = device;
+                editIndex = -1;
+                document.getElementById('add-btn').innerHTML = '<i class="fas fa-plus"></i> إضافة جهاز';
+            }
+            
+            // إعادة تعيين النموذج
+            document.getElementById('add-device-form').reset();
+            
+            // تحديث القائمة
+            updateDeviceList();
+        });
+
+        // تحديث قائمة الأجهزة
+        function updateDeviceList() {
+            const container = document.getElementById('devices-container');
+            const countElement = document.getElementById('device-count');
+            
+            countElement.textContent = `${devices.length} أجهزة`;
+            
+            if (devices.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-plug"></i>
+                        <h3>لا توجد أجهزة مضافة</h3>
+                        <p>قم بإضافة الأجهزة الكهربائية لبدء الحساب</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            devices.forEach((device, index) => {
+                const deviceElement = document.createElement('div');
+                deviceElement.className = 'device-item';
+                
+                deviceElement.innerHTML = `
+                    <div class="device-info">
+                        <div class="device-name">${device.name}</div>
+                        <div class="device-details">
+                            ${device.wattage} واط × ${device.hours} ساعة × ${device.quantity} جهاز
+                        </div>
+                    </div>
+                    <div class="device-consumption">
+                        ${device.dailyConsumption.toLocaleString()} واط/ساعة
+                    </div>
+                    <div class="device-actions">
+                        <div class="btn-icon btn-edit" onclick="editDevice(${index})">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="btn-icon btn-delete" onclick="deleteDevice(${index})">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(deviceElement);
+            });
+        }
+
+        // تعديل جهاز
+        function editDevice(index) {
+            const device = devices[index];
+            
+            document.getElementById('device-name').value = device.name;
+            document.getElementById('device-wattage').value = device.wattage;
+            document.getElementById('device-hours').value = device.hours;
+            document.getElementById('device-quantity').value = device.quantity;
+            
+            editIndex = index;
+            document.getElementById('add-btn').innerHTML = '<i class="fas fa-save"></i> حفظ التعديلات';
+            
+            // التمرير إلى النموذج
+            document.getElementById('add-device-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // حذف جهاز
+        function deleteDevice(index) {
+            if (confirm('هل أنت متأكد من حذف هذا الجهاز؟')) {
+                devices.splice(index, 1);
+                updateDeviceList();
+            }
+        }
+
+        // حساب الحمل الكلي
+        document.getElementById('calculate-btn').addEventListener('click', function() {
+            if (devices.length === 0) {
+                alert('الرجاء إضافة الأجهزة أولاً');
+                return;
+            }
+            
+            const totalDailyConsumption = devices.reduce((sum, device) => sum + device.dailyConsumption, 0);
+            const monthlyConsumption = (totalDailyConsumption * 30) / 1000; // تحويل إلى كيلوواط/ساعة
+            const yearlyConsumption = monthlyConsumption * 12;
+            
+            // حساب حجم النظام الشمسي المطلوب (افتراض 5 ساعات ذروة شمسية)
+            const systemSize = (totalDailyConsumption / 1000) / 5;
+            
+            // تحديث النتائج
+            document.getElementById('total-consumption').textContent = totalDailyConsumption.toLocaleString();
+            document.getElementById('monthly-consumption').textContent = monthlyConsumption.toFixed(1);
+            document.getElementById('yearly-consumption').textContent = yearlyConsumption.toFixed(1);
+            document.getElementById('system-size').textContent = systemSize.toFixed(2);
+            
+            // تحديث مخطط الاستهلاك
+            updateConsumptionChart();
+            
+            // إظهار النتائج
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // تحديث مخطط الاستهلاك
+        function updateConsumptionChart() {
+            const chartContainer = document.getElementById('consumption-chart');
+            chartContainer.innerHTML = '';
+            
+            const totalConsumption = devices.reduce((sum, device) => sum + device.dailyConsumption, 0);
+            
+            devices.forEach(device => {
+                const percentage = ((device.dailyConsumption / totalConsumption) * 100).toFixed(1);
+                
+                const chartBar = document.createElement('div');
+                chartBar.className = 'chart-bar';
+                
+                chartBar.innerHTML = `
+                    <div class="chart-label">${device.name}</div>
+                    <div class="chart-bar-container">
+                        <div class="chart-bar-fill" style="width: ${percentage}%"></div>
+                    </div>
+                    <div class="chart-value">${percentage}%</div>
+                `;
+                
+                chartContainer.appendChild(chartBar);
+            });
+        }
+
+        // إعادة تعيين الحساب
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            if (confirm('هل تريد بدء حساب جديد؟ سيتم حذف جميع الأجهزة المضافة.')) {
+                devices = [];
+                editIndex = -1;
+                updateDeviceList();
+                document.getElementById('add-device-form').reset();
+                document.getElementById('add-btn').innerHTML = '<i class="fas fa-plus"></i> إضافة جهاز';
+                document.getElementById('results').style.display = 'none';
+            }
+        });
+
+        // إضافة بعض الأجهزة الافتراضية للتوضيح
+        function addSampleDevices() {
+            if (devices.length === 0) {
+                devices = [
+                    {
+                        name: "ثلاجة",
+                        wattage: 150,
+                        hours: 8,
+                        quantity: 1,
+                        dailyConsumption: 1200
+                    },
+                    {
+                        name: "تلفاز LED",
+                        wattage: 100,
+                        hours: 5,
+                        quantity: 1,
+                        dailyConsumption: 500
+                    },
+                    {
+                        name: "إضاءة LED",
+                        wattage: 10,
+                        hours: 6,
+                        quantity: 8,
+                        dailyConsumption: 480
+                    }
+                ];
+                updateDeviceList();
+            }
+        }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // إضافة أجهزة افتراضية للتوضيح
+            addSampleDevices();
+        });
+    </script>
+</body>
+</html>

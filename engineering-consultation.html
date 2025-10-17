@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PV Calculator - الاستشارة الهندسية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --whatsapp-color: #25D366;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .logo img {
+            width: 50px;
+            margin-bottom: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 1.4rem;
+            margin: 10px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            margin: 15px auto;
+            max-width: 95%;
+            border-radius: 50px;
+            gap: 8px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(0.95);
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        
+        .step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .step.active {
+            display: block;
+        }
+        
+        .step h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .step p {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.95rem;
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .problem-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .problem-option {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 18px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+        
+        .problem-option:active {
+            border-color: var(--secondary-color);
+            background-color: rgba(52, 152, 219, 0.05);
+            transform: scale(0.98);
+        }
+        
+        .problem-option.selected {
+            border: 2px solid var(--success-color);
+            background-color: rgba(39, 174, 96, 0.05);
+        }
+        
+        .problem-option i {
+            margin-left: 5px;
+            color: var(--secondary-color);
+        }
+        
+        .engineer-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            background-color: #f9f9f9;
+        }
+        
+        .engineer-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+        
+        .engineer-info {
+            flex: 1;
+        }
+        
+        .engineer-info h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        .engineer-info p {
+            margin: 5px 0 0;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 10px;
+            font-family: 'Tajawal', sans-serif;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .btn-next {
+            background-color: var(--success-color);
+        }
+        
+        .btn-back {
+            background-color: var(--warning-color);
+        }
+        
+        .btn-submit {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-submit:active {
+            background-color: #c0392b;
+        }
+        
+        .success-message {
+            text-align: center;
+            padding: 30px 20px;
+            display: none;
+        }
+        
+        .success-message i {
+            font-size: 3rem;
+            color: var(--success-color);
+            margin-bottom: 20px;
+        }
+        
+        .success-message h3 {
+            color: var(--success-color);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .success-message p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+        
+        .whatsapp-btn {
+            background-color: var(--whatsapp-color) !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .whatsapp-btn:active {
+            background-color: #128C7E !important;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.85rem;
+        }
+        
+        footer p {
+            margin: 5px 0;
+        }
+        
+        /* تحسينات للشاشات المتوسطة والكبيرة */
+        @media (min-width: 768px) {
+            header {
+                padding: 20px 0;
+            }
+            
+            .logo img {
+                width: 60px;
+            }
+            
+            .logo h1 {
+                font-size: 1.8rem;
+            }
+            
+            .nav-links {
+                padding: 15px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 10px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.3);
+                transform: translateY(-3px);
+            }
+            
+            .container {
+                max-width: 800px;
+                margin: 30px auto;
+                padding: 0 20px;
+            }
+            
+            .form-container {
+                padding: 30px;
+            }
+            
+            .step h2 {
+                font-size: 1.5rem;
+            }
+            
+            .problem-options {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 15px;
+            }
+            
+            .problem-option:hover {
+                border-color: var(--secondary-color);
+                background-color: rgba(52, 152, 219, 0.05);
+            }
+            
+            .problem-option:active {
+                transform: scale(0.98);
+            }
+            
+            .btn {
+                width: auto;
+                padding: 12px 25px;
+            }
+            
+            .button-group {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .button-group .btn {
+                width: 48%;
+            }
+        }
+        
+        /* تحسينات للوضع الأفقي على الهواتف */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 10px 0;
+            }
+            
+            .logo img {
+                width: 40px;
+            }
+            
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links {
+                padding: 8px;
+                margin: 10px auto;
+            }
+            
+            .container {
+                margin: 15px auto;
+            }
+            
+            .form-container {
+                padding: 15px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="PV Calculator Logo">
+            <h1>الاستشارة الهندسية الشخصية</h1>
+        </div>
+        
+        <div class="nav-links">
+            <a href="general.html"><i class="fas fa-arrow-right"></i> رجوع للخدمات العامة</a>
+            <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="form-container">
+            <!-- الخطوة 1: اختيار نوع المشكلة -->
+            <div class="step active" id="step1">
+                <h2><i class="fas fa-list-alt"></i> الخطوة 1: اختر نوع المشكلة</h2>
+                <p>حدد نوع المشكلة أو الاستشارة من القائمة التالية:</p>
+                
+                <div class="problem-options" id="problemOptions">
+                    <div class="problem-option" data-problem="bill">
+                        <i class="fas fa-file-invoice"></i> مشكلة في قراءة فاتورة الكهرباء
+                    </div>
+                    <div class="problem-option" data-problem="outage">
+                        <i class="fas fa-bolt"></i> انقطاع كهرباء متكرر رغم وجود نظام شمسي
+                    </div>
+                    <div class="problem-option" data-problem="panels">
+                        <i class="fas fa-solar-panel"></i> انخفاض في أداء الألواح
+                    </div>
+                    <div class="problem-option" data-problem="inverter">
+                        <i class="fas fa-plug"></i> فرق في قراءة الانفرتر
+                    </div>
+                    <div class="problem-option" data-problem="batteries">
+                        <i class="fas fa-car-battery"></i> مشكلة في البطاريات
+                    </div>
+                    <div class="problem-option" data-problem="cables">
+                        <i class="fas fa-project-diagram"></i> خلل في كابل أو توصيلة
+                    </div>
+                    <div class="problem-option" data-problem="connection">
+                        <i class="fas fa-network-wired"></i> ربط النظام مع شركة الكهرباء
+                    </div>
+                    <div class="problem-option" data-problem="other">
+                        <i class="fas fa-question-circle"></i> أخرى (مشكلة غير مدرجة)
+                    </div>
+                </div>
+                
+                <div class="form-group" id="otherProblemGroup" style="display: none; margin-top: 20px;">
+                    <label for="otherProblem">حدد المشكلة:</label>
+                    <input type="text" id="otherProblem" placeholder="صف المشكلة بالتفصيل">
+                </div>
+                
+                <button class="btn btn-next" id="nextToStep2">التالي <i class="fas fa-arrow-left"></i></button>
+            </div>
+            
+            <!-- الخطوة 2: تحديد الجهة المناسبة -->
+            <div class="step" id="step2">
+                <h2><i class="fas fa-user-tie"></i> الخطوة 2: الجهة المختصة</h2>
+                <p>سيتم تحويلك إلى:</p>
+                
+                <div id="engineerSelection">
+                    <!-- سيتم تعبئتها بالجافاسكريبت -->
+                </div>
+                
+                <div class="form-group">
+                    <label for="problemDetails">تفاصيل المشكلة:</label>
+                    <textarea id="problemDetails" rows="4" placeholder="صف المشكلة بالتفصيل"></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-back" id="backToStep1"><i class="fas fa-arrow-right"></i> السابق</button>
+                    <button class="btn btn-next" id="nextToStep3">التالي <i class="fas fa-arrow-left"></i></button>
+                </div>
+            </div>
+            
+            <!-- الخطوة 3: البيانات الشخصية -->
+            <div class="step" id="step3">
+                <h2><i class="fas fa-user-circle"></i> الخطوة 3: البيانات الشخصية</h2>
+                <p>الرجاء إدخال بياناتك للتواصل معك:</p>
+                
+                <div class="form-group">
+                    <label for="fullName">الاسم الكامل:</label>
+                    <input type="text" id="fullName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nationalId">الرقم الوطني:</label>
+                    <input type="text" id="nationalId" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف:</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني (اختياري):</label>
+                    <input type="email" id="email">
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-back" id="backToStep2"><i class="fas fa-arrow-right"></i> السابق</button>
+                    <button class="btn btn-submit" id="submitRequest"><i class="fas fa-paper-plane"></i> إرسال الطلب</button>
+                </div>
+            </div>
+            
+            <!-- رسالة النجاح -->
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <h3>تم استلام استشارتك بنجاح</h3>
+                <p>سيتم التواصل معك خلال 24 ساعة من قبل المختص</p>
+                <div id="whatsappShare" style="margin-top: 20px;">
+                    <button class="btn whatsapp-btn" id="sendWhatsapp">
+                        <i class="fab fa-whatsapp"></i> إرسال الطلب عبر واتساب
+                    </button>
+                </div>
+                <button class="btn" onclick="window.location.href='general.html'" style="margin-top: 15px;">
+                    <i class="fas fa-home"></i> العودة للخدمات العامة
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 PV Calculator. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script>
+        // بيانات المهندسين
+        const engineers = {
+            solar: {
+                title: "مهندس طاقة شمسية",
+                description: "متخصص في مشاكل الألواح الشمسية، الانفرترات، البطاريات وأنظمة الطاقة الشمسية",
+                icon: "fa-solar-panel"
+            },
+            electric: {
+                title: "مهندس كهرباء",
+                description: "متخصص في التمديدات الكهربائية، الأحمال، والفولتية",
+                icon: "fa-bolt"
+            },
+            company: {
+                title: "مندوب شركة الكهرباء",
+                description: "متخصص في مشاكل الربط مع الشبكة، العدادات، والفواتير",
+                icon: "fa-building"
+            },
+            general: {
+                title: "مهندس عام",
+                description: "سيقوم بتحليل مشكلتك وتوجيهك للجهة المناسبة",
+                icon: "fa-user-cog"
+            }
+        };
+
+        // متغيرات التتبع
+        let selectedProblem = "";
+        let selectedEngineer = "";
+        
+        // اختيار المشكلة
+        document.querySelectorAll('.problem-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.problem-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                selectedProblem = this.getAttribute('data-problem');
+                
+                // إظهار حقل "أخرى" إذا تم اختياره
+                if (selectedProblem === 'other') {
+                    document.getElementById('otherProblemGroup').style.display = 'block';
+                } else {
+                    document.getElementById('otherProblemGroup').style.display = 'none';
+                }
+            });
+        });
+        
+        // الانتقال إلى الخطوة 2
+        document.getElementById('nextToStep2').addEventListener('click', function() {
+            if (!selectedProblem) {
+                alert('الرجاء اختيار نوع المشكلة');
+                return;
+            }
+            
+            // تحديد المهندس المناسب
+            let engineerType = 'general';
+            
+            if (selectedProblem === 'bill' || selectedProblem === 'connection') {
+                engineerType = 'company';
+            } else if (selectedProblem === 'panels' || selectedProblem === 'inverter' || selectedProblem === 'batteries') {
+                engineerType = 'solar';
+            } else if (selectedProblem === 'outage' || selectedProblem === 'cables') {
+                engineerType = 'electric';
+            }
+            
+            selectedEngineer = engineerType;
+            
+            // عرض بطاقة المهندس
+            const engineer = engineers[engineerType];
+            const engineerHTML = `
+                <div class="engineer-card">
+                    <div class="engineer-icon">
+                        <i class="fas ${engineer.icon}"></i>
+                    </div>
+                    <div class="engineer-info">
+                        <h3>${engineer.title}</h3>
+                        <p>${engineer.description}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('engineerSelection').innerHTML = engineerHTML;
+            
+            // الانتقال إلى الخطوة 2
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+        });
+        
+        // الأزرار للتنقل بين الخطوات
+        document.getElementById('backToStep1').addEventListener('click', function() {
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step1').classList.add('active');
+        });
+        
+        document.getElementById('nextToStep3').addEventListener('click', function() {
+            if (!document.getElementById('problemDetails').value) {
+                alert('الرجاء إدخال تفاصيل المشكلة');
+                return;
+            }
+            
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.add('active');
+        });
+        
+        document.getElementById('backToStep2').addEventListener('click', function() {
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+        });
+        
+        // إرسال الطلب
+        document.getElementById('submitRequest').addEventListener('click', function() {
+            const fullName = document.getElementById('fullName').value;
+            const nationalId = document.getElementById('nationalId').value;
+            const phone = document.getElementById('phone').value;
+            
+            if (!fullName || !nationalId || !phone) {
+                alert('الرجاء إدخال جميع البيانات المطلوبة');
+                return;
+            }
+            
+            // عرض رسالة النجاح
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // تسجيل البيانات في الكونسول
+            console.log('تم إرسال الطلب:', {
+                problem: selectedProblem,
+                engineer: selectedEngineer,
+                details: document.getElementById('problemDetails').value,
+                otherProblem: document.getElementById('otherProblem').value,
+                fullName,
+                nationalId,
+                phone,
+                email: document.getElementById('email').value
+            });
+        });
+        
+        // إرسال الاستشارة عبر واتساب
+        document.getElementById('sendWhatsapp').addEventListener('click', function() {
+            const fullName = document.getElementById('fullName').value;
+            const phone = document.getElementById('phone').value;
+            const problemDetails = document.getElementById('problemDetails').value;
+            const otherProblem = document.getElementById('otherProblem').value;
+            
+            // تحديد نوع المشكلة
+            let problemType = '';
+            switch(selectedProblem) {
+                case 'bill': problemType = 'مشكلة في قراءة فاتورة الكهرباء'; break;
+                case 'outage': problemType = 'انقطاع كهرباء متكرر رغم وجود نظام شمسي'; break;
+                case 'panels': problemType = 'انخفاض في أداء الألواح'; break;
+                case 'inverter': problemType = 'فرق في قراءة الانفرتر'; break;
+                case 'batteries': problemType = 'مشكلة في البطاريات'; break;
+                case 'cables': problemType = 'خلل في كابل أو توصيلة'; break;
+                case 'connection': problemType = 'ربط النظام مع شركة الكهرباء'; break;
+                case 'other': problemType = otherProblem || 'مشكلة غير محددة'; break;
+                default: problemType = 'مشكلة غير محددة';
+            }
+            
+            // تحديد نوع المهندس
+            const engineerType = engineers[selectedEngineer].title;
+            
+            // إنشاء الرسالة المنمقة
+            const message = `
+                *طلب استشارة هندسية - PV Calculator*
+                
+                *البيانات الشخصية:*
+                - الاسم: ${fullName}
+                - رقم الهاتف: ${phone}
+                
+                *تفاصيل المشكلة:*
+                - نوع المشكلة: ${problemType}
+                - الجهة المختصة: ${engineerType}
+                
+                *وصف المشكلة:*
+                ${problemDetails}
+                
+                *ملاحظة:* 
+                هذه الرسالة مرسلة تلقائياً من نظام الاستشارات الهندسية
+            `;
+            
+            // ترميز الرسالة للرابط
+            const encodedMessage = encodeURIComponent(message);
+            
+            // إنشاء رابط واتساب
+            const whatsappUrl = `https://wa.me/962781339210?text=${encodedMessage}`;
+            
+            // فتح الرابط في نافذة جديدة
+            window.open(whatsappUrl, '_blank');
+        });
+    </script>
+</body>
+</html>

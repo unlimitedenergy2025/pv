@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PV Calculator - حساب حجم النظام الشمسي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #005a8c;
+            --secondary-color: #008ecc;
+            --accent-color: #e74c3c;
+            --light-color: #f8fafb;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        
+        .logo img {
+            height: 45px;
+        }
+        
+        .logo h1 {
+            font-size: 1.3rem;
+            margin: 8px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            margin: 12px auto;
+            max-width: 95%;
+            border-radius: 30px;
+            gap: 6px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 20px 0;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .page-header h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Form Styles */
+        .form-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+        
+        .form-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
+        }
+        
+        .form-hint {
+            display: block;
+            color: #666;
+            margin-top: 5px;
+            font-size: 0.8rem;
+        }
+        
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        
+        .btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary:active {
+            background: linear-gradient(to right, #0077b3, #004a7a);
+        }
+        
+        /* Location Section */
+        .location-section {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-right: 4px solid var(--secondary-color);
+        }
+        
+        .location-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .location-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Result Card */
+        .result-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: none;
+            border-right: 4px solid var(--success-color);
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .result-header h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .result-item {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .result-item:active {
+            transform: scale(0.98);
+        }
+        
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .result-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .result-highlight {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+        
+        .result-highlight .result-value,
+        .result-highlight .result-label {
+            color: white;
+        }
+        
+        /* Solar Panel Recommendations */
+        .recommendations {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .recommendations-title {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .recommendation-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .recommendation-item:active {
+            background-color: #f9f9f9;
+            transform: scale(0.98);
+        }
+        
+        .recommendation-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+        }
+        
+        .recommendation-info {
+            flex: 1;
+        }
+        
+        .recommendation-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+        
+        .recommendation-desc {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Media Queries for Larger Screens */
+        @media (min-width: 768px) {
+            header {
+                padding: 20px 0;
+            }
+            
+            .logo img {
+                height: 50px;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-links {
+                padding: 12px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 8px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            .page-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                width: auto;
+                padding: 12px 28px;
+            }
+            
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .btn-primary:hover {
+                background: linear-gradient(to right, #0077b3, #004a7a);
+            }
+            
+            .result-item:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .result-item:active {
+                transform: scale(0.98);
+            }
+            
+            .recommendation-item:hover {
+                background-color: #f9f9f9;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .recommendation-item:active {
+                transform: scale(0.98);
+            }
+        }
+        
+        /* Landscape Mode for Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 10px 0;
+            }
+            
+            .logo img {
+                height: 35px;
+            }
+            
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+            
+            .nav-links {
+                padding: 6px;
+                margin: 8px auto;
+            }
+            
+            .main-content {
+                padding: 15px 0;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="PV Calculator Logo">
+                <h1>حساب حجم النظام الشمسي</h1>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="engineering.html"><i class="fas fa-arrow-right"></i> رجوع للخدمات الهندسية</a>
+                <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h2><i class="fas fa-solar-panel"></i> حساب حجم النظام الشمسي</h2>
+                <p>أدخل بيانات استهلاكك اليومي لتحديد حجم النظام الشمسي المطلوب في الأردن</p>
+            </div>
+
+            <div class="location-section">
+                <div class="location-header">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h4>تحديد الموقع تلقائياً</h4>
+                </div>
+                <div class="location-info">
+                    <p>اضغط على الزر أدناه لتحديد موقعك الحالي تلقائياً في الأردن</p>
+                    <button id="get-location-btn" class="btn btn-secondary" style="margin-top: 10px;">
+                        <i class="fas fa-location-arrow"></i> تحديد موقعي الحالي
+                    </button>
+                    <div id="location-status" class="form-hint" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h3 class="form-title"><i class="fas fa-calculator"></i> بيانات النظام الشمسي</h3>
+                
+                <form id="system-sizing-form">
+                    <div class="form-group">
+                        <label for="daily-usage"><i class="fas fa-bolt"></i> الاستهلاك اليومي (كيلوواط/ساعة):</label>
+                        <input type="number" id="daily-usage" min="1" placeholder="مثال: 20" required>
+                        <div class="form-hint">يمكنك حساب استهلاكك من فواتير الكهرباء السابقة</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location"><i class="fas fa-sun"></i> الموقع في الأردن:</label>
+                        <select id="location" required>
+                            <option value="5.8">عمان والمناطق الوسطى</option>
+                            <option value="6.2">العقبة والمناطق الجنوبية</option>
+                            <option value="5.5">إربد والمناطق الشمالية</option>
+                            <option value="5.3">الزرقاء والمناطق الشرقية</option>
+                            <option value="custom">تحديد مخصص</option>
+                        </select>
+                        <div class="form-hint">متوسط ساعات الشمس الكاملة (PSH) يختلف حسب المنطقة</div>
+                    </div>
+                    
+                    <div id="custom-location" style="display: none;">
+                        <div class="form-group">
+                            <label for="custom-sun-hours"><i class="fas fa-sun"></i> متوسط ساعات الشمس الكاملة (PSH):</label>
+                            <input type="number" id="custom-sun-hours" min="1" max="24" step="0.1" value="5.5">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="system-type"><i class="fas fa-plug"></i> نوع النظام:</label>
+                        <select id="system-type" required>
+                            <option value="on-grid">متصل بالشبكة (On-Grid)</option>
+                            <option value="off-grid">منفصل عن الشبكة (Off-Grid)</option>
+                            <option value="hybrid">هجين (Hybrid)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="system-efficiency"><i class="fas fa-tachometer-alt"></i> كفاءة النظام (%):</label>
+                        <input type="number" id="system-efficiency" min="1" max="100" value="78" required>
+                        <div class="form-hint">تتأثر كفاءة النظام بالخسائر في الأسلاك، الانفرتر، البطاريات، وغيرها</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="days-autonomy"><i class="fas fa-battery-full"></i> أيام التخزين المطلوبة:</label>
+                        <input type="number" id="days-autonomy" min="1" value="2" required>
+                        <div class="form-hint">عدد الأيام التي يجب أن يعمل فيها النظام دون شمس</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="battery-voltage"><i class="fas fa-car-battery"></i> جهد نظام البطاريات:</label>
+                        <select id="battery-voltage" required>
+                            <option value="12">12 فولت</option>
+                            <option value="24">24 فولت</option>
+                            <option value="48" selected>48 فولت</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-calculator"></i> حساب حجم النظام
+                    </button>
+                </form>
+            </div>
+            
+            <div class="result-card" id="results">
+                <div class="result-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>نتائج حساب النظام الشمسي</h3>
+                </div>
+                
+                <div class="result-grid">
+                    <div class="result-item result-highlight">
+                        <div class="result-value" id="panel-capacity">--</div>
+                        <div class="result-label">قدرة الألواح الشمسية</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="panel-count">--</div>
+                        <div class="result-label">عدد الألواح (400 واط)</div>
+                    </div>
+                    
+                    <div class="result-item result-highlight">
+                        <div class="result-value" id="battery-capacity">--</div>
+                        <div class="result-label">سعة البطاريات المطلوبة</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="battery-count">--</div>
+                        <div class="result-label">عدد البطاريات (200Ah)</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="inverter-size">--</div>
+                        <div class="result-label">حجم الانفرتر الموصى به</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="required-area">--</div>
+                        <div class="result-label">المساحة التقريبية المطلوبة</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="daily-production">--</div>
+                        <div class="result-label">متوسط الإنتاج اليومي</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="system-cost">--</div>
+                        <div class="result-label">التكلفة التقريبية</div>
+                    </div>
+                </div>
+                
+                <div class="recommendations">
+                    <h4 class="recommendations-title"><i class="fas fa-solar-panel"></i> توصيات النظام الشمسي</h4>
+                    <div id="recommendations-container">
+                        <!-- سيتم ملؤها بالجافاسكريبت -->
+                    </div>
+                </div>
+                
+                <button id="reset-btn" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> إعادة الحساب
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 PV Calculator. جميع الحقوق محفوظة.</p>
+            <p>أداة متكاملة لحساب حجم النظام الشمسي وتصميم أنظمة الطاقة الشمسية في الأردن</p>
+        </div>
+    </footer>
+
+    <script>
+        // المدن الرئيسية في الأردن
+        const jordanCities = {
+            'amman': { name: 'عمان', lat: 31.9539, lng: 35.9106, psh: 5.8 },
+            'irbid': { name: 'إربد', lat: 32.5556, lng: 35.8500, psh: 5.5 },
+            'zarqa': { name: 'الزرقاء', lat: 32.0836, lng: 36.1000, psh: 5.3 },
+            'aqaba': { name: 'العقبة', lat: 29.5267, lng: 35.0078, psh: 6.2 },
+            'salt': { name: 'السلط', lat: 32.0392, lng: 35.7272, psh: 5.7 },
+            'mafraq': { name: 'المفرق', lat: 32.3417, lng: 36.2022, psh: 5.4 },
+            'karak': { name: 'الكرك', lat: 31.1833, lng: 35.7000, psh: 5.9 },
+            'maan': { name: 'معان', lat: 30.1967, lng: 35.7342, psh: 6.1 }
+        };
+
+        // تحديد الموقع تلقائياً
+        document.getElementById('get-location-btn').addEventListener('click', function() {
+            const statusElement = document.getElementById('location-status');
+            statusElement.textContent = 'جاري تحديد موقعك...';
+            statusElement.style.color = '#f39c12';
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        
+                        // التحقق إذا كان الموقع في الأردن
+                        if (lat >= 29.0 && lat <= 33.5 && lng >= 34.5 && lng <= 39.5) {
+                            // تحديد أقرب مدينة
+                            const nearestCity = findNearestCity(lat, lng);
+                            document.getElementById('location').value = nearestCity.psh;
+                            statusElement.textContent = `✓ تم تحديد موقعك في الأردن (قريب من ${nearestCity.name})`;
+                            statusElement.style.color = '#27ae60';
+                        } else {
+                            statusElement.textContent = '❌ الموقع خارج نطاق الأردن. تم تعيين عمان كموقع افتراضي.';
+                            statusElement.style.color = '#e74c3c';
+                            setDefaultLocation();
+                        }
+                    },
+                    function(error) {
+                        console.error('Error getting location:', error);
+                        statusElement.textContent = '❌ تعذر تحديد الموقع. تم تعيين عمان كموقع افتراضي.';
+                        statusElement.style.color = '#e74c3c';
+                        setDefaultLocation();
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 60000
+                    }
+                );
+            } else {
+                statusElement.textContent = '❌ المتصفح لا يدعم تحديد الموقع. تم تعيين عمان كموقع افتراضي.';
+                statusElement.style.color = '#e74c3c';
+                setDefaultLocation();
+            }
+        });
+
+        // تعيين موقع افتراضي (عمان)
+        function setDefaultLocation() {
+            document.getElementById('location').value = jordanCities.amman.psh;
+        }
+
+        // البحث عن أقرب مدينة
+        function findNearestCity(lat, lng) {
+            let nearestCity = jordanCities.amman;
+            let minDistance = Number.MAX_VALUE;
+
+            for (const [key, city] of Object.entries(jordanCities)) {
+                const distance = Math.sqrt(Math.pow(lat - city.lat, 2) + Math.pow(lng - city.lng, 2));
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearestCity = city;
+                }
+            }
+
+            return nearestCity;
+        }
+
+        // إدارة الموقع المخصص
+        const locationSelect = document.getElementById('location');
+        const customLocationDiv = document.getElementById('custom-location');
+        
+        locationSelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customLocationDiv.style.display = 'block';
+            } else {
+                customLocationDiv.style.display = 'none';
+            }
+        });
+
+        // حساب النظام الشمسي
+        document.getElementById('system-sizing-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const dailyUsage = parseFloat(document.getElementById('daily-usage').value);
+            
+            if (!dailyUsage || dailyUsage <= 0) {
+                alert('الرجاء إدخال استهلاك يومي صحيح');
+                return;
+            }
+            
+            // الحصول على ساعات الشمس
+            let sunHours;
+            if (document.getElementById('location').value === 'custom') {
+                sunHours = parseFloat(document.getElementById('custom-sun-hours').value);
+            } else {
+                sunHours = parseFloat(document.getElementById('location').value);
+            }
+            
+            const systemEfficiency = parseFloat(document.getElementById('system-efficiency').value) / 100;
+            const daysAutonomy = parseFloat(document.getElementById('days-autonomy').value);
+            const batteryVoltage = parseFloat(document.getElementById('battery-voltage').value);
+            const systemType = document.getElementById('system-type').value;
+            
+            // الحسابات الأساسية
+            const requiredEnergy = dailyUsage / systemEfficiency;
+            const panelCapacityKW = requiredEnergy / sunHours;
+            const panelCapacityW = panelCapacityKW * 1000;
+            const panelWattage = 400; // واط لكل لوح
+            const panelCount = Math.ceil(panelCapacityW / panelWattage);
+            
+            // حساب سعة البطاريات
+            const batteryCapacityAh = (dailyUsage * daysAutonomy) / (batteryVoltage * 0.5); // افتراض تفريغ 50%
+            const batteryCount = Math.ceil(batteryCapacityAh / 200); // افتراض بطارية 200Ah
+            
+            // حساب حجم الانفرتر
+            const inverterSize = Math.ceil(dailyUsage / 5 * 1.2); // تقدير تقريبي مع هامش أمان 20%
+            
+            // حساب المساحة
+            const panelArea = panelCount * 1.6; // افتراض مساحة 1.6 م² للوح 400 واط
+            
+            // حساب الإنتاج اليومي
+            const dailyProduction = (panelCapacityKW * sunHours * systemEfficiency).toFixed(2);
+            
+            // حساب التكلفة التقريبية
+            const systemCost = calculateSystemCost(panelCount, batteryCount, inverterSize, systemType);
+            
+            // تحديث النتائج
+            updateResults({
+                panelCapacity: panelCapacityKW.toFixed(2),
+                panelCount: panelCount,
+                batteryCapacity: batteryCapacityAh.toFixed(0),
+                batteryCount: batteryCount,
+                inverterSize: inverterSize,
+                requiredArea: panelArea.toFixed(1),
+                dailyProduction: dailyProduction,
+                systemCost: systemCost.toFixed(0)
+            });
+            
+            // تحديث التوصيات
+            updateRecommendations(systemType, daysAutonomy, batteryCount, panelCount);
+            
+            // إظهار النتائج
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // حساب تكلفة النظام
+        function calculateSystemCost(panelCount, batteryCount, inverterSize, systemType) {
+            const panelCost = panelCount * 400 * 0.8; // 0.8 دولار للواط
+            const batteryCost = batteryCount * 350; // 350 دولار للبطارية
+            const inverterCost = inverterSize * 500; // 500 دولار للكيلوواط
+            const structureCost = panelCount * 1.6 * 50; // 50 دولار للمتر المربع
+            
+            let additionalCost = 0;
+            if (systemType === 'on-grid') {
+                additionalCost = inverterSize * 200; // تكلفة إضافية للأنظمة المتصلة بالشبكة
+            } else if (systemType === 'off-grid') {
+                additionalCost = inverterSize * 300; // تكلفة إضافية للأنظمة المنعزلة
+            } else {
+                additionalCost = inverterSize * 400; // تكلفة إضافية للأنظمة الهجينة
+            }
+            
+            const installationCost = (panelCost + batteryCost + inverterCost + structureCost + additionalCost) * 0.2; // 20% من تكلفة المعدات
+            
+            return panelCost + batteryCost + inverterCost + structureCost + additionalCost + installationCost;
+        }
+
+        // تحديث النتائج
+        function updateResults(data) {
+            document.getElementById('panel-capacity').textContent = data.panelCapacity + ' كيلوواط';
+            document.getElementById('panel-count').textContent = data.panelCount + ' لوح';
+            document.getElementById('battery-capacity').textContent = data.batteryCapacity + ' أمبير/ساعة';
+            document.getElementById('battery-count').textContent = data.batteryCount + ' بطارية';
+            document.getElementById('inverter-size').textContent = data.inverterSize + ' كيلوواط';
+            document.getElementById('required-area').textContent = data.requiredArea + ' متر مربع';
+            document.getElementById('daily-production').textContent = data.dailyProduction + ' كيلوواط/ساعة';
+            document.getElementById('system-cost').textContent = data.systemCost + ' دولار';
+        }
+
+        // تحديث التوصيات
+        function updateRecommendations(systemType, daysAutonomy, batteryCount, panelCount) {
+            const container = document.getElementById('recommendations-container');
+            container.innerHTML = '';
+            
+            let recommendations = [];
+            
+            // توصيات عامة
+            recommendations.push({
+                icon: 'fas fa-solar-panel',
+                title: 'نوع النظام',
+                description: systemType === 'on-grid' ? 
+                    'نظام متصل بالشبكة - مناسب إذا كان لديك اتصال بشبكة الكهرباء' :
+                    systemType === 'off-grid' ?
+                    'نظام منعزل - مثالي للمناطق النائية بدون شبكة كهرباء' :
+                    'نظام هجين - يجمع بين مزايا النظامين المتصل والمنعزل'
+            });
+            
+            // توصيات البطاريات
+            if (batteryCount > 10) {
+                recommendations.push({
+                    icon: 'fas fa-car-battery',
+                    title: 'نظام البطاريات',
+                    description: 'نوصي باستخدام بطاريات الليثيوم لتوفير المساحة وزيادة العمر الافتراضي'
+                });
+            } else {
+                recommendations.push({
+                    icon: 'fas fa-car-battery',
+                    title: 'نظام البطاريات',
+                    description: 'يمكن استخدام بطاريات الرصاص-حمض لتوفير التكلفة مع ضمان أداء جيد'
+                });
+            }
+            
+            // توصيات الألواح
+            if (panelCount > 20) {
+                recommendations.push({
+                    icon: 'fas fa-sun',
+                    title: 'تركيب الألواح',
+                    description: 'نوصي باستخدام هياكل تركيب متينة ومقاومة للرياح لضمان سلامة النظام'
+                });
+            }
+            
+            // توصيات الصيانة
+            recommendations.push({
+                icon: 'fas fa-tools',
+                title: 'الصيانة الدورية',
+                description: 'نظف الألواح الشمسية كل 3 أشهر وافحص البطاريات شهرياً لضمان كفاءة النظام'
+            });
+            
+            // توصيات إضافية حسب أيام التخزين
+            if (daysAutonomy > 3) {
+                recommendations.push({
+                    icon: 'fas fa-battery-full',
+                    title: 'سعة التخزين',
+                    description: 'لديك سعة تخزين عالية - مناسبة للمناطق ذات الأيام الملبدة بالغيوم المتكررة'
+                });
+            }
+            
+            recommendations.forEach(rec => {
+                const item = document.createElement('div');
+                item.className = 'recommendation-item';
+                
+                item.innerHTML = `
+                    <div class="recommendation-icon">
+                        <i class="${rec.icon}"></i>
+                    </div>
+                    <div class="recommendation-info">
+                        <div class="recommendation-title">${rec.title}</div>
+                        <div class="recommendation-desc">${rec.description}</div>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+
+        // إعادة تعيين الحساب
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            document.getElementById('system-sizing-form').reset();
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('location-status').textContent = '';
+            document.getElementById('custom-location').style.display = 'none';
+        });
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // تعيين عمان كموقع افتراضي
+            setDefaultLocation();
+        });
+    </script>
+</body>
+</html>

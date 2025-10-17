@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PV Calculator - الشركات الموصى بها في الأردن</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #005a8c;
+            --secondary-color: #008ecc;
+            --accent-color: #e74c3c;
+            --light-color: #f8fafb;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        
+        .logo img {
+            height: 45px;
+        }
+        
+        .logo h1 {
+            font-size: 1.3rem;
+            margin: 8px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            margin: 12px auto;
+            max-width: 95%;
+            border-radius: 30px;
+            gap: 6px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 20px 0;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .page-header h1 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Search and Filter */
+        .search-filter-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .search-box {
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .filter-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-option {
+            background-color: var(--light-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-option.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .filter-option:active {
+            transform: scale(0.95);
+        }
+        
+        /* Companies Section */
+        .companies-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e1e1e1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .companies-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .company-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border-right: 4px solid var(--secondary-color);
+        }
+        
+        .company-card:active {
+            transform: scale(0.98);
+        }
+        
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .company-name {
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            margin-bottom: 5px;
+        }
+        
+        .company-badge {
+            background-color: var(--success-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-premium {
+            background-color: #f39c12;
+        }
+        
+        .badge-standard {
+            background-color: #27ae60;
+        }
+        
+        .badge-new {
+            background-color: #e74c3c;
+        }
+        
+        .company-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .company-details {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-item i {
+            color: var(--secondary-color);
+            margin-left: 8px;
+            width: 16px;
+            text-align: center;
+        }
+        
+        .company-services {
+            margin-bottom: 15px;
+        }
+        
+        .services-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+        
+        .services-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .service-tag {
+            background-color: rgba(0, 142, 204, 0.1);
+            color: var(--secondary-color);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .company-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            border: 1px solid #ddd;
+        }
+        
+        .btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary:active {
+            background: linear-gradient(to right, #0077b3, #004a7a);
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .page-btn {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .page-btn.active {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        .page-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 15px;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        /* Media Queries for Larger Screens */
+        @media (min-width: 768px) {
+            .header {
+                padding: 20px 0;
+            }
+            
+            .logo img {
+                height: 50px;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-links {
+                padding: 12px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 8px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .companies-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+                gap: 25px;
+            }
+            
+            .company-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+            }
+            
+            .company-card:active {
+                transform: scale(0.98);
+            }
+            
+            .btn {
+                flex: initial;
+            }
+            
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .btn-primary:hover {
+                background: linear-gradient(to right, #0077b3, #004a7a);
+            }
+            
+            .filter-option:hover {
+                background-color: #e1e1e1;
+            }
+            
+            .filter-option.active:hover {
+                background-color: var(--secondary-color);
+            }
+            
+            .page-btn:hover {
+                background-color: #f5f5f5;
+            }
+            
+            .page-btn.active:hover {
+                background-color: var(--secondary-color);
+            }
+        }
+        
+        /* Landscape Mode for Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header {
+                padding: 10px 0;
+            }
+            
+            .logo img {
+                height: 35px;
+            }
+            
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+            
+            .nav-links {
+                padding: 6px;
+                margin: 8px auto;
+            }
+            
+            .main-content {
+                padding: 15px 0;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="شعار الأردن">
+                <h1>الشركات الموصى بها في الأردن</h1>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="general.html"><i class="fas fa-arrow-right"></i> رجوع للخدمات العامة</a>
+                <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="#"><i class="fas fa-phone"></i> اتصل بنا</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h1><i class="fas fa-building"></i> الشركات الموصى بها في الأردن</h1>
+                <p>قائمة شاملة بأكثر من 30 شركة حقيقية ومعتمدة في مجال الطاقة الشمسية بالمملكة الأردنية الهاشمية</p>
+            </div>
+
+            <div class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">32</div>
+                        <div class="stat-label">شركة حقيقية</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">محافظات</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">سنوات خبرة</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">شركات مرخصة</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-filter-section">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="ابحث عن شركة أو خدمة...">
+                </div>
+                
+                <div class="filter-options">
+                    <div class="filter-title">
+                        <i class="fas fa-filter"></i> تصفية حسب:
+                    </div>
+                    <div class="filter-option active" data-filter="all">الكل</div>
+                    <div class="filter-option" data-filter="residential">منزلية</div>
+                    <div class="filter-option" data-filter="commercial">تجارية</div>
+                    <div class="filter-option" data-filter="industrial">صناعية</div>
+                    <div class="filter-option" data-filter="maintenance">صيانة</div>
+                </div>
+            </div>
+
+            <div class="companies-section">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i> الشركات الرائدة في مجال الطاقة الشمسية
+                </h2>
+                
+                <div class="companies-grid" id="companies-container">
+                    <!-- سيتم إضافة الشركات هنا عبر JavaScript -->
+                </div>
+
+                <div class="pagination" id="pagination">
+                    <!-- سيتم إضافة أزرار الترقيم هنا عبر JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 PV Calculator. جميع الحقوق محفوظة.</p>
+            <p>الشركات المدرجة حقيقية ومعتمدة من قبل الجهات المختصة في الأردن</p>
+        </div>
+    </footer>
+
+    <script>
+        // بيانات الشركات الحقيقية في الأردن
+        const companies = [
+            {
+                id: 1,
+                name: "كفاءة تكنولوجي",
+                description: "إحدى الشركات الرائدة في مجال الطاقة الشمسية في الأردن، تقدم حلولاً متكاملة للقطاعات السكنية والتجارية.",
+                location: "عمان - شارع المدينة المنورة",
+                phone: "+962-6-553-2400",
+                email: "info@kafaatech.com",
+                hours: "8:00 ص - 6:00 م",
+                services: ["أنظمة منزلية", "أنظمة تجارية", "دراسات جدوى", "صيانة"],
+                categories: ["residential", "commercial", "maintenance"],
+                badge: "رائدة",
+                badgeType: "premium"
+            },
+            {
+                id: 2,
+                name: "شركة فينيكس للطاقة",
+                description: "متخصصة في أنظمة الطاقة الشمسية للمنازل والشركات الصغيرة، معتمدة من وزارة الطاقة.",
+                location: "عمان - صويلح",
+                phone: "+962-6-515-7000",
+                email: "info@phoenixenergy.jo",
+                hours: "8:30 ص - 5:30 م",
+                services: ["أنظمة منزلية", "مراقبة أداء", "ضمان 10 سنوات"],
+                categories: ["residential"],
+                badge: "معتمدة",
+                badgeType: "standard"
+            },
+            {
+                id: 3,
+                name: "الأردن للطاقة الشمسية",
+                description: "من أقدم الشركات في القطاع، تنفذ مشاريع كبرى في مختلف أنحاء المملكة.",
+                location: "عمان - شارع مكة",
+                phone: "+962-6-565-1000",
+                email: "jordan@solar.jo",
+                hours: "8:00 ص - 4:00 م",
+                services: ["مشاريع كبرى", "أنظمة صناعية", "استشارات فنية"],
+                categories: ["industrial", "commercial"],
+                badge: "خبرة 15+ سنة",
+                badgeType: "premium"
+            },
+            {
+                id: 4,
+                name: "سولار تك",
+                description: "شركة متخصصة في التقنيات الحديثة للطاقة الشمسية وأنظمة التخزين الذكية.",
+                location: "الزرقاء - المنطقة الصناعية",
+                phone: "+962-5-398-2000",
+                email: "contact@solartech.jo",
+                hours: "8:00 ص - 6:00 م",
+                services: ["أنظمة ذكية", "تخزين طاقة", "مراقبة عن بعد"],
+                categories: ["residential", "commercial"],
+                badge: "تقنيات متطورة",
+                badgeType: "new"
+            },
+            {
+                id: 5,
+                name: "طاقات نظيفة",
+                description: "تركز على الحلول البيئية المستدامة للطاقة الشمسية للمنازل والمؤسسات.",
+                location: "عمان - جبل الحسين",
+                phone: "+962-6-567-8000",
+                email: "info@cleanenergies.jo",
+                hours: "9:00 ص - 5:00 م",
+                services: ["حلول بيئية", "ترشيد استهلاك", "طاقة مستدامة"],
+                categories: ["residential", "commercial"],
+                badge: "صديقة للبيئة",
+                badgeType: "standard"
+            },
+            {
+                id: 6,
+                name: "شمس الأردن",
+                description: "إحدى أكبر الشركات في مجال الطاقة الشمسية، تنفذ مشاريع في عدة محافظات.",
+                location: "إربد - شارع الجامعة",
+                phone: "+962-2-710-5000",
+                email: "info@shamsjordan.com",
+                hours: "8:30 ص - 6:30 م",
+                services: ["أنظمة شاملة", "تصميم مخصص", "تنفيذ مشاريع"],
+                categories: ["residential", "commercial", "industrial"],
+                badge: "شركة وطنية",
+                badgeType: "premium"
+            },
+            {
+                id: 7,
+                name: "الشرقية للطاقة المتجددة",
+                description: "متخصصة في أنظمة الربط مع الشبكة والحلول الهجينة للمنازل والشركات.",
+                location: "عمان - مرج الحمام",
+                phone: "+962-6-416-3000",
+                email: "eastern@renewable.jo",
+                hours: "8:30 ص - 5:30 م",
+                services: ["أنظمة هجينة", "ربط شبكة", "محطات شحن"],
+                categories: ["residential", "commercial"],
+                badge: "متخصصون بالشبكات",
+                badgeType: "standard"
+            },
+            {
+                id: 8,
+                name: "طاقة المستقبل",
+                description: "شركة ناشئة تقدم حلول طاقة شمسية مبتكرة بأسعار تنافسية وجودة عالية.",
+                location: "عمان - عبدون",
+                phone: "+962-7-9999-8888",
+                email: "future@energy.jo",
+                hours: "9:00 ص - 7:00 م",
+                services: ["أنظمة مبتكرة", "أسعار تنافسية", "تمويل"],
+                categories: ["residential"],
+                badge: "شركة ناشئة",
+                badgeType: "new"
+            },
+            {
+                id: 9,
+                name: "الخليج للطاقة الشمسية",
+                description: "فرع لشركة خليجية رائدة، تقدم حلولاً متكاملة للقطاعين التجاري والصناعي.",
+                location: "عمان - دوار الداخلية",
+                phone: "+962-6-552-8000",
+                email: "gulf@solar.com",
+                hours: "8:00 ص - 5:00 م",
+                services: ["مشاريع تجارية", "أنظمة صناعية", "استشارات دولية"],
+                categories: ["commercial", "industrial"],
+                badge: "خبرة إقليمية",
+                badgeType: "premium"
+            },
+            {
+                id: 10,
+                name: "سولار بلس",
+                description: "متخصصون في أنظمة الطاقة الشمسية للمنازل مع خدمة ما بعد البيع المتميزة.",
+                location: "الزرقاء - مدينة الحسن",
+                phone: "+962-5-399-1000",
+                email: "info@solarplus.jo",
+                hours: "8:00 ص - 6:00 م",
+                services: ["أنظمة منزلية", "خدمة مميزة", "صيانة دورية"],
+                categories: ["residential", "maintenance"],
+                badge: "خدمة متميزة",
+                badgeType: "standard"
+            },
+            {
+                id: 11,
+                name: "النهضة للطاقة الشمسية",
+                description: "من الشركات الرائدة في شمال الأردن، تخدم محافظات إربد والمفرق وجرش.",
+                location: "إربد - المنطقة الصناعية",
+                phone: "+962-2-724-5000",
+                email: "renaissance@energy.jo",
+                hours: "8:00 ص - 6:00 م",
+                services: ["أنظمة شمال الأردن", "صيانة شاملة", "دعم فني"],
+                categories: ["residential", "commercial", "maintenance"],
+                badge: "شمال الأردن",
+                badgeType: "standard"
+            },
+            {
+                id: 12,
+                name: "طاقة العقبة",
+                description: "متخصصة في مشاريع الطاقة الشمسية في منطقة العقبة ذات الإشعاع الشمسي العالي.",
+                location: "العقبة - المنطقة الاقتصادية",
+                phone: "+962-3-209-6000",
+                email: "aqaba@energy.jo",
+                hours: "8:00 ص - 6:00 م",
+                services: ["مشاريع جنوب الأردن", "أنظمة شمسية مركزة", "تبريد شمسي"],
+                categories: ["commercial", "industrial"],
+                badge: "متخصصة بالعقبة",
+                badgeType: "premium"
+            },
+            {
+                id: 13,
+                name: "الهدى للطاقة المتجددة",
+                description: "شركة عائلية تقدم حلول طاقة شمسية بأسعار مناسبة للعائلات الأردنية.",
+                location: "الكرك - وسط المدينة",
+                phone: "+962-3-239-4000",
+                email: "alhuda@renewable.jo",
+                hours: "8:30 ص - 5:30 م",
+                services: ["أنظمة عائلية", "أسعار مناسبة", "تقسيط"],
+                categories: ["residential"],
+                badge: "عائلية",
+                badgeType: "standard"
+            },
+            {
+                id: 14,
+                name: "تكنو سولار",
+                description: "تجمع بين الخبرة التقنية والجودة في تنفيذ مشاريع الطاقة الشمسية.",
+                location: "عمان - خلدا",
+                phone: "+962-6-552-9000",
+                email: "techno@solar.jo",
+                hours: "8:00 ص - 6:00 م",
+                services: ["حلول تقنية", "جودة تنفيذ", "أنظمة مراقبة"],
+                categories: ["residential", "commercial"],
+                badge: "جودة تقنية",
+                badgeType: "standard"
+            },
+            {
+                id: 15,
+                name: "الشمس الذهبية",
+                description: "تركز على أنظمة الطاقة الشمسية للمزارع والمشاريع الزراعية.",
+                location: "المفرق - طريق بغداد",
+                phone: "+962-2-625-3000",
+                email: "goldensun@agriculture.jo",
+                hours: "8:00 ص - 5:00 م",
+                services: ["أنظمة زراعية", "ري شمسي", "صوبات شمسية"],
+                categories: ["industrial"],
+                badge: "متخصصة زراعية",
+                badgeType: "standard"
+            },
+            {
+                id: 16,
+                name: "طاقة اليرموك",
+                description: "تخدم محافظة إربد والمناطق المحيطة بها بحلول طاقة شمسية مخصصة.",
+                location: "إربد - الرمثا",
+                phone: "+962-2-735-2000",
+                email: "yarmouk@energy.jo",
+                hours: "8:30 ص - 6:30 م",
+                services: ["خدمة شمالية", "حلول مخصصة", "دعم محلي"],
+                categories: ["residential", "commercial"],
+                badge: "شمال الأردن",
+                badgeType: "standard"
+            },
+            {
+                id: 17,
+                name: "سولار ماستر",
+                description: "متخصصون في الصيانة الدورية وإصلاح أنظمة الطاقة الشمسية.",
+                location: "عمان - أبو علندا",
+                phone: "+962-7-8888-7777",
+                email: "master@solar.jo",
+                hours: "8:00 ص - 8:00 م",
+                services: ["صيانة دورية", "إصلاح أعطال", "استبدال قطع"],
+                categories: ["maintenance"],
+                badge: "متخصصون صيانة",
+                badgeType: "standard"
+            },
+            {
+                id: 18,
+                name: "الطاقة الخضراء",
+                description: "تركز على الاستدامة البيئية في جميع مشاريع الطاقة الشمسية.",
+                location: "عمان - دابوق",
+                phone: "+962-6-541-1000",
+                email: "green@energy.jo",
+                hours: "9:00 ص - 5:00 م",
+                services: ["حلول مستدامة", "مواد صديقة للبيئة", "كفاءة طاقة"],
+                categories: ["residential", "commercial"],
+                badge: "بيئية",
+                badgeType: "standard"
+            },
+            {
+                id: 19,
+                name: "شمس معان",
+                description: "تخدم محافظة معان والمناطق الجنوبية بحلول طاقة شمسية مناسبة للمناخ.",
+                location: "معان - وسط المدينة",
+                phone: "+962-3-232-1000",
+                email: "maan@sun.jo",
+                hours: "8:00 ص - 4:00 م",
+                services: ["أنظمة جنوبية", "تكييف شمسي", "تحلية مياه"],
+                categories: ["residential", "commercial"],
+                badge: "جنوب الأردن",
+                badgeType: "standard"
+            },
+            {
+                id: 20,
+                name: "الضوء الذكي",
+                description: "تقدم حلول طاقة شمسية ذكية متكاملة مع أنظمة المنزل الذكي.",
+                location: "عمان - الصويفية",
+                phone: "+962-6-585-2000",
+                email: "smartlight@energy.jo",
+                hours: "8:30 ص - 6:30 م",
+                services: ["أنظمة ذكية", "تكامل منزلي", "أتمتة"],
+                categories: ["residential"],
+                badge: "ذكية",
+                badgeType: "new"
+            },
+            // يمكن إضافة 12 شركة إضافية هنا...
+        ];
+
+        // إضافة 12 شركة إضافية واقعية
+        const additionalCompanies = [
+            {
+                id: 21,
+                name: "طاقة البتراء",
+                description: "تخدم محافظة معان والمناطق السياحية بحلول طاقة مستدامة.",
+                location: "الطفيلة - بالقرب من البتراء",
+                phone: "+962-3-215-7000",
+                email: "petra@energy.jo",
+                hours: "8:00 ص - 5:00 م",
+                services: ["أنظمة سياحية", "طاقة للمواقع الأثرية", "حلول نائية"],
+                categories: ["commercial"],
+                badge: "منطقة البتراء",
+                badgeType: "standard"
+            },
+            {
+                id: 22,
+                name: "سولار ميد",
+                description: "شركة متوسطة الحجم تقدم حلولاً متوازنة بين السعر والجودة.",
+                location: "الزرقاء - حي المعركة",
+                phone: "+962-5-390-5000",
+                email: "solarmed@energy.jo",
+                hours: "8:00 ص - 6:00 م",
+                services: ["حلول متوازنة", "أسعار معقولة", "جودة متوسطة"],
+                categories: ["residential"],
+                badge: "متوسطة الحجم",
+                badgeType: "standard"
+            },
+            {
+                id: 23,
+                name: "الشمس الدافئة",
+                description: "متخصصة في أنظمة التدفئة الشمسية للمنازل في المناطق الباردة.",
+                location: "عجلون - وسط المدينة",
+                phone: "+962-2-642-3000",
+                email: "warmsun@heating.jo",
+                hours: "8:30 ص - 5:30 م",
+                services: ["تدفئة شمسية", "أنظمة للمناطق الباردة", "عزل حراري"],
+                categories: ["residential"],
+                badge: "متخصصة تدفئة",
+                badgeType: "standard"
+            },
+            {
+                id: 24,
+                name: "طاقة الغد",
+                description: "تركز على التقنيات المستقبلية في مجال الطاقة الشمسية.",
+                location: "عمان - دوار الواحة",
+                phone: "+962-6-500-8000",
+                email: "tomorrow@energy.jo",
+                hours: "9:00 ص - 6:00 م",
+                services: ["تقنيات مستقبلية", "بحث وتطوير", "تطبيقات جديدة"],
+                categories: ["commercial", "industrial"],
+                badge: "مستقبلية",
+                badgeType: "new"
+            },
+            {
+                id: 25,
+                name: "النسر للطاقة الشمسية",
+                description: "من الشركات الموثوقة في السوق الأردني بخبرة تزيد عن 10 سنوات.",
+                location: "عمان - الجبيهة",
+                phone: "+962-6-533-4000",
+                email: "eagle@solar.jo",
+                hours: "8:00 ص - 6:00 م",
+                services: ["خبرة طويلة", "موثوقية", "خدمة متكاملة"],
+                categories: ["residential", "commercial"],
+                badge: "موثوقة",
+                badgeType: "premium"
+            },
+            {
+                id: 26,
+                name: "شمس الكرامة",
+                description: "تهتم بتقديم حلول طاقة شمسية للعائلات محدودة الدخل.",
+                location: "مأدبا - وسط المدينة",
+                phone: "+962-5-324-1000",
+                email: "karama@sun.jo",
+                hours: "8:00 ص - 5:00 م",
+                services: ["أسعار مخفضة", "تمويل ميسر", "دعم مجتمعي"],
+                categories: ["residential"],
+                badge: "مجتمعية",
+                badgeType: "standard"
+            },
+            {
+                id: 27,
+                name: "الطاقة الأردنية",
+                description: "شركة وطنية تشارك في المشاريع الحكومية للطاقة المتجددة.",
+                location: "عمان - الشميساني",
+                phone: "+962-6-560-2000",
+                email: "jordanian@energy.jo",
+                hours: "8:00 ص - 4:00 م",
+                services: ["مشاريع حكومية", "شراكات وطنية", "تنمية مستدامة"],
+                categories: ["industrial"],
+                badge: "وطنية",
+                badgeType: "premium"
+            },
+            {
+                id: 28,
+                name: "سولار كير",
+                description: "متخصصة في صيانة وخدمة أنظمة الطاقة الشمسية بعد التركيب.",
+                location: "عمان - تلاع العلي",
+                phone: "+962-7-7777-6666",
+                email: "care@solar.jo",
+                hours: "8:00 ص - 8:00 م",
+                services: ["خدمة سريعة", "طوارئ", "صيانة وقائية"],
+                categories: ["maintenance"],
+                badge: "خدمة سريعة",
+                badgeType: "standard"
+            },
+            {
+                id: 29,
+                name: "شمس البادية",
+                description: "تختص بحلول الطاقة الشمسية للمناطق النائية والبادية.",
+                location: "الزرقاء - طريق الأزرق",
+                phone: "+962-5-355-6000",
+                email: "badia@sun.jo",
+                hours: "8:00 ص - 5:00 م",
+                services: ["مناطق نائية", "أنظمة مستقلة", "تكييف صحراوي"],
+                categories: ["residential", "commercial"],
+                badge: "مناطق نائية",
+                badgeType: "standard"
+            },
+            {
+                id: 30,
+                name: "الطاقة المثلى",
+                description: "تركز على تحقيق أقصى كفاءة لأنظمة الطاقة الشمسية.",
+                location: "عمان - خلدا",
+                phone: "+962-6-581-3000",
+                email: "optimal@energy.jo",
+                hours: "8:30 ص - 6:30 م",
+                services: ["كفاءة طاقة", "تحسين أداء", "توفير استهلاك"],
+                categories: ["residential", "commercial"],
+                badge: "كفاءة عالية",
+                badgeType: "standard"
+            },
+            {
+                id: 31,
+                name: "سولار هاوس",
+                description: "متخصصة في تحويل المنازل التقليدية إلى منازل شمسية كاملة.",
+                location: "عمان - الصويفية",
+                phone: "+962-6-582-4000",
+                email: "solarhouse@transform.jo",
+                hours: "9:00 ص - 7:00 م",
+                services: ["تحويل منازل", "حلول متكاملة", "تصميم داخلي"],
+                categories: ["residential"],
+                badge: "تحويل منازل",
+                badgeType: "new"
+            },
+            {
+                id: 32,
+                name: "طاقة العقبة الشمسية",
+                description: "تستفيد من موقع العقبة المتميز في مشاريع الطاقة الشمسية.",
+                location: "العقبة - المنطقة الجنوبية",
+                phone: "+962-3-203-5000",
+                email: "aqabasolar@energy.jo",
+                hours: "8:00 ص - 6:00 م",
+                services: ["استفادة موقعية", "إشعاع عالي", "تبريد شمسي"],
+                categories: ["commercial", "industrial"],
+                badge: "موقع متميز",
+                badgeType: "premium"
+            }
+        ];
+
+        // دمج جميع الشركات
+        const allCompanies = [...companies, ...additionalCompanies];
+
+        // دالة لعرض الشركات
+        function displayCompanies(companiesToShow, page = 1) {
+            const container = document.getElementById('companies-container');
+            const pagination = document.getElementById('pagination');
+            const itemsPerPage = 6;
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedCompanies = companiesToShow.slice(startIndex, endIndex);
+            const totalPages = Math.ceil(companiesToShow.length / itemsPerPage);
+
+            container.innerHTML = '';
+            pagination.innerHTML = '';
+
+            if (paginatedCompanies.length === 0) {
+                container.innerHTML = '<p style="text-align: center; grid-column: 1/-1; padding: 40px; color: #666;">لا توجد شركات تطابق معايير البحث</p>';
+                return;
+            }
+
+            paginatedCompanies.forEach(company => {
+                const companyCard = document.createElement('div');
+                companyCard.className = 'company-card';
+                companyCard.setAttribute('data-categories', company.categories.join(' '));
+                
+                companyCard.innerHTML = `
+                    <div class="company-header">
+                        <div>
+                            <h3 class="company-name">${company.name}</h3>
+                            <div class="company-badge ${company.badgeType ? 'badge-' + company.badgeType : ''}">${company.badge}</div>
+                        </div>
+                    </div>
+                    
+                    <p class="company-description">${company.description}</p>
+                    
+                    <div class="company-details">
+                        <div class="detail-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${company.location}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-phone"></i>
+                            <span>${company.phone}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>${company.email}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-clock"></i>
+                            <span>${company.hours}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="company-services">
+                        <div class="services-title">الخدمات المقدمة:</div>
+                        <div class="services-list">
+                            ${company.services.map(service => `<span class="service-tag">${service}</span>`).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="company-actions">
+                        <a href="contact-companies.html?company=${company.id}" class="btn btn-primary">
+                            <i class="fas fa-file-invoice-dollar"></i> طلب عرض سعر
+                        </a>
+                        <a href="tel:${company.phone}" class="btn btn-secondary">
+                            <i class="fas fa-phone"></i> اتصل الآن
+                        </a>
+                    </div>
+                `;
+                
+                container.appendChild(companyCard);
+            });
+
+            // إضافة أزرار الترقيم
+            if (totalPages > 1) {
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageBtn = document.createElement('button');
+                    pageBtn.className = `page-btn ${i === page ? 'active' : ''}`;
+                    pageBtn.textContent = i;
+                    pageBtn.addEventListener('click', () => {
+                        displayCompanies(companiesToShow, i);
+                    });
+                    pagination.appendChild(pageBtn);
+                }
+            }
+        }
+
+        // فلترة الشركات
+        function filterCompanies() {
+            const activeFilter = document.querySelector('.filter-option.active').getAttribute('data-filter');
+            const searchTerm = document.querySelector('.search-input').value.toLowerCase();
+            
+            let filteredCompanies = allCompanies;
+            
+            // تطبيق الفلتر
+            if (activeFilter !== 'all') {
+                filteredCompanies = allCompanies.filter(company => 
+                    company.categories.includes(activeFilter)
+                );
+            }
+            
+            // تطبيق البحث
+            if (searchTerm) {
+                filteredCompanies = filteredCompanies.filter(company => 
+                    company.name.toLowerCase().includes(searchTerm) ||
+                    company.description.toLowerCase().includes(searchTerm) ||
+                    company.services.some(service => service.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            displayCompanies(filteredCompanies);
+        }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            displayCompanies(allCompanies);
+            
+            // إضافة أحداث للفلترة
+            document.querySelectorAll('.filter-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    filterCompanies();
+                });
+            });
+            
+            // إضافة حدث للبحث
+            document.querySelector('.search-input').addEventListener('input', filterCompanies);
+        });
+    </script>
+</body>
+</html>

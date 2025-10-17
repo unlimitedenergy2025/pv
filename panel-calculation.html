@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PV Calculator - حساب الألواح الشمسية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #005a8c;
+            --secondary-color: #008ecc;
+            --accent-color: #e74c3c;
+            --light-color: #f8fafb;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        
+        .logo img {
+            height: 45px;
+        }
+        
+        .logo h1 {
+            font-size: 1.3rem;
+            margin: 8px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            margin: 12px auto;
+            max-width: 95%;
+            border-radius: 30px;
+            gap: 6px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 20px 0;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .page-header h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Form Styles */
+        .form-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+        
+        .form-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
+        }
+        
+        .form-hint {
+            display: block;
+            color: #666;
+            margin-top: 5px;
+            font-size: 0.8rem;
+        }
+        
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        
+        .btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary:active {
+            background: linear-gradient(to right, #0077b3, #004a7a);
+        }
+        
+        /* Result Card */
+        .result-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: none;
+            border-right: 4px solid var(--success-color);
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .result-header h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .result-item {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .result-item:active {
+            transform: scale(0.98);
+        }
+        
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .result-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .result-highlight {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+        
+        .result-highlight .result-value,
+        .result-highlight .result-label {
+            color: white;
+        }
+        
+        /* Panel Types */
+        .panel-types {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .panel-types-title {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .panel-types-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .panel-type {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .panel-type:active {
+            background-color: #f9f9f9;
+            transform: scale(0.98);
+        }
+        
+        .panel-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+        }
+        
+        .panel-info {
+            flex: 1;
+        }
+        
+        .panel-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+        
+        .panel-desc {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Media Queries for Larger Screens */
+        @media (min-width: 768px) {
+            header {
+                padding: 20px 0;
+            }
+            
+            .logo img {
+                height: 50px;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-links {
+                padding: 12px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 8px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            .page-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .form-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .btn {
+                width: auto;
+                padding: 12px 28px;
+            }
+            
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .btn-primary:hover {
+                background: linear-gradient(to right, #0077b3, #004a7a);
+            }
+            
+            .result-item:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .result-item:active {
+                transform: scale(0.98);
+            }
+            
+            .panel-types-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+            }
+            
+            .panel-type:hover {
+                background-color: #f9f9f9;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .panel-type:active {
+                transform: scale(0.98);
+            }
+        }
+        
+        /* Landscape Mode for Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 10px 0;
+            }
+            
+            .logo img {
+                height: 35px;
+            }
+            
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+            
+            .nav-links {
+                padding: 6px;
+                margin: 8px auto;
+            }
+            
+            .main-content {
+                padding: 15px 0;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="PV Calculator Logo">
+                <h1>حساب الألواح الشمسية</h1>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="engineering.html"><i class="fas fa-arrow-right"></i> رجوع للخدمات الهندسية</a>
+                <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h2><i class="fas fa-solar-panel"></i> حساب عدد الألواح الشمسية المطلوبة</h2>
+                <p>أدخل بيانات نظامك لتحديد عدد الألواح الشمسية المناسبة مع التكلفة والتوفير المتوقع</p>
+            </div>
+
+            <div class="form-card">
+                <h3 class="form-title"><i class="fas fa-calculator"></i> بيانات النظام المطلوب</h3>
+                
+                <form id="panel-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="required-power"><i class="fas fa-bolt"></i> الاستهلاك اليومي (كيلوواط/ساعة):</label>
+                            <input type="number" id="required-power" min="1" step="0.1" placeholder="مثال: 20" required>
+                            <div class="form-hint">إجمالي الاستهلاك اليومي للطاقة بالكيلوواط/ساعة</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="panel-wattage"><i class="fas fa-solar-panel"></i> قدرة اللوح الواحد (واط):</label>
+                            <select id="panel-wattage" required>
+                                <option value="250">250 واط</option>
+                                <option value="300">300 واط</option>
+                                <option value="350">350 واط</option>
+                                <option value="400" selected>400 واط</option>
+                                <option value="450">450 واط</option>
+                                <option value="500">500 واط</option>
+                                <option value="550">550 واط</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="panel-efficiency"><i class="fas fa-tachometer-alt"></i> كفاءة الألواح (%):</label>
+                            <select id="panel-efficiency" required>
+                                <option value="15">15% (منخفضة)</option>
+                                <option value="18" selected>18% (قياسية)</option>
+                                <option value="20">20% (عالية)</option>
+                                <option value="22">22% (عالية جداً)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="panel-type"><i class="fas fa-layer-group"></i> نوع الألواح:</label>
+                            <select id="panel-type" required>
+                                <option value="mono">مونو كريستالين</option>
+                                <option value="poly">بولي كريستالين</option>
+                                <option value="thin">أغشية رقيقة</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sun-hours"><i class="fas fa-sun"></i> متوسط ساعات الشمس اليومية:</label>
+                            <select id="sun-hours" required>
+                                <option value="3.5">3.5 ساعات (شتاء)</option>
+                                <option value="4.5">4.5 ساعات</option>
+                                <option value="5.5" selected>5.5 ساعات (متوسط سنوي)</option>
+                                <option value="6.5">6.5 ساعات (صيف)</option>
+                                <option value="7.5">7.5 ساعات (مناطق مشمسة جداً)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="system-losses"><i class="fas fa-exclamation-triangle"></i> فقدان النظام (%):</label>
+                            <input type="number" id="system-losses" min="0" max="50" value="14" required>
+                            <div class="form-hint">يشمل فقدان الكابلات، العاكس، الغبار، وغيرها</div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-calculator"></i> حساب الألواح المطلوبة
+                    </button>
+                </form>
+            </div>
+            
+            <div class="result-card" id="results">
+                <div class="result-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>نتائج حساب الألواح الشمسية</h3>
+                </div>
+                
+                <div class="result-grid">
+                    <div class="result-item result-highlight">
+                        <div class="result-value" id="panel-count">--</div>
+                        <div class="result-label">عدد الألواح المطلوبة</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="total-power">--</div>
+                        <div class="result-label">القدرة الإجمالية للنظام</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="total-area">--</div>
+                        <div class="result-label">المساحة الإجمالية</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="panel-cost">--</div>
+                        <div class="result-label">التكلفة التقريبية</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="daily-output">--</div>
+                        <div class="result-label">الإنتاج اليومي المتوقع</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="panel-life">--</div>
+                        <div class="result-label">العمر الافتراضي</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="annual-saving">--</div>
+                        <div class="result-label">التوفير السنوي المتوقع</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="payback-period">--</div>
+                        <div class="result-label">فترة استرداد التكلفة</div>
+                    </div>
+                </div>
+                
+                <div class="panel-types">
+                    <h4 class="panel-types-title"><i class="fas fa-info-circle"></i> أنواع الألواح الشمسية</h4>
+                    <div class="panel-types-grid">
+                        <div class="panel-type">
+                            <div class="panel-icon">
+                                <i class="fas fa-sun"></i>
+                            </div>
+                            <div class="panel-info">
+                                <div class="panel-name">مونو كريستالين</div>
+                                <div class="panel-desc">كفاءة عالية، أداء أفضل في الإضاءة المنخفضة</div>
+                            </div>
+                        </div>
+                        
+                        <div class="panel-type">
+                            <div class="panel-icon">
+                                <i class="fas fa-th-large"></i>
+                            </div>
+                            <div class="panel-info">
+                                <div class="panel-name">بولي كريستالين</div>
+                                <div class="panel-desc">سعر منخفض، كفاءة متوسطة، لون أزرق</div>
+                            </div>
+                        </div>
+                        
+                        <div class="panel-type">
+                            <div class="panel-icon">
+                                <i class="fas fa-square"></i>
+                            </div>
+                            <div class="panel-info">
+                                <div class="panel-name">أغشية رقيقة</div>
+                                <div class="panel-desc">مرنة، خفيفة الوزن، كفاءة منخفضة</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="reset-btn" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> إعادة الحساب
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 PV Calculator. جميع الحقوق محفوظة.</p>
+            <p>أداة متكاملة لحساب متطلبات الألواح الشمسية وتصميم أنظمة الطاقة الشمسية</p>
+        </div>
+    </footer>
+
+    <script>
+        // بيانات أنواع الألواح
+        const panelTypes = {
+            mono: { 
+                name: "مونو كريستالين", 
+                efficiency: 1.1, 
+                costPerWatt: 0.45,
+                life: "25+ سنة",
+                areaPerKw: 5.5
+            },
+            poly: { 
+                name: "بولي كريستالين", 
+                efficiency: 1.0, 
+                costPerWatt: 0.35,
+                life: "20-25 سنة",
+                areaPerKw: 6.0
+            },
+            thin: { 
+                name: "أغشية رقيقة", 
+                efficiency: 0.9, 
+                costPerWatt: 0.30,
+                life: "15-20 سنة",
+                areaPerKw: 8.0
+            }
+        };
+
+        // حساب الألواح المطلوبة
+        document.getElementById('panel-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // الحصول على القيم المدخلة
+            const requiredPower = parseFloat(document.getElementById('required-power').value);
+            const panelWattage = parseInt(document.getElementById('panel-wattage').value);
+            const panelEfficiency = parseInt(document.getElementById('panel-efficiency').value);
+            const panelType = document.getElementById('panel-type').value;
+            const sunHours = parseFloat(document.getElementById('sun-hours').value);
+            const systemLosses = parseInt(document.getElementById('system-losses').value);
+            
+            if (!requiredPower || !panelWattage) {
+                alert('الرجاء ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            // الحسابات
+            const panelInfo = panelTypes[panelType];
+            const efficiencyFactor = panelEfficiency / 18; // نسبة الكفاءة مقارنة بالقياسية 18%
+            const lossFactor = (100 - systemLosses) / 100;
+            
+            // حساب عدد الألواح المطلوبة
+            const requiredEnergy = requiredPower * 1000; // تحويل إلى واط/ساعة
+            const panelDailyOutput = panelWattage * sunHours * efficiencyFactor * lossFactor;
+            const panelCount = Math.ceil(requiredEnergy / panelDailyOutput);
+            
+            // حساب القدرة الإجمالية
+            const totalPower = (panelCount * panelWattage) / 1000; // كيلوواط
+            
+            // حساب المساحة الإجمالية
+            const totalArea = (totalPower * panelInfo.areaPerKw).toFixed(1);
+            
+            // حساب التكلفة
+            const panelCost = Math.round(totalPower * 1000 * panelInfo.costPerWatt);
+            
+            // حساب الإنتاج اليومي
+            const dailyOutput = (panelCount * panelDailyOutput / 1000).toFixed(1);
+            
+            // حساب التوفير السنوي (افتراض سعر الكهرباء 0.08 دينار/كيلوواط ساعة)
+            const electricityPrice = 0.08;
+            const annualSaving = Math.round(dailyOutput * 365 * electricityPrice);
+            
+            // حساب فترة استرداد التكلفة
+            const paybackPeriod = (panelCost / annualSaving).toFixed(1);
+            
+            // تحديث النتائج
+            document.getElementById('panel-count').textContent = panelCount + ' لوح';
+            document.getElementById('total-power').textContent = totalPower.toFixed(1) + ' كيلوواط';
+            document.getElementById('total-area').textContent = totalArea + ' متر مربع';
+            document.getElementById('panel-cost').textContent = panelCost.toLocaleString() + ' دينار';
+            document.getElementById('daily-output').textContent = dailyOutput + ' كيلوواط/ساعة';
+            document.getElementById('panel-life').textContent = panelInfo.life;
+            document.getElementById('annual-saving').textContent = annualSaving.toLocaleString() + ' دينار';
+            document.getElementById('payback-period').textContent = paybackPeriod + ' سنة';
+            
+            // إظهار النتائج
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // إعادة تعيين الحساب
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            document.getElementById('panel-form').reset();
+            document.getElementById('results').style.display = 'none';
+        });
+
+        // تحديث التكلفة عند تغيير نوع الألواح
+        document.getElementById('panel-type').addEventListener('change', function() {
+            // يمكن إضافة تحديثات ديناميكية هنا إذا لزم الأمر
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة أنظمة الطاقة الشمسية - الكابلات والهياكل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #005a8c;
+            --secondary-color: #008ecc;
+            --accent-color: #e74c3c;
+            --light-color: #f8fafb;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        
+        .logo img {
+            height: 45px;
+        }
+        
+        .logo h1 {
+            font-size: 1.3rem;
+            margin: 8px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            margin: 12px auto;
+            max-width: 95%;
+            border-radius: 30px;
+            gap: 6px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+        }
+        
+        /* Card Styles */
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            margin: 20px 0;
+        }
+        
+        .card-header {
+            margin-bottom: 20px;
+        }
+        
+        .card-header h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        /* Form Styles */
+        .form-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        
+        .form-section h3 {
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
+        }
+        
+        .form-hint {
+            display: block;
+            color: #666;
+            margin-top: 5px;
+            font-size: 0.8rem;
+        }
+        
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 15px;
+            font-family: 'Tajawal', sans-serif;
+            text-align: center;
+        }
+        
+        .btn:active {
+            background: linear-gradient(to right, #0077b3, #004a7a);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+        }
+        
+        .btn-lg {
+            padding: 16px 28px;
+            font-size: 1.1rem;
+        }
+        
+        /* Preview Card */
+        .preview-card {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border-right: 4px solid var(--secondary-color);
+            display: none;
+        }
+        
+        /* Result Card */
+        .result-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            display: none;
+        }
+        
+        .result-header {
+            margin-bottom: 20px;
+        }
+        
+        .result-header h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .result-summary {
+            background-color: var(--light-color);
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid var(--success-color);
+            font-size: 0.95rem;
+        }
+        
+        .result-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-item span:first-child {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .result-item span:last-child {
+            font-weight: 500;
+            color: #333;
+            text-align: left;
+        }
+        
+        .result-item.highlight {
+            background-color: rgba(0, 142, 204, 0.05);
+            padding: 12px;
+            border-radius: 6px;
+            border-right: 3px solid var(--secondary-color);
+        }
+        
+        /* Specifications */
+        .specifications {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .specifications h4 {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+        
+        .spec-item {
+            background-color: var(--light-color);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .spec-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .spec-value {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+        
+        /* Note */
+        .note {
+            background-color: #fff9e6;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid var(--warning-color);
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Media Queries for Larger Screens */
+        @media (min-width: 768px) {
+            .header {
+                padding: 20px 0;
+            }
+            
+            .logo img {
+                height: 50px;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-links {
+                padding: 12px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 8px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            .card {
+                padding: 25px;
+                margin: 30px 0;
+            }
+            
+            .card-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .form-row {
+                flex-direction: row;
+                gap: 20px;
+            }
+            
+            .form-row .form-group {
+                flex: 1;
+            }
+            
+            .btn {
+                width: auto;
+                padding: 12px 28px;
+            }
+            
+            .btn:hover {
+                background: linear-gradient(to right, #0077b3, #004a7a);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+        }
+        
+        /* Landscape Mode for Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header {
+                padding: 10px 0;
+            }
+            
+            .logo img {
+                height: 35px;
+            }
+            
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+            
+            .nav-links {
+                padding: 6px;
+                margin: 8px auto;
+            }
+            
+            .card {
+                padding: 15px;
+                margin: 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="شعار الأردن">
+                <h1>حاسبة متطلبات الأنظمة الشمسية - الكابلات والهياكل</h1>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="engineering.html"><i class="fas fa-arrow-right"></i> رجوع للخدمات الهندسية</a>
+                <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="#"><i class="fas fa-phone"></i> اتصل بنا</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-solar-panel"></i> حساب متطلبات الكابلات والهياكل</h2>
+                <p class="subtitle">أدخل بيانات نظام الطاقة الشمسية الخاص بك لحساب متطلبات الكابلات والهياكل حسب المعايير الأردنية</p>
+            </div>
+            
+            <form id="cable-form">
+                <div class="form-section">
+                    <h3><i class="fas fa-bolt"></i> بيانات النظام الأساسية</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="system-power"><i class="fas fa-bolt"></i> قدرة النظام (كيلوواط):</label>
+                            <input type="number" id="system-power" min="0.1" step="0.1" placeholder="مثال: 5.5" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="system-voltage"><i class="fas fa-plug"></i> جهد النظام (فولت):</label>
+                            <select id="system-voltage" required>
+                                <option value="12">12 فولت (أنظمة صغيرة)</option>
+                                <option value="24">24 فولت (أنظمة متوسطة)</option>
+                                <option value="48" selected>48 فولت (أنظمة كبيرة)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-ruler-horizontal"></i> أبعاد ومسافات النظام</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="distance"><i class="fas fa-arrows-alt-h"></i> المسافة بين الألواح والعاكس (متر):</label>
+                            <input type="number" id="distance" min="1" value="15" required>
+                            <div class="form-hint">يجب إضافة 20% هامش أمان للكابلات</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="panel-count"><i class="fas fa-solar-panel"></i> عدد الألواح الشمسية:</label>
+                            <input type="number" id="panel-count" min="1" value="10" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="panel-dimensions"><i class="fas fa-ruler-combined"></i> أبعاد اللوح الشمسي (متر):</label>
+                            <input type="text" id="panel-dimensions" placeholder="الطول x العرض" value="1.7x1.0" required>
+                            <div class="form-hint">مثال: 1.7x1.0 للألواح القياسية</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="roof-type"><i class="fas fa-home"></i> نوع التركيب:</label>
+                            <select id="roof-type" required>
+                                <option value="flat">سطح مستو</option>
+                                <option value="tilted">سطح مائل</option>
+                                <option value="ground">تركيب أرضي</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-sliders-h"></i> إعدادات إضافية</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="safety-factor"><i class="fas fa-shield-alt"></i> معامل الأمان:</label>
+                            <select id="safety-factor" required>
+                                <option value="1.25">1.25 (معياري)</option>
+                                <option value="1.5">1.5 (مرتفع)</option>
+                                <option value="2.0">2.0 (عالي جداً)</option>
+                            </select>
+                            <div class="form-hint">للتطبيقات الحرجة أو الظروف القاسية</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cable-type"><i class="fas fa-bolt"></i> نوع الكابل:</label>
+                            <select id="cable-type" required>
+                                <option value="pvc">PVC (قاعدة)</option>
+                                <option value="xlpe">XLPE (مقاوم للحرارة)</option>
+                                <option value="tuv">TUV (معتمد أوروبي)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-calculator"></i> حساب المتطلبات
+                </button>
+
+                <div id="system-preview" class="preview-card"></div>
+            </form>
+        </div>
+        
+        <div class="result-card" id="results">
+            <div class="result-header">
+                <h3><i class="fas fa-chart-line"></i> نتائج الحساب:</h3>
+                <div class="result-summary" id="result-summary"></div>
+            </div>
+            
+            <div class="result-grid">
+                <div class="result-item">
+                    <span>التيار الأقصى للنظام:</span>
+                    <span id="max-current">--</span>
+                </div>
+                
+                <div class="result-item highlight">
+                    <span>مقاس الكابل الموصى به:</span>
+                    <span id="cable-size">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>الطول الإجمالي للكابلات:</span>
+                    <span id="cable-length">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>كمية الحديد للهيكل:</span>
+                    <span id="iron-required">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>مساحة الهيكل المطلوبة:</span>
+                    <span id="structure-area">--</span>
+                </div>
+                
+                <div class="result-item highlight">
+                    <span>التكلفة التقريبية (دينار أردني):</span>
+                    <span id="material-cost">--</span>
+                </div>
+            </div>
+            
+            <div class="specifications">
+                <h4><i class="fas fa-clipboard-list"></i> المواصفات الفنية:</h4>
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <div class="spec-label">مقاس الكابل</div>
+                        <div class="spec-value" id="spec-cable">--</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">نوع العزل</div>
+                        <div class="spec-value" id="spec-insulation">--</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">تيار التحمل</div>
+                        <div class="spec-value" id="spec-current">--</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">مقاس الحديد</div>
+                        <div class="spec-value" id="spec-iron">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="note">
+                <i class="fas fa-info-circle"></i> <strong>ملاحظة:</strong> هذه التقديرات تقريبية وقد تختلف حسب الموقع والمواد المستخدمة. يوصى باستشارة مهندس متخصص قبل التنفيذ.
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 حاسبة الأنظمة الشمسية - الأردن | تم التطوير وفقاً للمعايير الأردنية</p>
+            <p>جميع الأسعار بالدينار الأردني وتشمل ضريبة المبيعات</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('cable-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // الحصول على القيم المدخلة
+            const systemPower = parseFloat(document.getElementById('system-power').value);
+            const systemVoltage = parseInt(document.getElementById('system-voltage').value);
+            const distance = parseInt(document.getElementById('distance').value);
+            const panelCount = parseInt(document.getElementById('panel-count').value);
+            const panelDimensions = document.getElementById('panel-dimensions').value;
+            const roofType = document.getElementById('roof-type').value;
+            const safetyFactor = parseFloat(document.getElementById('safety-factor').value);
+            const cableType = document.getElementById('cable-type').value;
+            
+            // حساب التيار الأقصى
+            const maxCurrent = (systemPower * 1000) / systemVoltage;
+            
+            // حساب مقاس الكابل بناءً على التيار
+            let cableSize;
+            if (maxCurrent <= 10) cableSize = '2.5 مم²';
+            else if (maxCurrent <= 16) cableSize = '4 مم²';
+            else if (maxCurrent <= 25) cableSize = '6 مم²';
+            else if (maxCurrent <= 35) cableSize = '10 مم²';
+            else if (maxCurrent <= 50) cableSize = '16 مم²';
+            else cableSize = '25 مم²';
+            
+            // حساب الطول الإجمالي للكابلات (مع هامش 20%)
+            const cableLength = Math.ceil(distance * 1.2 * 2); // ذهاب وإياب
+            
+            // حساب متطلبات الهيكل
+            const dimensions = panelDimensions.split('x');
+            const panelLength = parseFloat(dimensions[0]);
+            const panelWidth = parseFloat(dimensions[1]);
+            const panelArea = panelLength * panelWidth;
+            const totalArea = panelArea * panelCount;
+            
+            // حساب كمية الحديد (كجم لكل متر مربع)
+            let ironPerSqM = 0;
+            if (roofType === 'flat') ironPerSqM = 12;
+            else if (roofType === 'tilted') ironPerSqM = 15;
+            else ironPerSqM = 18; // ground
+            
+            const ironRequired = Math.ceil(totalArea * ironPerSqM * safetyFactor);
+            
+            // حساب التكلفة التقريبية
+            let cableCostPerMeter = 0;
+            if (cableSize === '2.5 مم²') cableCostPerMeter = 1.5;
+            else if (cableSize === '4 مم²') cableCostPerMeter = 2.2;
+            else if (cableSize === '6 مم²') cableCostPerMeter = 3.5;
+            else if (cableSize === '10 مم²') cableCostPerMeter = 5.8;
+            else if (cableSize === '16 مم²') cableCostPerMeter = 9.2;
+            else cableCostPerMeter = 14.5;
+            
+            const cableCost = cableLength * cableCostPerMeter;
+            const ironCost = ironRequired * 2.5; // 2.5 دينار للكيلو
+            const materialCost = Math.ceil(cableCost + ironCost + (totalArea * 15)); // إضافة تكلفة التركيب
+            
+            // تحديد مواصفات العزل
+            let insulationType = '';
+            if (cableType === 'pvc') insulationType = 'PVC عادي';
+            else if (cableType === 'xlpe') insulationType = 'XLPE مقاوم للحرارة';
+            else insulationType = 'TUV معتمد';
+            
+            // تيار التحمل
+            let currentRating = 0;
+            if (cableSize === '2.5 مم²') currentRating = 24;
+            else if (cableSize === '4 مم²') currentRating = 32;
+            else if (cableSize === '6 مم²') currentRating = 41;
+            else if (cableSize === '10 مم²') currentRating = 57;
+            else if (cableSize === '16 مم²') currentRating = 76;
+            else currentRating = 101;
+            
+            // مقاس الحديد
+            const ironSize = roofType === 'ground' ? '40x40x3 مم' : '30x30x2.5 مم';
+            
+            // عرض النتائج
+            document.getElementById('max-current').textContent = maxCurrent.toFixed(2) + ' أمبير';
+            document.getElementById('cable-size').textContent = cableSize;
+            document.getElementById('cable-length').textContent = cableLength + ' متر';
+            document.getElementById('iron-required').textContent = ironRequired + ' كجم';
+            document.getElementById('structure-area').textContent = totalArea.toFixed(2) + ' متر مربع';
+            document.getElementById('material-cost').textContent = materialCost + ' دينار أردني';
+            
+            // المواصفات الفنية
+            document.getElementById('spec-cable').textContent = cableSize;
+            document.getElementById('spec-insulation').textContent = insulationType;
+            document.getElementById('spec-current').textContent = currentRating + ' أمبير';
+            document.getElementById('spec-iron').textContent = ironSize;
+            
+            // ملخص النتائج
+            document.getElementById('result-summary').textContent = 
+                `نظام ${systemPower} كيلوواط، ${panelCount} لوح شمسي، مساحة إجمالية ${totalArea.toFixed(1)} متر مربع`;
+            
+            // إظهار النتائج
+            document.getElementById('results').style.display = 'block';
+            
+            // التمرير إلى النتائج بسلاسة
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

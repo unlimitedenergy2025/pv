@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة الأنظمة الشمسية - اختيار الانفرتر</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #005a8c;
+            --secondary-color: #008ecc;
+            --accent-color: #e74c3c;
+            --light-color: #f8fafb;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Navigation */
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            margin: 15px auto;
+            max-width: 95%;
+            border-radius: 30px;
+            gap: 6px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+        }
+        
+        /* Form Section */
+        .form-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
+        }
+        
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            width: 100%;
+            text-align: center;
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+            margin: 15px 0;
+        }
+        
+        .btn:active {
+            transform: translateY(-2px);
+            background: linear-gradient(to right, #0077b3, #004a7a);
+        }
+        
+        /* Inverter Grid */
+        .inverter-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .inverter-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-right: 4px solid var(--secondary-color);
+            transition: all 0.3s;
+        }
+        
+        .inverter-card:active {
+            transform: scale(0.98);
+        }
+        
+        .inverter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .inverter-name {
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+        
+        .inverter-badge {
+            background-color: var(--success-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-recommended {
+            background-color: var(--success-color);
+        }
+        
+        .badge-alternative {
+            background-color: var(--warning-color);
+        }
+        
+        .inverter-specs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .spec-item:last-child {
+            border-bottom: none;
+        }
+        
+        .spec-label {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .spec-value {
+            color: #333;
+        }
+        
+        .inverter-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-select {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .btn-details {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            padding: 10px 18px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+        }
+        
+        /* Result Section */
+        .result-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: none;
+        }
+        
+        .result-section h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .spec-row:last-child {
+            border-bottom: none;
+        }
+        
+        .technical-note {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border-right: 4px solid var(--warning-color);
+        }
+        
+        .technical-note h4 {
+            color: var(--primary-color);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Media Queries for Larger Screens */
+        @media (min-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .nav-links {
+                padding: 12px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 8px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            .form-row {
+                flex-direction: row;
+                gap: 20px;
+            }
+            
+            .form-row .form-group {
+                flex: 1;
+            }
+            
+            .btn {
+                width: auto;
+                padding: 12px 28px;
+            }
+            
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                background: linear-gradient(to right, #0077b3, #004a7a);
+            }
+            
+            .inverter-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 20px;
+            }
+            
+            .inverter-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+            }
+            
+            .inverter-card:active {
+                transform: scale(0.98);
+            }
+        }
+        
+        /* Landscape Mode for Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 15px 0;
+            }
+            
+            header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links {
+                padding: 6px;
+                margin: 10px auto;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-solar-panel"></i> حاسبة الأنظمة الشمسية - اختيار الانفرتر</h1>
+            <p>أداة احترافية لاختيار انفرتر الطاقة الشمسية وفق المعايير العالمية</p>
+            
+            <nav class="nav-links">
+                <a href="engineering.html"><i class="fas fa-arrow-right"></i> رجوع للخدمات الهندسية</a>
+                <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="#"><i class="fas fa-phone"></i> اتصل بنا</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="form-section">
+            <div class="form-row">
+                <div>
+                    <div class="form-group">
+                        <label for="system-size"><i class="fas fa-bolt"></i> القدرة الشمسية الإجمالية (kW):</label>
+                        <input type="number" id="system-size" class="form-control" min="1" step="0.1" placeholder="مثال: 5.5" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="array-config"><i class="fas fa-solar-panel"></i> تكوين مصفوفة الألواح:</label>
+                        <select id="array-config" class="form-control">
+                            <option value="single">سلسلة واحدة</option>
+                            <option value="multiple">متوازي متعدد</option>
+                            <option value="complex">نظام معقد</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pv-voltage"><i class="fas fa-plug"></i> جهد الدائرة المفتوحة (Voc):</label>
+                        <input type="number" id="pv-voltage" class="form-control" placeholder="الجهد الأقصى (V)" step="1">
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="form-group">
+                        <label for="system-type"><i class="fas fa-network-wired"></i> نوع النظام:</label>
+                        <select id="system-type" class="form-control">
+                            <option value="on-grid">متصل بالشبكة (Grid-Tie)</option>
+                            <option value="hybrid">هجين (Hybrid)</option>
+                            <option value="off-grid">منفصل (Off-Grid)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phase-type"><i class="fas fa-bolt"></i> نظام التيار:</label>
+                        <select id="phase-type" class="form-control">
+                            <option value="single">أحادي الطور</option>
+                            <option value="three">ثلاثي الأطوار</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location"><i class="fas fa-map-marker-alt"></i> الموقع الجغرافي:</label>
+                        <select id="location" class="form-control">
+                            <option value="standard">مناخ معتدل</option>
+                            <option value="hot">مناخ حار</option>
+                            <option value="cold">مناخ بارد</option>
+                            <option value="coastal">مناخ ساحلي</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <button id="calculate-btn" class="btn">
+            <i class="fas fa-calculator"></i> حساب الأنفرترات المناسبة
+        </button>
+        
+        <div class="inverter-grid" id="inverter-grid">
+            <!-- سيتم ملؤها بالجافاسكريبت -->
+        </div>
+        
+        <div class="result-section" id="results">
+            <h3><i class="fas fa-chart-bar"></i> نتائج التحليل الفني</h3>
+            
+            <div class="inverter-specs">
+                <div class="spec-row">
+                    <span class="spec-label">الانفرتر المختار:</span>
+                    <span id="selected-model">--</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">القدرة الاسمية:</span>
+                    <span id="rated-power">--</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">كفاءة الذروة:</span>
+                    <span id="peak-efficiency">--</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">نطاق جهد MPPT:</span>
+                    <span id="mppt-range">--</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">الشهادات العالمية:</span>
+                    <span id="certifications">--</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">درجة حرارة التشغيل:</span>
+                    <span id="operating-temp">--</span>
+                </div>
+            </div>
+            
+            <div class="technical-note">
+                <h4><i class="fas fa-info-circle"></i> ملاحظات فنية:</h4>
+                <p id="technical-notes">سيتم عرض الملاحظات الفنية هنا بعد اختيار الانفرتر</p>
+            </div>
+            
+            <button id="export-btn" class="btn" style="margin-top: 20px;">
+                <i class="fas fa-file-export"></i> تصدير المواصفات الفنية
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 نظام حساب الأنظمة الشمسية | تم التطوير وفق معايير IEC 62109 و UL 1741</p>
+            <p>جميع الحسابات تستند إلى معايير السلامة الكهربائية الدولية</p>
+        </div>
+    </footer>
+
+    <script>
+        // بيانات الانفرترات
+        const inverters = [
+            {
+                id: 1,
+                name: "Huawei SUN2000-5KTL-L1",
+                power: "5 kW",
+                efficiency: "98.6%",
+                mpptRange: "80-550V",
+                certifications: "IEC 62109, VDE-AR-N 4105",
+                operatingTemp: "-25°C to 60°C",
+                price: "850 دينار",
+                type: "on-grid",
+                badge: "موصى به",
+                badgeType: "recommended",
+                notes: "مثالي للأنظمة المنزلية، كفاءة عالية، مراقبة ذكية"
+            },
+            {
+                id: 2,
+                name: "Growatt MIN 5000TL-X",
+                power: "5 kW",
+                efficiency: "98.1%",
+                mpptRange: "90-500V",
+                certifications: "IEC 62109, VDE 0126",
+                operatingTemp: "-25°C to 60°C",
+                price: "720 دينار",
+                type: "on-grid",
+                badge: "اقتصادي",
+                badgeType: "alternative",
+                notes: "سعر مناسب، أداء موثوق، مناسب للميزانيات المحدودة"
+            },
+            {
+                id: 3,
+                name: "Solis 5K Hybrid",
+                power: "5 kW",
+                efficiency: "97.8%",
+                mpptRange: "120-500V",
+                certifications: "IEC 62109, IEC 61683",
+                operatingTemp: "-25°C to 60°C",
+                price: "1100 دينار",
+                type: "hybrid",
+                badge: "هجين",
+                badgeType: "recommended",
+                notes: "يدعم البطاريات، تشغيل أثناء انقطاع التيار، مرونة في الاستخدام"
+            },
+            {
+                id: 4,
+                name: "Victron MultiPlus 48/5000",
+                power: "5 kW",
+                efficiency: "96.5%",
+                mpptRange: "115-450V",
+                certifications: "IEC 62109, UL 1741",
+                operatingTemp: "-20°C to 50°C",
+                price: "1500 دينار",
+                type: "off-grid",
+                badge: "منفصل عن الشبكة",
+                badgeType: "alternative",
+                notes: "مثالي للأنظمة المستقلة، بناء متين، شاشة عرض مدمجة"
+            },
+            {
+                id: 5,
+                name: "Fronius Symo 5.0-3-M",
+                power: "5 kW",
+                efficiency: "98.2%",
+                mpptRange: "75-700V",
+                certifications: "IEC 62109, VDE-AR-N 4105",
+                operatingTemp: "-25°C to 60°C",
+                price: "950 دينار",
+                type: "three-phase",
+                badge: "ثلاثي الطور",
+                badgeType: "recommended",
+                notes: "للاستخدام التجاري، ثلاثي الطور، كفاءة عالية في الظروف المختلفة"
+            },
+            {
+                id: 6,
+                name: "SMA Sunny Boy 5.0",
+                power: "5 kW",
+                efficiency: "98.4%",
+                mpptRange: "175-500V",
+                certifications: "IEC 62109, UL 1741",
+                operatingTemp: "-25°C to 60°C",
+                price: "1050 دينار",
+                type: "on-grid",
+                badge: "جودة ألمانية",
+                badgeType: "recommended",
+                notes: "صناعة ألمانية، موثوقية عالية، عمر افتراضي طويل"
+            }
+        ];
+
+        // عرض الانفرترات
+        function displayInverters() {
+            const systemSize = parseFloat(document.getElementById('system-size').value);
+            const systemType = document.getElementById('system-type').value;
+            const phaseType = document.getElementById('phase-type').value;
+            
+            if (!systemSize) {
+                alert('الرجاء إدخال القدرة الشمسية الإجمالية');
+                return;
+            }
+            
+            const container = document.getElementById('inverter-grid');
+            container.innerHTML = '';
+            
+            // تصفية الانفرترات المناسبة
+            const suitableInverters = inverters.filter(inverter => {
+                // تطابق نوع النظام
+                if (systemType === 'three-phase' && inverter.type !== 'three-phase') return false;
+                if (systemType !== 'three-phase' && inverter.type === 'three-phase') return false;
+                
+                // تطابق القدرة (مع هامش ±20%)
+                const inverterPower = parseFloat(inverter.power);
+                return Math.abs(inverterPower - systemSize) / systemSize <= 0.2;
+            });
+            
+            if (suitableInverters.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">لا توجد انفرترات مناسبة للبيانات المدخلة</p>';
+                return;
+            }
+            
+            suitableInverters.forEach(inverter => {
+                const card = document.createElement('div');
+                card.className = 'inverter-card';
+                
+                card.innerHTML = `
+                    <div class="inverter-header">
+                        <div class="inverter-name">${inverter.name}</div>
+                        <div class="inverter-badge badge-${inverter.badgeType}">${inverter.badge}</div>
+                    </div>
+                    
+                    <div class="inverter-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">القدرة:</span>
+                            <span class="spec-value">${inverter.power}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">الكفاءة:</span>
+                            <span class="spec-value">${inverter.efficiency}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">نطاق MPPT:</span>
+                            <span class="spec-value">${inverter.mpptRange}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">السعر:</span>
+                            <span class="spec-value">${inverter.price}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="inverter-actions">
+                        <button class="btn-select" onclick="selectInverter(${inverter.id})">
+                            <i class="fas fa-check"></i> اختيار
+                        </button>
+                        <button class="btn-details" onclick="showDetails(${inverter.id})">
+                            <i class="fas fa-info-circle"></i> تفاصيل
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // اختيار الانفرتر
+        function selectInverter(inverterId) {
+            const inverter = inverters.find(inv => inv.id === inverterId);
+            
+            if (inverter) {
+                document.getElementById('selected-model').textContent = inverter.name;
+                document.getElementById('rated-power').textContent = inverter.power;
+                document.getElementById('peak-efficiency').textContent = inverter.efficiency;
+                document.getElementById('mppt-range').textContent = inverter.mpptRange;
+                document.getElementById('certifications').textContent = inverter.certifications;
+                document.getElementById('operating-temp').textContent = inverter.operatingTemp;
+                document.getElementById('technical-notes').textContent = inverter.notes;
+                
+                document.getElementById('results').style.display = 'block';
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // عرض التفاصيل
+        function showDetails(inverterId) {
+            const inverter = inverters.find(inv => inv.id === inverterId);
+            if (inverter) {
+                alert(`تفاصيل ${inverter.name}:\n\nالقدرة: ${inverter.power}\nالكفاءة: ${inverter.efficiency}\nنطاق MPPT: ${inverter.mpptRange}\nالشهادات: ${inverter.certifications}\nدرجة الحرارة: ${inverter.operatingTemp}\nالسعر: ${inverter.price}\n\n${inverter.notes}`);
+            }
+        }
+
+        // تصدير المواصفات
+        document.getElementById('export-btn').addEventListener('click', function() {
+            const model = document.getElementById('selected-model').textContent;
+            if (model === '--') {
+                alert('الرجاء اختيار انفرتر أولاً');
+                return;
+            }
+            
+            const specs = `
+مواصفات الانفرتر المختار:
+- النموذج: ${document.getElementById('selected-model').textContent}
+- القدرة: ${document.getElementById('rated-power').textContent}
+- الكفاءة: ${document.getElementById('peak-efficiency').textContent}
+- نطاق MPPT: ${document.getElementById('mppt-range').textContent}
+- الشهادات: ${document.getElementById('certifications').textContent}
+- درجة الحرارة: ${document.getElementById('operating-temp').textContent}
+
+${document.getElementById('technical-notes').textContent}
+            `.trim();
+            
+            // إنشاء ملف نصي للتحميل
+            const blob = new Blob([specs], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `مواصفات-الانفرتر-${model.replace(/\s+/g, '-')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('calculate-btn').addEventListener('click', displayInverters);
+        });
+    </script>
+</body>
+</html>

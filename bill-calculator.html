@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PV Calculator - حساب النظام من الفاتورة (الأردن)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bill-calculator.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="PV Calculator Logo" width="50">
+                <h1>حساب النظام الشمسي من الفاتورة (الأردن)</h1>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="general.html"><i class="fas fa-arrow-right"></i> رجوع للخدمات العامة</a>
+                <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-file-invoice-dollar"></i> حساب النظام الشمسي من الفاتورة</h2>
+                <p class="subtitle">أدخل بيانات فاتورة الكهرباء الشهرية لحساب حجم النظام الشمسي المناسب لك</p>
+            </div>
+            
+            <form id="bill-form">
+                <div class="form-section">
+                    <h3><i class="fas fa-bolt"></i> بيانات الفاتورة</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="monthly-consumption" class="form-label">
+                                <i class="fas fa-chart-line"></i> الاستهلاك الشهري (كيلوواط/ساعة)
+                            </label>
+                            <input type="number" id="monthly-consumption" min="1" placeholder="مثال: 800" required>
+                            <div class="form-hint">يمكنك إيجاد هذه القيمة في فاتورة الكهرباء</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="monthly-bill" class="form-label">
+                                <i class="fas fa-money-bill-wave"></i> قيمة الفاتورة الشهرية (دينار)
+                            </label>
+                            <input type="number" id="monthly-bill" min="1" step="0.1" placeholder="مثال: 85.5">
+                            <div class="form-hint">اختياري - لحساب دقيق لفترة الاسترداد</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-map-marker-alt"></i> الموقع والإعدادات</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city" class="form-label">
+                                <i class="fas fa-city"></i> المحافظة/المدينة
+                            </label>
+                            <select id="city" required>
+                                <option value="">اختر المدينة</option>
+                                <option value="amman">عمان</option>
+                                <option value="irbid">إربد</option>
+                                <option value="zarqa">الزرقاء</option>
+                                <option value="maan">معان</option>
+                                <option value="aqaba">العقبة</option>
+                                <option value="salt">السلط</option>
+                                <option value="karak">الكرك</option>
+                                <option value="mafraq">المفرق</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="system-type" class="form-label">
+                                <i class="fas fa-solar-panel"></i> نوع النظام المطلوب
+                            </label>
+                            <select id="system-type" required>
+                                <option value="on-grid">متصل بالشبكة (On-Grid)</option>
+                                <option value="hybrid">هجين (Hybrid)</option>
+                                <option value="off-grid">منفصل عن الشبكة (Off-Grid)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tariff" class="form-label">
+                                <i class="fas fa-tag"></i> نوع التعرفة الكهربائية
+                            </label>
+                            <select id="tariff" required>
+                                <option value="residential">سكني</option>
+                                <option value="commercial">تجاري</option>
+                                <option value="industrial">صناعي</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="roof-area" class="form-label">
+                                <i class="fas fa-home"></i> مساحة السطح المتاحة (م²)
+                            </label>
+                            <input type="number" id="roof-area" min="1" placeholder="مثال: 50">
+                            <div class="form-hint">للتأكد من إمكانية تركيب النظام</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-calculator"></i> حساب النظام المثالي
+                </button>
+
+                <div id="quick-preview" class="preview-card"></div>
+            </form>
+        </div>
+        
+        <div class="result-card" id="results" style="display: none;">
+            <div class="result-header">
+                <h3 class="result-title"><i class="fas fa-chart-line"></i> نتائج الحساب</h3>
+                <div class="result-summary" id="result-summary"></div>
+            </div>
+            
+            <div class="result-grid">
+                <div class="result-item">
+                    <span>الاستهلاك اليومي المتوسط:</span>
+                    <span id="daily-consumption">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>متوسط ساعات الشمس في منطقتك:</span>
+                    <span id="sun-hours">--</span>
+                </div>
+                
+                <div class="result-item highlight">
+                    <span>حجم النظام المطلوب:</span>
+                    <span id="system-size">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>عدد الألواح الشمسية (500 واط):</span>
+                    <span id="panels-count">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>حجم الانفرتر الموصى به:</span>
+                    <span id="inverter-size">--</span>
+                </div>
+                
+                <div class="result-item highlight">
+                    <span>التكلفة التقديرية (دينار أردني):</span>
+                    <span id="estimated-cost">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>فترة الاسترداد (تقريبية):</span>
+                    <span id="payback-period">--</span>
+                </div>
+                
+                <div class="result-item highlight">
+                    <span>التوفير السنوي المتوقع:</span>
+                    <span id="annual-saving">--</span>
+                </div>
+            </div>
+            
+            <div class="analysis-section">
+                <h4><i class="fas fa-chart-bar"></i> تحليل الجدوى الاقتصادية</h4>
+                <div class="analysis-grid">
+                    <div class="analysis-item">
+                        <div class="analysis-label">التكلفة الإجمالية</div>
+                        <div class="analysis-value" id="total-cost">--</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">التوفير السنوي</div>
+                        <div class="analysis-value" id="yearly-saving">--</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">فترة الاسترداد</div>
+                        <div class="analysis-value" id="roi-period">--</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">العائد على الاستثمار (5 سنوات)</div>
+                        <div class="analysis-value" id="roi">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="notes">
+                <h4><i class="fas fa-info-circle"></i> ملاحظات هامة:</h4>
+                <ul>
+                    <li>هذه الحسابات تقديرية وقد تختلف حسب الظروف الفعلية</li>
+                    <li>يتم حساب فترة الاسترداد بناءً على أسعار الكهرباء الحالية</li>
+                    <li>للحصول على دراسة دقيقة يرجى التواصل مع مختص</li>
+                    <li>الأسعار تشمل التركيب وضريبة المبيعات</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2023 PV Calculator. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script src="js/bill-calculator.js"></script>
+</body>
+</html>

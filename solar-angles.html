@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PV Calculator - حساب الزوايا الشمسية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #005a8c;
+            --secondary-color: #008ecc;
+            --accent-color: #e74c3c;
+            --light-color: #f8fafb;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        
+        .logo img {
+            height: 45px;
+        }
+        
+        .logo h1 {
+            font-size: 1.3rem;
+            margin: 8px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            margin: 12px auto;
+            max-width: 95%;
+            border-radius: 30px;
+            gap: 6px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 20px 0;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .page-header h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Form Styles */
+        .form-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+        
+        .form-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
+        }
+        
+        .form-hint {
+            display: block;
+            color: #666;
+            margin-top: 5px;
+            font-size: 0.8rem;
+        }
+        
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        
+        .btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary:active {
+            background: linear-gradient(to right, #0077b3, #004a7a);
+        }
+        
+        /* Location Section */
+        .location-section {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-right: 4px solid var(--secondary-color);
+        }
+        
+        .location-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .location-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Result Card */
+        .result-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: none;
+            border-right: 4px solid var(--success-color);
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .result-header h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .result-item {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .result-item:active {
+            transform: scale(0.98);
+        }
+        
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .result-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .result-highlight {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+        
+        .result-highlight .result-value,
+        .result-highlight .result-label {
+            color: white;
+        }
+        
+        /* Solar Panel Recommendations */
+        .recommendations {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .recommendations-title {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .recommendation-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .recommendation-item:active {
+            background-color: #f9f9f9;
+            transform: scale(0.98);
+        }
+        
+        .recommendation-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+        }
+        
+        .recommendation-info {
+            flex: 1;
+        }
+        
+        .recommendation-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+        
+        .recommendation-desc {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Media Queries for Larger Screens */
+        @media (min-width: 768px) {
+            header {
+                padding: 20px 0;
+            }
+            
+            .logo img {
+                height: 50px;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-links {
+                padding: 12px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 8px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            .page-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                width: auto;
+                padding: 12px 28px;
+            }
+            
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .btn-primary:hover {
+                background: linear-gradient(to right, #0077b3, #004a7a);
+            }
+            
+            .result-item:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .result-item:active {
+                transform: scale(0.98);
+            }
+            
+            .recommendation-item:hover {
+                background-color: #f9f9f9;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .recommendation-item:active {
+                transform: scale(0.98);
+            }
+        }
+        
+        /* Landscape Mode for Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 10px 0;
+            }
+            
+            .logo img {
+                height: 35px;
+            }
+            
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+            
+            .nav-links {
+                padding: 6px;
+                margin: 8px auto;
+            }
+            
+            .main-content {
+                padding: 15px 0;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="PV Calculator Logo">
+                <h1>حساب الزوايا الشمسية</h1>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="engineering.html"><i class="fas fa-arrow-right"></i> رجوع للخدمات الهندسية</a>
+                <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h2><i class="fas fa-sun"></i> حساب الزوايا الشمسية</h2>
+                <p>أدخل بيانات موقعك الجغرافي والتاريخ للحصول على الزوايا الشمسية الدقيقة لتثبيت الألواح الشمسية</p>
+            </div>
+
+            <div class="location-section">
+                <div class="location-header">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h4>تحديد الموقع تلقائياً</h4>
+                </div>
+                <div class="location-info">
+                    <p>اضغط على الزر أدناه لتحديد موقعك الحالي تلقائياً في الأردن</p>
+                    <button id="get-location-btn" class="btn btn-secondary" style="margin-top: 10px;">
+                        <i class="fas fa-location-arrow"></i> تحديد موقعي الحالي
+                    </button>
+                    <div id="location-status" class="form-hint" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h3 class="form-title"><i class="fas fa-calculator"></i> بيانات الموقع والتاريخ</h3>
+                
+                <form id="solar-angle-form">
+                    <div class="form-group">
+                        <label for="latitude"><i class="fas fa-globe-asia"></i> خط العرض (درجات):</label>
+                        <input type="number" id="latitude" step="0.0001" placeholder="مثال: 31.9539 لعمان" required>
+                        <div class="form-hint">قيمة خط العرض لموقعك في الأردن (بين 29.5 و 33.5)</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="longitude"><i class="fas fa-globe-asia"></i> خط الطول (درجات):</label>
+                        <input type="number" id="longitude" step="0.0001" placeholder="مثال: 35.9106 لعمان" required>
+                        <div class="form-hint">قيمة خط الطول لموقعك في الأردن (بين 34.5 و 39.5)</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date"><i class="fas fa-calendar-alt"></i> التاريخ:</label>
+                        <input type="date" id="date" required>
+                        <div class="form-hint">اختر التاريخ الذي تريد حساب الزوايا الشمسية له</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="time"><i class="fas fa-clock"></i> الوقت:</label>
+                        <input type="time" id="time" value="12:00" required>
+                        <div class="form-hint">اختر الوقت الذي تريد حساب الزوايا الشمسية له (يفضل وقت الظهيرة)</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-calculator"></i> حساب الزوايا الشمسية
+                    </button>
+                </form>
+            </div>
+            
+            <div class="result-card" id="results">
+                <div class="result-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>نتائج حساب الزوايا الشمسية</h3>
+                </div>
+                
+                <div class="result-grid">
+                    <div class="result-item result-highlight">
+                        <div class="result-value" id="elevation-angle">--</div>
+                        <div class="result-label">زاوية الارتفاع الشمسي</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="azimuth-angle">--</div>
+                        <div class="result-label">زاوية السمت الشمسي</div>
+                    </div>
+                    
+                    <div class="result-item result-highlight">
+                        <div class="result-value" id="optimal-tilt">--</div>
+                        <div class="result-label">زاوية الانحدار المثلى</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="sunrise">--</div>
+                        <div class="result-label">وقت الشروق</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="sunset">--</div>
+                        <div class="result-label">وقت الغروب</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="day-length">--</div>
+                        <div class="result-label">طول النهار</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="solar-noon">--</div>
+                        <div class="result-label">وقت الظهيرة الشمسية</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="declination">--</div>
+                        <div class="result-label">الميل الشمسي</div>
+                    </div>
+                </div>
+                
+                <div class="recommendations">
+                    <h4 class="recommendations-title"><i class="fas fa-solar-panel"></i> توصيات تركيب الألواح الشمسية</h4>
+                    <div id="recommendations-container">
+                        <!-- سيتم ملؤها بالجافاسكريبت -->
+                    </div>
+                </div>
+                
+                <button id="reset-btn" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> إعادة الحساب
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 PV Calculator. جميع الحقوق محفوظة.</p>
+            <p>أداة متكاملة لحساب الزوايا الشمسية وتصميم أنظمة الطاقة الشمسية في الأردن</p>
+        </div>
+    </footer>
+
+    <script>
+        // المدن الرئيسية في الأردن
+        const jordanCities = {
+            'amman': { name: 'عمان', lat: 31.9539, lng: 35.9106 },
+            'irbid': { name: 'إربد', lat: 32.5556, lng: 35.8500 },
+            'zarqa': { name: 'الزرقاء', lat: 32.0836, lng: 36.1000 },
+            'aqaba': { name: 'العقبة', lat: 29.5267, lng: 35.0078 },
+            'salt': { name: 'السلط', lat: 32.0392, lng: 35.7272 },
+            'mafraq': { name: 'المفرق', lat: 32.3417, lng: 36.2022 },
+            'karak': { name: 'الكرك', lat: 31.1833, lng: 35.7000 },
+            'maan': { name: 'معان', lat: 30.1967, lng: 35.7342 }
+        };
+
+        // تحديد الموقع تلقائياً
+        document.getElementById('get-location-btn').addEventListener('click', function() {
+            const statusElement = document.getElementById('location-status');
+            statusElement.textContent = 'جاري تحديد موقعك...';
+            statusElement.style.color = '#f39c12';
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        
+                        // التحقق إذا كان الموقع في الأردن
+                        if (lat >= 29.0 && lat <= 33.5 && lng >= 34.5 && lng <= 39.5) {
+                            document.getElementById('latitude').value = lat.toFixed(4);
+                            document.getElementById('longitude').value = lng.toFixed(4);
+                            statusElement.textContent = '✓ تم تحديد موقعك في الأردن بنجاح';
+                            statusElement.style.color = '#27ae60';
+                            
+                            // تحديد أقرب مدينة
+                            findNearestCity(lat, lng);
+                        } else {
+                            statusElement.textContent = '❌ الموقع خارج نطاق الأردن. تم تعيين عمان كموقع افتراضي.';
+                            statusElement.style.color = '#e74c3c';
+                            setDefaultLocation();
+                        }
+                    },
+                    function(error) {
+                        console.error('Error getting location:', error);
+                        statusElement.textContent = '❌ تعذر تحديد الموقع. تم تعيين عمان كموقع افتراضي.';
+                        statusElement.style.color = '#e74c3c';
+                        setDefaultLocation();
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 60000
+                    }
+                );
+            } else {
+                statusElement.textContent = '❌ المتصفح لا يدعم تحديد الموقع. تم تعيين عمان كموقع افتراضي.';
+                statusElement.style.color = '#e74c3c';
+                setDefaultLocation();
+            }
+        });
+
+        // تعيين موقع افتراضي (عمان)
+        function setDefaultLocation() {
+            document.getElementById('latitude').value = jordanCities.amman.lat;
+            document.getElementById('longitude').value = jordanCities.amman.lng;
+        }
+
+        // البحث عن أقرب مدينة
+        function findNearestCity(lat, lng) {
+            let nearestCity = 'amman';
+            let minDistance = Number.MAX_VALUE;
+
+            for (const [key, city] of Object.entries(jordanCities)) {
+                const distance = Math.sqrt(Math.pow(lat - city.lat, 2) + Math.pow(lng - city.lng, 2));
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearestCity = key;
+                }
+            }
+
+            const statusElement = document.getElementById('location-status');
+            statusElement.textContent += ` (قريب من ${jordanCities[nearestCity].name})`;
+        }
+
+        // حساب الزوايا الشمسية
+        document.getElementById('solar-angle-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const lat = parseFloat(document.getElementById('latitude').value);
+            const lng = parseFloat(document.getElementById('longitude').value);
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            
+            if (!lat || !lng || !date || !time) {
+                alert('الرجاء ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            // التحقق من أن الموقع في الأردن
+            if (lat < 29.0 || lat > 33.5 || lng < 34.5 || lng > 39.5) {
+                if (!confirm('الموقع خارج نطاق الأردن. هل تريد المتابعة؟')) {
+                    return;
+                }
+            }
+            
+            // حساب الزوايا الشمسية
+            const solarData = calculateSolarAngles(lat, lng, date, time);
+            
+            // تحديث النتائج
+            updateResults(solarData);
+            
+            // إظهار النتائج
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // حساب الزوايا الشمسية
+        function calculateSolarAngles(lat, lng, date, time) {
+            // تحويل التاريخ والوقت
+            const selectedDate = new Date(date + 'T' + time);
+            const dayOfYear = Math.floor((selectedDate - new Date(selectedDate.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            
+            // حساب الميل الشمسي
+            const declination = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * (Math.PI / 180));
+            
+            // حساب معادلة الوقت
+            const B = (360 / 365) * (dayOfYear - 81);
+            const equationOfTime = 9.87 * Math.sin(2 * B * Math.PI / 180) - 7.53 * Math.cos(B * Math.PI / 180) - 1.5 * Math.sin(B * Math.PI / 180);
+            
+            // تصحيح التوقيت المحلي
+            const timeCorrection = equationOfTime + 4 * (45 - lng); // 45 هو خط الطول القياسي للأردن
+            const localSolarTime = selectedDate.getHours() + selectedDate.getMinutes() / 60 + timeCorrection / 60;
+            
+            // حساب زاوية الساعة
+            const hourAngle = 15 * (localSolarTime - 12);
+            
+            // حساب زاوية الارتفاع الشمسي
+            const latRad = lat * Math.PI / 180;
+            const decRad = declination * Math.PI / 180;
+            const hourRad = hourAngle * Math.PI / 180;
+            
+            const elevation = Math.asin(
+                Math.sin(latRad) * Math.sin(decRad) + 
+                Math.cos(latRad) * Math.cos(decRad) * Math.cos(hourRad)
+            ) * 180 / Math.PI;
+            
+            // حساب زاوية السمت الشمسي
+            const azimuth = Math.acos(
+                (Math.sin(decRad) - Math.sin(latRad) * Math.sin(elevation * Math.PI / 180)) / 
+                (Math.cos(latRad) * Math.cos(elevation * Math.PI / 180))
+            ) * 180 / Math.PI;
+            
+            const azimuthFinal = hourAngle > 0 ? 360 - azimuth : azimuth;
+            
+            // حساب زاوية الانحدار المثلى للألواح الشمسية
+            const optimalTilt = Math.max(0, Math.min(60, Math.round(lat * 0.9 + 5)));
+            
+            // حساب أوقات الشروق والغروب
+            const sunrise = calculateSunriseSunset(lat, lng, date, true);
+            const sunset = calculateSunriseSunset(lat, lng, date, false);
+            const dayLength = calculateDayLength(sunset - sunrise);
+            
+            // وقت الظهيرة الشمسية
+            const solarNoon = calculateSolarNoon(lng, date);
+            
+            return {
+                elevation: Math.round(elevation * 10) / 10,
+                azimuth: Math.round(azimuthFinal * 10) / 10,
+                optimalTilt: optimalTilt,
+                sunrise: sunrise,
+                sunset: sunset,
+                dayLength: dayLength,
+                solarNoon: solarNoon,
+                declination: Math.round(declination * 10) / 10
+            };
+        }
+
+        // حساب الشروق والغروب
+        function calculateSunriseSunset(lat, lng, date, isSunrise) {
+            const dayOfYear = Math.floor((new Date(date) - new Date(new Date(date).getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            const solarDeclination = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * (Math.PI / 180));
+            
+            const latRad = lat * Math.PI / 180;
+            const decRad = solarDeclination * Math.PI / 180;
+            
+            const hourAngle = Math.acos(-Math.tan(latRad) * Math.tan(decRad)) * 180 / Math.PI;
+            const time = isSunrise ? 12 - hourAngle / 15 : 12 + hourAngle / 15;
+            
+            // تحويل إلى توقيت الأردن (UTC+3)
+            const localTime = time + (3 - lng / 15);
+            
+            const hours = Math.floor(localTime);
+            const minutes = Math.round((localTime - hours) * 60);
+            
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        }
+
+        // حساب طول النهار
+        function calculateDayLength(dayLengthHours) {
+            const hours = Math.floor(dayLengthHours);
+            const minutes = Math.round((dayLengthHours - hours) * 60);
+            return `${hours} ساعة ${minutes} دقيقة`;
+        }
+
+        // حساب وقت الظهيرة الشمسية
+        function calculateSolarNoon(lng, date) {
+            const dayOfYear = Math.floor((new Date(date) - new Date(new Date(date).getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            const B = (360 / 365) * (dayOfYear - 81);
+            const equationOfTime = 9.87 * Math.sin(2 * B * Math.PI / 180) - 7.53 * Math.cos(B * Math.PI / 180) - 1.5 * Math.sin(B * Math.PI / 180);
+            
+            const timeCorrection = equationOfTime + 4 * (45 - lng);
+            const solarNoon = 12 - timeCorrection / 60;
+            
+            const hours = Math.floor(solarNoon);
+            const minutes = Math.round((solarNoon - hours) * 60);
+            
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        }
+
+        // تحديث النتائج
+        function updateResults(data) {
+            document.getElementById('elevation-angle').textContent = data.elevation + '°';
+            document.getElementById('azimuth-angle').textContent = data.azimuth + '°';
+            document.getElementById('optimal-tilt').textContent = data.optimalTilt + '°';
+            document.getElementById('sunrise').textContent = data.sunrise;
+            document.getElementById('sunset').textContent = data.sunset;
+            document.getElementById('day-length').textContent = data.dayLength;
+            document.getElementById('solar-noon').textContent = data.solarNoon;
+            document.getElementById('declination').textContent = data.declination + '°';
+            
+            // تحديث التوصيات
+            updateRecommendations(data);
+        }
+
+        // تحديث التوصيات
+        function updateRecommendations(data) {
+            const container = document.getElementById('recommendations-container');
+            container.innerHTML = '';
+            
+            const recommendations = [
+                {
+                    icon: 'fas fa-solar-panel',
+                    title: 'زاوية ميل الألواح',
+                    description: `اضبط الألواح على زاوية ${data.optimalTilt}° لتحقيق أقصى إنتاجية`
+                },
+                {
+                    icon: 'fas fa-compass',
+                    title: 'اتجاه الألواح',
+                    description: `وجّه الألواح نحو الجنوب بزاوية ${data.azimuth}°`
+                },
+                {
+                    icon: 'fas fa-sun',
+                    title: 'أفضل وقت للإنتاج',
+                    description: `أعلى إنتاجية بين ${data.sunrise} و ${data.sunset}`
+                },
+                {
+                    icon: 'fas fa-bolt',
+                    title: 'نصيحة تركيب',
+                    description: 'استخدم هياكل قابلة للتعديل لتغيير الزاوية حسب الفصول'
+                }
+            ];
+            
+            recommendations.forEach(rec => {
+                const item = document.createElement('div');
+                item.className = 'recommendation-item';
+                
+                item.innerHTML = `
+                    <div class="recommendation-icon">
+                        <i class="${rec.icon}"></i>
+                    </div>
+                    <div class="recommendation-info">
+                        <div class="recommendation-title">${rec.title}</div>
+                        <div class="recommendation-desc">${rec.description}</div>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+
+        // إعادة تعيين الحساب
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            document.getElementById('solar-angle-form').reset();
+            document.getElementById('date').valueAsDate = new Date();
+            document.getElementById('time').value = '12:00';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('location-status').textContent = '';
+        });
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // تعيين التاريخ الحالي كقيمة افتراضية
+            const today = new Date();
+            document.getElementById('date').valueAsDate = today;
+            
+            // تعيين عمان كموقع افتراضي
+            setDefaultLocation();
+        });
+    </script>
+</body>
+</html>

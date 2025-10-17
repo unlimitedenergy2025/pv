@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PV Calculator - التواصل مع الشركات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #005a8c;
+            --secondary-color: #008ecc;
+            --accent-color: #e74c3c;
+            --light-color: #f8fafb;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --whatsapp-color: #25D366;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        
+        .logo img {
+            height: 45px;
+        }
+        
+        .logo h1 {
+            font-size: 1.3rem;
+            margin: 8px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            margin: 12px auto;
+            max-width: 95%;
+            border-radius: 30px;
+            gap: 6px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 20px 0;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .page-header h1 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Company Info */
+        .company-info {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-right: 4px solid var(--secondary-color);
+        }
+        
+        .company-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .company-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .company-name {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .company-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .detail-item i {
+            color: var(--secondary-color);
+            width: 16px;
+            text-align: center;
+        }
+        
+        /* Form Styles */
+        .form-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .form-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
+        }
+        
+        .form-hint {
+            display: block;
+            color: #666;
+            margin-top: 5px;
+            font-size: 0.8rem;
+        }
+        
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn-whatsapp {
+            background-color: var(--whatsapp-color);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        
+        .btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .btn-whatsapp:active {
+            background-color: #128C7E;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Success Message */
+        .success-message {
+            background-color: rgba(39, 174, 96, 0.1);
+            border: 1px solid var(--success-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success-message i {
+            color: var(--success-color);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        /* Media Queries for Larger Screens */
+        @media (min-width: 768px) {
+            .header {
+                padding: 20px 0;
+            }
+            
+            .logo img {
+                height: 50px;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-links {
+                padding: 12px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 8px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .company-details {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            
+            .btn {
+                width: auto;
+                padding: 12px 28px;
+            }
+            
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .btn-whatsapp:hover {
+                background-color: #128C7E;
+            }
+        }
+        
+        /* Landscape Mode for Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header {
+                padding: 10px 0;
+            }
+            
+            .logo img {
+                height: 35px;
+            }
+            
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+            
+            .nav-links {
+                padding: 6px;
+                margin: 8px auto;
+            }
+            
+            .main-content {
+                padding: 15px 0;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="شعار الأردن">
+                <h1>التواصل مع الشركات</h1>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="companies.html"><i class="fas fa-arrow-right"></i> رجوع للشركات</a>
+                <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="#"><i class="fas fa-phone"></i> اتصل بنا</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h1><i class="fas fa-handshake"></i> طلب عرض سعر</h1>
+                <p>أدخل بياناتك لطلب عرض سعر من الشركة المحددة</p>
+            </div>
+
+            <div class="company-info" id="selected-company">
+                <!-- سيتم ملء معلومات الشركة هنا عند التشغيل -->
+                <div class="company-header">
+                    <div class="company-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div>
+                        <div class="company-name">اسم الشركة سيظهر هنا</div>
+                        <div class="form-hint">يتم تحميل معلومات الشركة...</div>
+                    </div>
+                </div>
+                <div class="company-details">
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="company-location">--</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-phone"></i>
+                        <span id="company-phone">--</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-envelope"></i>
+                        <span id="company-email">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <h3>تم إعداد رسالتك بنجاح!</h3>
+                <p>سيتم فتح تطبيق واتساب لإرسال الطلب للشركة</p>
+            </div>
+
+            <div class="form-card">
+                <h2 class="form-title"><i class="fas fa-file-invoice-dollar"></i> نموذج طلب عرض السعر</h2>
+                
+                <form id="quote-form">
+                    <div class="form-group">
+                        <label for="fullName"><i class="fas fa-user"></i> الاسم الكامل:</label>
+                        <input type="text" id="fullName" name="fullName" required placeholder="أدخل اسمك الكامل">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone"><i class="fas fa-mobile-alt"></i> رقم الجوال:</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="أدخل رقم جوالك">
+                        <div class="form-hint">سيتم التواصل معك على هذا الرقم</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> البريد الإلكتروني:</label>
+                        <input type="email" id="email" name="email" placeholder="أدخل بريدك الإلكتروني (اختياري)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="city"><i class="fas fa-city"></i> المدينة:</label>
+                        <input type="text" id="city" name="city" required placeholder="المدينة التي تقيم فيها">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="systemType"><i class="fas fa-solar-panel"></i> نوع النظام المطلوب:</label>
+                        <select id="systemType" name="systemType" required>
+                            <option value="">اختر نوع النظام</option>
+                            <option value="on-grid">متصل بالشبكة (On-Grid)</option>
+                            <option value="hybrid">هجين (Hybrid)</option>
+                            <option value="off-grid">منفصل عن الشبكة (Off-Grid)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="systemSize"><i class="fas fa-bolt"></i> حجم النظام المطلوب (كيلوواط):</label>
+                        <input type="number" id="systemSize" name="systemSize" min="1" step="0.1" placeholder="مثال: 5.5">
+                        <div class="form-hint">الحجم التقريبي للنظام الذي تحتاجه</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="budget"><i class="fas fa-money-bill-wave"></i> الميزانية المتوقعة (دينار أردني):</label>
+                        <input type="number" id="budget" name="budget" min="1000" step="100" placeholder="الميزانية المتوقعة">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes"><i class="fas fa-sticky-note"></i> ملاحظات إضافية:</label>
+                        <textarea id="notes" name="notes" rows="4" placeholder="أي متطلبات أو ملاحظات إضافية..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> إرسال الطلب عبر واتساب
+                    </button>
+                    
+                    <a href="companies.html" class="btn btn-secondary">
+                        <i class="fas fa-arrow-right"></i> العودة لقائمة الشركات
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2023 PV Calculator. جميع الحقوق محفوظة.</p>
+            <p>يتم التواصل مع الشركات عبر واتساب لتسهيل عملية التواصل</p>
+        </div>
+    </footer>
+
+    <script>
+        // بيانات الشركات (نفس البيانات من صفحة الشركات)
+        const companies = {
+            1: {
+                name: "كفاءة تكنولوجي",
+                location: "عمان - شارع المدينة المنورة",
+                phone: "+962-6-553-2400",
+                email: "info@kafaatech.com"
+            },
+            2: {
+                name: "شركة فينيكس للطاقة",
+                location: "عمان - صويلح",
+                phone: "+962-6-515-7000",
+                email: "info@phoenixenergy.jo"
+            },
+            3: {
+                name: "الأردن للطاقة الشمسية",
+                location: "عمان - شارع مكة",
+                phone: "+962-6-565-1000",
+                email: "jordan@solar.jo"
+            },
+            4: {
+                name: "سولار تك",
+                location: "الزرقاء - المنطقة الصناعية",
+                phone: "+962-5-398-2000",
+                email: "contact@solartech.jo"
+            },
+            5: {
+                name: "طاقات نظيفة",
+                location: "عمان - جبل الحسين",
+                phone: "+962-6-567-8000",
+                email: "info@cleanenergies.jo"
+            }
+        };
+
+        // الحصول على معرف الشركة من URL
+        function getCompanyIdFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('company') || 1; // افتراضي الشركة الأولى
+        }
+
+        // تحميل معلومات الشركة
+        function loadCompanyInfo() {
+            const companyId = getCompanyIdFromURL();
+            const company = companies[companyId];
+            
+            if (company) {
+                document.getElementById('selected-company').querySelector('.company-name').textContent = company.name;
+                document.getElementById('company-location').textContent = company.location;
+                document.getElementById('company-phone').textContent = company.phone;
+                document.getElementById('company-email').textContent = company.email;
+            }
+        }
+
+        // إعداد رسالة واتساب
+        function setupWhatsAppMessage(formData, company) {
+            const systemTypeLabels = {
+                'on-grid': 'متصل بالشبكة (On-Grid)',
+                'hybrid': 'هجين (Hybrid)',
+                'off-grid': 'منفصل عن الشبكة (Off-Grid)'
+            };
+            
+            const message = `
+*طلب عرض سعر - PV Calculator*
+
+*البيانات الشخصية:*
+- الاسم: ${formData.fullName}
+- رقم الجوال: ${formData.phone}
+- البريد الإلكتروني: ${formData.email || 'غير محدد'}
+- المدينة: ${formData.city}
+
+*تفاصيل النظام المطلوب:*
+- نوع النظام: ${systemTypeLabels[formData.systemType] || formData.systemType}
+- حجم النظام: ${formData.systemSize || 'غير محدد'} كيلوواط
+- الميزانية المتوقعة: ${formData.budget ? formData.budget + ' دينار أردني' : 'غير محددة'}
+
+*ملاحظات إضافية:*
+${formData.notes || 'لا توجد ملاحظات إضافية'}
+
+*مرسل إلى:*
+${company.name}
+${company.location}
+
+*ملاحظة:*
+هذا الطلب تم إنشاؤه تلقائياً عبر منصة PV Calculator
+            `.trim();
+            
+            return encodeURIComponent(message);
+        }
+
+        // إرسال النموذج
+        document.getElementById('quote-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const companyId = getCompanyIdFromURL();
+            const company = companies[companyId];
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                city: document.getElementById('city').value,
+                systemType: document.getElementById('systemType').value,
+                systemSize: document.getElementById('systemSize').value,
+                budget: document.getElementById('budget').value,
+                notes: document.getElementById('notes').value
+            };
+            
+            // التحقق من البيانات المطلوبة
+            if (!formData.fullName || !formData.phone || !formData.city || !formData.systemType) {
+                alert('الرجاء ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            // إعداد رسالة واتساب
+            const whatsappMessage = setupWhatsAppMessage(formData, company);
+            const whatsappUrl = `https://wa.me/${company.phone.replace(/\D/g, '')}?text=${whatsappMessage}`;
+            
+            // عرض رسالة النجاح
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // التمرير إلى رسالة النجاح
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+            
+            // فتح واتساب بعد تأخير بسيط
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+            }, 2000);
+        });
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCompanyInfo();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PV Calculator - حساب البطاريات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .logo img {
+            width: 50px;
+            margin-bottom: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 1.4rem;
+            margin: 10px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            margin: 15px auto;
+            max-width: 95%;
+            border-radius: 50px;
+            gap: 8px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(0.95);
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        
+        .form-container h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .form-container p {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.95rem;
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: #7f8c8d;
+            font-size: 0.8rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn:active {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .result-card {
+            background-color: #ecf0f1;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            border-right: 4px solid var(--secondary-color);
+            display: none;
+        }
+        
+        .result-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-item span:first-child {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .result-item span:last-child {
+            color: var(--primary-color);
+            text-align: left;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.85rem;
+        }
+        
+        footer p {
+            margin: 5px 0;
+        }
+        
+        /* تحسينات للشاشات المتوسطة والكبيرة */
+        @media (min-width: 768px) {
+            header {
+                padding: 20px 0;
+            }
+            
+            .logo img {
+                width: 60px;
+            }
+            
+            .logo h1 {
+                font-size: 1.8rem;
+            }
+            
+            .nav-links {
+                padding: 15px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 10px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.3);
+                transform: translateY(-3px);
+            }
+            
+            .container {
+                max-width: 800px;
+                margin: 30px auto;
+                padding: 0 20px;
+            }
+            
+            .form-container {
+                padding: 30px;
+            }
+            
+            .form-container h2 {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                width: auto;
+                padding: 12px 25px;
+            }
+            
+            .btn:hover {
+                background-color: #2980b9;
+                transform: translateY(-2px);
+            }
+        }
+        
+        /* تحسينات للوضع الأفقي على الهواتف */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 10px 0;
+            }
+            
+            .logo img {
+                width: 40px;
+            }
+            
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links {
+                padding: 8px;
+                margin: 10px auto;
+            }
+            
+            .container {
+                margin: 15px auto;
+            }
+            
+            .form-container {
+                padding: 15px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="PV Calculator Logo">
+            <h1>حساب البطاريات</h1>
+        </div>
+        
+        <div class="nav-links">
+            <a href="engineering.html"><i class="fas fa-arrow-right"></i> رجوع للخدمات الهندسية</a>
+            <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="form-container">
+            <h2><i class="fas fa-car-battery"></i> حساب سعة البطاريات المطلوبة</h2>
+            <p>أدخل بيانات نظامك لتحديد سعة البطاريات المناسبة (حسابات مخصصة للسوق الأردني)</p>
+            
+            <form id="battery-form">
+                <div class="form-group">
+                    <label for="daily-consumption">الاستهلاك اليومي (واط/ساعة):</label>
+                    <input type="number" id="daily-consumption" min="1" placeholder="مثال: 5000" required>
+                    <small>إجمالي استهلاك الطاقة اليومي بالأجهزة الكهربائية</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="autonomy-days">أيام التخزين المطلوبة:</label>
+                    <input type="number" id="autonomy-days" min="1" value="2" required>
+                    <small>عدد الأيام التي تحتاج أن يعمل فيها النظام دون شحن</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="system-voltage">جهد النظام (فولت):</label>
+                    <select id="system-voltage" required>
+                        <option value="12">12 فولت</option>
+                        <option value="24">24 فولت</option>
+                        <option value="48" selected>48 فولت</option>
+                    </select>
+                    <small>جهد نظام الطاقة الشمسية</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dod">عمق التفريغ (DOD %):</label>
+                    <input type="number" id="dod" min="10" max="100" value="50" required>
+                    <small>النسبة المئوية للطاقة التي يمكن استهلاكها من البطارية (للرصاص الحمضية 50%، للليثيوم 80%)</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="battery-type">نوع البطارية:</label>
+                    <select id="battery-type" required>
+                        <option value="lead-acid">بطارية الرصاص الحمضية</option>
+                        <option value="lithium">بطارية الليثيوم</option>
+                        <option value="gel">بطارية الجل</option>
+                    </select>
+                    <small>اختر نوع البطارية المناسب لنظامك</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="battery-capacity">سعة البطارية (أمبير/ساعة):</label>
+                    <input type="number" id="battery-capacity" min="50" value="200" required>
+                    <small>سعة كل بطارية بالأمبير/ساعة</small>
+                </div>
+                
+                <button type="submit" class="btn">حساب البطاريات <i class="fas fa-calculator"></i></button>
+            </form>
+            
+            <div class="result-card" id="results">
+                <h3><i class="fas fa-battery-three-quarters"></i> النتائج:</h3>
+                
+                <div class="result-item">
+                    <span>إجمالي الطاقة المطلوبة:</span>
+                    <span id="total-energy">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>السعة المطلوبة:</span>
+                    <span id="total-capacity">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>عدد البطاريات:</span>
+                    <span id="battery-count">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>التكلفة التقريبية:</span>
+                    <span id="estimated-cost">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>العمر الافتراضي:</span>
+                    <span id="battery-life">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>الوزن التقريبي:</span>
+                    <span id="total-weight">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>المساحة التقريبية:</span>
+                    <span id="total-space">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>التوفير السنوي:</span>
+                    <span id="annual-savings">--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 PV Calculator. جميع الحقوق محفوظة.</p>
+        <p>حسابات مخصصة للأسواق الأردنية - الأسعار تشمل الضريبة</p>
+    </footer>
+
+    <script>
+        document.getElementById('battery-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // الحصول على القيم المدخلة
+            const dailyConsumption = parseFloat(document.getElementById('daily-consumption').value);
+            const autonomyDays = parseFloat(document.getElementById('autonomy-days').value);
+            const systemVoltage = parseFloat(document.getElementById('system-voltage').value);
+            const dod = parseFloat(document.getElementById('dod').value);
+            const batteryType = document.getElementById('battery-type').value;
+            const batteryCapacity = parseFloat(document.getElementById('battery-capacity').value);
+            
+            // حساب الطاقة الإجمالية المطلوبة (واط/ساعة)
+            const totalEnergy = dailyConsumption * autonomyDays;
+            
+            // حساب السعة المطلوبة (أمبير/ساعة)
+            const totalCapacity = totalEnergy / (systemVoltage * (dod / 100));
+            
+            // حساب عدد البطاريات
+            const batteryCount = Math.ceil(totalCapacity / batteryCapacity);
+            
+            // التكلفة التقريبية بالدينار الأردني (أسعار السوق الأردني 2023)
+            let costPerBattery = 0;
+            let lifeExpectancy = '';
+            let weightPerBattery = 0;
+            let dimensions = '';
+            let efficiency = 0;
+            
+            switch(batteryType) {
+                case 'lead-acid':
+                    costPerBattery = 120; // دينار أردني للبطارية 200 أمبير
+                    lifeExpectancy = '3-5 سنوات';
+                    weightPerBattery = 60; // كجم
+                    dimensions = '50×25×30 سم';
+                    efficiency = 0.85; // كفاءة 85%
+                    break;
+                case 'lithium':
+                    costPerBattery = 650; // دينار أردني للبطارية 200 أمبير (سعر السوق الأردني)
+                    lifeExpectancy = '8-12 سنوات';
+                    weightPerBattery = 25; // كجم
+                    dimensions = '45×20×25 سم';
+                    efficiency = 0.95; // كفاءة 95%
+                    break;
+                case 'gel':
+                    costPerBattery = 220; // دينار أردني للبطارية 200 أمبير
+                    lifeExpectancy = '5-7 سنوات';
+                    weightPerBattery = 50; // كجم
+                    dimensions = '50×25×30 سم';
+                    efficiency = 0.90; // كفاءة 90%
+                    break;
+            }
+            
+            // تعديل السعر حسب سعة البطارية (افتراض أن السعر يتناسب طردياً مع السعة)
+            costPerBattery = costPerBattery * (batteryCapacity / 200);
+            
+            const estimatedCost = Math.round(batteryCount * costPerBattery);
+            const totalWeight = batteryCount * weightPerBattery;
+            const totalSpace = batteryCount + ' بطارية (' + dimensions + ' لكل بطارية)';
+            
+            // حساب التوفير السنوي (افتراض سعر الكهرباء 0.08 دينار/كيلوواط ساعة)
+            const electricityPrice = 0.08; // دينار أردني للكيلوواط ساعة
+            const dailySavings = (dailyConsumption / 1000) * electricityPrice;
+            const annualSavings = Math.round(dailySavings * 365);
+            
+            // عرض النتائج
+            document.getElementById('total-energy').textContent = totalEnergy.toLocaleString('ar-JO') + ' واط/ساعة';
+            document.getElementById('total-capacity').textContent = Math.round(totalCapacity) + ' أمبير/ساعة';
+            document.getElementById('battery-count').textContent = batteryCount + ' بطارية (' + batteryCapacity + ' أمبير/ساعة)';
+            document.getElementById('estimated-cost').textContent = estimatedCost.toLocaleString('ar-JO') + ' دينار أردني';
+            document.getElementById('battery-life').textContent = lifeExpectancy;
+            document.getElementById('total-weight').textContent = totalWeight + ' كجم';
+            document.getElementById('total-space').textContent = totalSpace;
+            document.getElementById('annual-savings').textContent = annualSavings.toLocaleString('ar-JO') + ' دينار أردني سنوياً';
+            
+            document.getElementById('results').style.display = 'block';
+            
+            // التمرير إلى النتائج
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // تحديث عمق التفريغ الافتراضي بناءً على نوع البطارية
+        document.getElementById('battery-type').addEventListener('change', function() {
+            const batteryType = this.value;
+            const dodInput = document.getElementById('dod');
+            
+            switch(batteryType) {
+                case 'lead-acid':
+                    dodInput.value = 50;
+                    break;
+                case 'lithium':
+                    dodInput.value = 80;
+                    break;
+                case 'gel':
+                    dodInput.value = 60;
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>

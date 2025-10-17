@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PV Calculator - اختيار الألواح الشمسية (الأردن)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #005a8c;
+            --secondary-color: #008ecc;
+            --accent-color: #e74c3c;
+            --light-color: #f8fafb;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        
+        .logo img {
+            height: 45px;
+        }
+        
+        .logo h1 {
+            font-size: 1.3rem;
+            margin: 8px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            margin: 12px auto;
+            max-width: 95%;
+            border-radius: 30px;
+            gap: 6px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 20px 0;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .page-header h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Filter Section */
+        .filter-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+        
+        .filter-title {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .filter-group {
+            margin-bottom: 10px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+        
+        .filter-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        /* Form Styles */
+        .form-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .form-group input:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
+        }
+        
+        /* Panel Grid */
+        .panel-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .panel-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .panel-card:active {
+            transform: scale(0.98);
+        }
+        
+        .panel-card.selected {
+            border-color: var(--success-color);
+            background-color: rgba(39, 174, 96, 0.05);
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .panel-name {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        
+        .panel-badge {
+            background-color: var(--success-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-recommended {
+            background-color: var(--success-color);
+        }
+        
+        .badge-economical {
+            background-color: var(--warning-color);
+        }
+        
+        .badge-premium {
+            background-color: var(--primary-color);
+        }
+        
+        .panel-specs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .spec-item:last-child {
+            border-bottom: none;
+        }
+        
+        .spec-label {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .spec-value {
+            color: #333;
+        }
+        
+        .panel-price {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin: 15px 0;
+        }
+        
+        .panel-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary:active {
+            background: linear-gradient(to right, #0077b3, #004a7a);
+        }
+        
+        /* Result Card */
+        .result-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: none;
+            border-right: 4px solid var(--success-color);
+        }
+        
+        .result-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .result-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notes {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border-right: 4px solid var(--warning-color);
+        }
+        
+        .notes h4 {
+            color: var(--primary-color);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .notes ul {
+            padding-right: 20px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .notes li {
+            margin-bottom: 8px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Media Queries for Larger Screens */
+        @media (min-width: 768px) {
+            header {
+                padding: 20px 0;
+            }
+            
+            .logo img {
+                height: 50px;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-links {
+                padding: 12px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 8px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            .page-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .filter-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+            
+            .panel-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 20px;
+            }
+            
+            .panel-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+            }
+            
+            .panel-card:active {
+                transform: scale(0.98);
+            }
+            
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .btn-primary:hover {
+                background: linear-gradient(to right, #0077b3, #004a7a);
+            }
+        }
+        
+        /* Landscape Mode for Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 10px 0;
+            }
+            
+            .logo img {
+                height: 35px;
+            }
+            
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+            
+            .nav-links {
+                padding: 6px;
+                margin: 8px auto;
+            }
+            
+            .main-content {
+                padding: 15px 0;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="PV Calculator Logo">
+                <h1>اختيار الألواح الشمسية (الأردن)</h1>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="general.html"><i class="fas fa-arrow-right"></i> رجوع للخدمات العامة</a>
+                <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h2><i class="fas fa-solar-panel"></i> مقارنة أنواع الألواح الشمسية</h2>
+                <p>اختر نوع اللوح الشمسي المناسب لك بناءً على احتياجاتك وميزانيتك في السوق الأردني</p>
+            </div>
+
+            <div class="filter-section">
+                <h3 class="filter-title"><i class="fas fa-filter"></i> تصفية النتائج</h3>
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label for="filter-type">نوع اللوح:</label>
+                        <select id="filter-type">
+                            <option value="all">جميع الأنواع</option>
+                            <option value="mono">مونو كريستالين</option>
+                            <option value="poly">بولي كريستالين</option>
+                            <option value="thin">ألواح رقيقة</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-power">القدرة (واط):</label>
+                        <select id="filter-power">
+                            <option value="all">جميع القدرات</option>
+                            <option value="300-400">300-400 واط</option>
+                            <option value="400-500">400-500 واط</option>
+                            <option value="500+">500+ واط</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-price">السعر (دينار):</label>
+                        <select id="filter-price">
+                            <option value="all">جميع الأسعار</option>
+                            <option value="0-100">أقل من 100 دينار</option>
+                            <option value="100-150">100-150 دينار</option>
+                            <option value="150+">أكثر من 150 دينار</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-card">
+                <div class="form-group">
+                    <label for="required-power"><i class="fas fa-bolt"></i> القدرة المطلوبة للنظام (كيلوواط):</label>
+                    <input type="number" id="required-power" min="1" placeholder="مثال: 5" step="0.1">
+                </div>
+            </div>
+            
+            <div class="panel-grid" id="panel-grid">
+                <!-- الألواح ستضاف هنا بالجافاسكريبت -->
+            </div>
+            
+            <div class="result-card" id="results">
+                <h3 class="result-title"><i class="fas fa-check-circle"></i> ملخص الاختيار</h3>
+                
+                <div class="result-grid">
+                    <div class="result-item">
+                        <span>اللوح المختار:</span>
+                        <span id="selected-panel">--</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span>عدد الألواح المطلوبة:</span>
+                        <span id="required-panels">--</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span>القدرة الإجمالية:</span>
+                        <span id="total-power">--</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span>التكلفة الإجمالية:</span>
+                        <span id="total-cost">--</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span>المساحة الإجمالية:</span>
+                        <span id="total-area">--</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span>متوسط الإنتاج اليومي:</span>
+                        <span id="daily-production">--</span>
+                    </div>
+                </div>
+                
+                <div class="notes">
+                    <h4><i class="fas fa-info-circle"></i> ملاحظات هامة:</h4>
+                    <ul>
+                        <li>الأسعار تشمل ضريبة المبيعات الأردنية البالغة 16%</li>
+                        <li>الإنتاج اليومي محسوب بناءً على متوسط 5.5 ساعات شمس في الأردن</li>
+                        <li>الأسعار قد تختلف حسب الكمية والمورد</li>
+                        <li>يوصى باستشارة مختص قبل الشراء</li>
+                    </ul>
+                </div>
+                
+                <button id="save-selection" class="btn btn-primary">
+                    <i class="fas fa-save"></i> حفظ الاختيار والمتابعة
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 PV Calculator. جميع الحقوق محفوظة.</p>
+            <p>أداة متكاملة لمقارنة واختيار الألواح الشمسية في السوق الأردني</p>
+        </div>
+    </footer>
+
+    <script>
+        // بيانات الألواح الشمسية
+        const solarPanels = [
+            {
+                id: 1,
+                name: "Jinko Solar Tiger Neo 540W",
+                type: "mono",
+                power: 540,
+                efficiency: "21.3%",
+                dimensions: "1722×1134×30mm",
+                weight: "28.5kg",
+                price: 145,
+                warranty: "25 سنة",
+                badge: "موصى به",
+                badgeType: "recommended",
+                description: "ألواح مونو كريستالين عالية الكفاءة من Jinko Solar"
+            },
+            {
+                id: 2,
+                name: "Canadian Solar HiKu6 535W",
+                type: "mono",
+                power: 535,
+                efficiency: "20.9%",
+                dimensions: "1762×1134×30mm",
+                weight: "27.5kg",
+                price: 142,
+                warranty: "25 سنة",
+                badge: "جودة عالية",
+                badgeType: "premium",
+                description: "ألواح مونو كريستالين من Canadian Solar بكفاءة ممتازة"
+            },
+            {
+                id: 3,
+                name: "Trina Solar Vertex S 505W",
+                type: "poly",
+                power: 505,
+                efficiency: "20.8%",
+                dimensions: "1722×1134×30mm",
+                weight: "26.8kg",
+                price: 128,
+                warranty: "25 سنة",
+                badge: "اقتصادي",
+                badgeType: "economical",
+                description: "ألواح بولي كريستالين من Trina Solar بسعر مناسب"
+            },
+            {
+                id: 4,
+                name: "Longi Solar Hi-MO 5 535W",
+                type: "mono",
+                power: 535,
+                efficiency: "21.0%",
+                dimensions: "1762×1134×30mm",
+                weight: "27.2kg",
+                price: 140,
+                warranty: "25 سنة",
+                badge: "موثوق",
+                badgeType: "recommended",
+                description: "ألواح مونو كريستالين من Longi Solar بشهرة عالمية"
+            },
+            {
+                id: 5,
+                name: "JA Solar JAM72S30 525W",
+                type: "poly",
+                power: 525,
+                efficiency: "20.7%",
+                dimensions: "1722×1134×30mm",
+                weight: "26.5kg",
+                price: 125,
+                warranty: "25 سنة",
+                badge: "اقتصادي",
+                badgeType: "economical",
+                description: "ألواح بولي كريستالين من JA Solar بأداء ممتاز"
+            },
+            {
+                id: 6,
+                name: "Risen Energy RSM120-8-550M 550W",
+                type: "mono",
+                power: 550,
+                efficiency: "21.5%",
+                dimensions: "1782×1134×30mm",
+                weight: "29.2kg",
+                price: 155,
+                warranty: "25 سنة",
+                badge: "متميز",
+                badgeType: "premium",
+                description: "ألواح مونو كريستالين عالية الأداء من Risen Energy"
+            }
+        ];
+
+        let selectedPanel = null;
+
+        // عرض الألواح الشمسية
+        function displayPanels() {
+            const typeFilter = document.getElementById('filter-type').value;
+            const powerFilter = document.getElementById('filter-power').value;
+            const priceFilter = document.getElementById('filter-price').value;
+            
+            const container = document.getElementById('panel-grid');
+            container.innerHTML = '';
+            
+            const filteredPanels = solarPanels.filter(panel => {
+                // تصفية حسب النوع
+                if (typeFilter !== 'all' && panel.type !== typeFilter) return false;
+                
+                // تصفية حسب القدرة
+                if (powerFilter !== 'all') {
+                    if (powerFilter === '300-400' && (panel.power < 300 || panel.power > 400)) return false;
+                    if (powerFilter === '400-500' && (panel.power < 400 || panel.power > 500)) return false;
+                    if (powerFilter === '500+' && panel.power < 500) return false;
+                }
+                
+                // تصفية حسب السعر
+                if (priceFilter !== 'all') {
+                    if (priceFilter === '0-100' && panel.price > 100) return false;
+                    if (priceFilter === '100-150' && (panel.price < 100 || panel.price > 150)) return false;
+                    if (priceFilter === '150+' && panel.price < 150) return false;
+                }
+                
+                return true;
+            });
+            
+            if (filteredPanels.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666; grid-column: 1/-1;">
+                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 15px; color: #ddd;"></i>
+                        <h3>لا توجد ألواح تطابق معايير البحث</h3>
+                        <p>جرب تغيير عوامل التصفية</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredPanels.forEach(panel => {
+                const panelCard = document.createElement('div');
+                panelCard.className = `panel-card ${selectedPanel?.id === panel.id ? 'selected' : ''}`;
+                
+                panelCard.innerHTML = `
+                    <div class="panel-header">
+                        <div class="panel-name">${panel.name}</div>
+                        <div class="panel-badge badge-${panel.badgeType}">${panel.badge}</div>
+                    </div>
+                    
+                    <div class="panel-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">القدرة:</span>
+                            <span class="spec-value">${panel.power} واط</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">الكفاءة:</span>
+                            <span class="spec-value">${panel.efficiency}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">الأبعاد:</span>
+                            <span class="spec-value">${panel.dimensions}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">الوزن:</span>
+                            <span class="spec-value">${panel.weight}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">الضمان:</span>
+                            <span class="spec-value">${panel.warranty}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-price">${panel.price} دينار</div>
+                    
+                    <div class="panel-actions">
+                        <button class="btn btn-outline" onclick="showPanelDetails(${panel.id})">
+                            <i class="fas fa-info-circle"></i> التفاصيل
+                        </button>
+                        <button class="btn btn-primary" onclick="selectPanel(${panel.id})">
+                            <i class="fas fa-check"></i> اختيار
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(panelCard);
+            });
+        }
+
+        // اختيار لوح شمسي
+        function selectPanel(panelId) {
+            selectedPanel = solarPanels.find(panel => panel.id === panelId);
+            displayPanels();
+            updateResults();
+        }
+
+        // عرض تفاصيل اللوح
+        function showPanelDetails(panelId) {
+            const panel = solarPanels.find(panel => panel.id === panelId);
+            if (panel) {
+                alert(`${panel.name}\n\nالقدرة: ${panel.power} واط\nالكفاءة: ${panel.efficiency}\nالأبعاد: ${panel.dimensions}\nالوزن: ${panel.weight}\nالسعر: ${panel.price} دينار\nالضمان: ${panel.warranty}\n\n${panel.description}`);
+            }
+        }
+
+        // تحديث النتائج
+        function updateResults() {
+            const requiredPower = parseFloat(document.getElementById('required-power').value);
+            
+            if (!selectedPanel || !requiredPower) {
+                document.getElementById('results').style.display = 'none';
+                return;
+            }
+            
+            // الحسابات
+            const panelsRequired = Math.ceil((requiredPower * 1000) / selectedPanel.power);
+            const totalPower = (panelsRequired * selectedPanel.power) / 1000;
+            const totalCost = panelsRequired * selectedPanel.price;
+            const totalArea = (totalPower * 6).toFixed(1); // 6 متر مربع لكل كيلوواط
+            const dailyProduction = (totalPower * 5.5).toFixed(1); // 5.5 ساعات شمس يومياً
+            
+            // تحديث النتائج
+            document.getElementById('selected-panel').textContent = selectedPanel.name;
+            document.getElementById('required-panels').textContent = panelsRequired + ' لوح';
+            document.getElementById('total-power').textContent = totalPower.toFixed(1) + ' كيلوواط';
+            document.getElementById('total-cost').textContent = totalCost.toLocaleString() + ' دينار';
+            document.getElementById('total-area').textContent = totalArea + ' متر مربع';
+            document.getElementById('daily-production').textContent = dailyProduction + ' كيلوواط/ساعة';
+            
+            // إظهار النتائج
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // حفظ الاختيار
+        document.getElementById('save-selection').addEventListener('click', function() {
+            if (!selectedPanel) {
+                alert('الرجاء اختيار لوح شمسي أولاً');
+                return;
+            }
+            
+            const requiredPower = parseFloat(document.getElementById('required-power').value);
+            if (!requiredPower) {
+                alert('الرجاء إدخال القدرة المطلوبة للنظام');
+                return;
+            }
+            
+            // حفظ البيانات في localStorage
+            const selectionData = {
+                panel: selectedPanel,
+                requiredPower: requiredPower,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('solarPanelSelection', JSON.stringify(selectionData));
+            
+            alert('تم حفظ اختيارك بنجاح! يمكنك المتابعة لخطوة اختيار العاكس.');
+            // يمكن توجيه المستخدم لصفحة أخرى هنا
+        });
+
+        // إضافة أحداث التصفية
+        document.getElementById('filter-type').addEventListener('change', displayPanels);
+        document.getElementById('filter-power').addEventListener('change', displayPanels);
+        document.getElementById('filter-price').addEventListener('change', displayPanels);
+        document.getElementById('required-power').addEventListener('input', updateResults);
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            displayPanels();
+            
+            // محاولة تحميل اختيار سابق
+            const savedSelection = localStorage.getItem('solarPanelSelection');
+            if (savedSelection) {
+                const selection = JSON.parse(savedSelection);
+                selectedPanel = selection.panel;
+                document.getElementById('required-power').value = selection.requiredPower;
+                displayPanels();
+                updateResults();
+            }
+        });
+    </script>
+</body>
+</html>
