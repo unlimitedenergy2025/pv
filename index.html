@@ -51,6 +51,29 @@
             opacity: 0.9;
         }
         
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(0.95);
+        }
+        
         .container {
             max-width: 100%;
             margin: 20px auto;
@@ -124,6 +147,34 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
         
+        .contact-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-top: 4px solid var(--success-color);
+        }
+        
+        .contact-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .contact-section p {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+        
+        .btn-contact {
+            background-color: var(--success-color);
+        }
+        
+        .btn-contact:hover, .btn-contact:focus {
+            background-color: #219652;
+        }
+        
         footer {
             background-color: var(--dark-color);
             color: white;
@@ -135,6 +186,17 @@
         
         footer p {
             margin: 5px 0;
+        }
+        
+        .footer-links {
+            margin: 15px 0;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 0.9rem;
         }
         
         /* تحسينات للشاشات المتوسطة والكبيرة */
@@ -154,6 +216,15 @@
             
             .logo p {
                 font-size: 1rem;
+            }
+            
+            .nav-links {
+                margin-top: 20px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
             }
             
             .container {
@@ -184,6 +255,15 @@
             
             .btn {
                 width: auto;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.3);
+                transform: translateY(-2px);
+            }
+            
+            .nav-links a:active {
+                transform: scale(0.95);
             }
         }
         
@@ -218,6 +298,12 @@
             <h1>PV Calculator</h1>
             <p>حلول متكاملة لجميع احتياجاتك في الطاقة الشمسية</p>
         </div>
+        
+        <nav class="nav-links">
+            <a href="engineering.html"><i class="fas fa-calculator"></i> الخدمات الهندسية</a>
+            <a href="pages/contact.html"><i class="fas fa-envelope"></i> تواصل معنا</a>
+            <a href="index.html" style="background-color: rgba(255, 255, 255, 0.3);"><i class="fas fa-home"></i> الرئيسية</a>
+        </nav>
     </header>
 
     <div class="container">
@@ -243,9 +329,20 @@
                 <a href="engineering-consultation.html" class="btn">الدخول إلى الخدمة <i class="fas fa-arrow-left"></i></a>
             </div>
         </div>
+        
+        <div class="contact-section">
+            <h2><i class="fas fa-envelope"></i> تواصل مع فريقنا</h2>
+            <p>لديك استفسار أو تحتاج إلى مساعدة؟ فريق الدعم الفني لدينا جاهز لمساعدتك في أي وقت</p>
+            <a href="pages/contact.html" class="btn btn-contact">اتصل بنا الآن <i class="fas fa-arrow-left"></i></a>
+        </div>
     </div>
 
     <footer>
+        <div class="footer-links">
+            <a href="index.html">الرئيسية</a>
+            <a href="engineering.html">الخدمات الهندسية</a>
+            <a href="pages/contact.html">تواصل معنا</a>
+        </div>
         <p>© 2025 PV Calculator. جميع الحقوق محفوظة.</p>
         <p>الإصدار 2.1 - نظام متكامل لحسابات الطاقة الشمسية</p>
     </footer>
