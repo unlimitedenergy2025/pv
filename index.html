@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PV Calculator - الرئيسية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="header-lang-switcher.css">
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -293,6 +294,25 @@
 </head>
 <body>
     <header>
+        <!-- زر التبديل بين اللغات -->
+        <div class="lang-switcher">
+            <button class="lang-btn" id="langToggle">
+                <span class="flag-icon">🇯🇴</span>
+                <span class="lang-text">العربية</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="lang-dropdown">
+                <a href="index.html" class="lang-option active">
+                    <span class="flag-icon">🇯🇴</span>
+                    <span class="lang-text">العربية</span>
+                </a>
+                <a href="index-en.html" class="lang-option">
+                    <span class="flag-icon">🇺🇸</span>
+                    <span class="lang-text">English</span>
+                </a>
+            </div>
+        </div>
+
         <div class="logo">
             <img src="logo.png" alt="PV Calculator Logo">
             <h1>PV Calculator</h1>
@@ -333,7 +353,7 @@
         <div class="contact-section">
             <h2><i class="fas fa-envelope"></i> تواصل مع فريقنا</h2>
             <p>لديك استفسار أو تحتاج إلى مساعدة؟ فريق الدعم الفني لدينا جاهز لمساعدتك في أي وقت</p>
-            <a href="pages/contact.html" class="btn btn-contact">اتصل بنا الآن <i class="fas fa-arrow-left"></i></a>
+            <a href="contact.html" class="btn btn-contact">اتصل بنا الآن <i class="fas fa-arrow-left"></i></a>
         </div>
     </div>
 
@@ -346,7 +366,7 @@
         <p>© 2025 PV Calculator. جميع الحقوق محفوظة.</p>
         <p>الإصدار 2.1 - نظام متكامل لحسابات الطاقة الشمسية</p>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
-
-
