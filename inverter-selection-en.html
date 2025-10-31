@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar System Calculator - Inverter Selection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #005a8c;
+            --secondary-color: #008ecc;
+            --accent-color: #e74c3c;
+            --light-color: #f8fafb;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Navigation */
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            margin: 15px auto;
+            max-width: 95%;
+            border-radius: 30px;
+            gap: 6px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+        }
+        
+        /* Form Section */
+        .form-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
+        }
+        
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 100%;
+            text-align: center;
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+            margin: 15px 0;
+        }
+        
+        .btn:active {
+            transform: translateY(-2px);
+            background: linear-gradient(to right, #0077b3, #004a7a);
+        }
+        
+        /* Inverter Grid */
+        .inverter-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .inverter-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--secondary-color);
+            transition: all 0.3s;
+        }
+        
+        .inverter-card:active {
+            transform: scale(0.98);
+        }
+        
+        .inverter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .inverter-name {
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+        
+        .inverter-badge {
+            background-color: var(--success-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-recommended {
+            background-color: var(--success-color);
+        }
+        
+        .badge-alternative {
+            background-color: var(--warning-color);
+        }
+        
+        .inverter-specs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .spec-item:last-child {
+            border-bottom: none;
+        }
+        
+        .spec-label {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .spec-value {
+            color: #333;
+        }
+        
+        .inverter-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-select {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .btn-details {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            padding: 10px 18px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+        }
+        
+        /* Result Section */
+        .result-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: none;
+        }
+        
+        .result-section h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .spec-row:last-child {
+            border-bottom: none;
+        }
+        
+        .technical-note {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .technical-note h4 {
+            color: var(--primary-color);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        /* زر التبديل بين اللغات */
+.lang-switcher {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.lang-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.85rem;
+    backdrop-filter: blur(10px);
+}
+
+.lang-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.lang-btn i {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.lang-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 140px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+
+.lang-switcher.active .lang-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(5px);
+}
+
+.lang-switcher.active .lang-btn i {
+    transform: rotate(180deg);
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.lang-option:last-child {
+    border-bottom: none;
+}
+
+.lang-option:hover {
+    background: #f8f9fa;
+}
+
+.lang-option.active {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.flag-icon {
+    font-size: 1.2rem;
+}
+
+.lang-text {
+    font-weight: 500;
+}
+
+/* تحسينات للشاشات الصغيرة */
+@media (max-width: 768px) {
+    .lang-switcher {
+        top: 15px;
+        left: 15px;
+    }
+    
+    .lang-btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .lang-dropdown {
+        min-width: 120px;
+    }
+}
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Media Queries for Larger Screens */
+        @media (min-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .nav-links {
+                padding: 12px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 8px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            .form-row {
+                flex-direction: row;
+                gap: 20px;
+            }
+            
+            .form-row .form-group {
+                flex: 1;
+            }
+            
+            .btn {
+                width: auto;
+                padding: 12px 28px;
+            }
+            
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                background: linear-gradient(to right, #0077b3, #004a7a);
+            }
+            
+            .inverter-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 20px;
+            }
+            
+            .inverter-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+            }
+            
+            .inverter-card:active {
+                transform: scale(0.98);
+            }
+        }
+        
+        /* Landscape Mode for Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 15px 0;
+            }
+            
+            header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links {
+                padding: 6px;
+                margin: 10px auto;
+            }
+            
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <!-- Language Switcher Button -->
+<div class="lang-switcher">
+    <button class="lang-btn" id="langToggle">
+        <span class="flag-icon">🇺🇸</span>
+        <span class="lang-text">English</span>
+        <i class="fas fa-chevron-down"></i>
+    </button>
+    <div class="lang-dropdown">
+        <a href="inverter-selection.html" class="lang-option">
+            <span class="flag-icon">🇯🇴</span>
+            <span class="lang-text">العربية</span>
+        </a>
+        <a href="inverter-selection-en.html" class="lang-option active">
+            <span class="flag-icon">🇺🇸</span>
+            <span class="lang-text">English</span>
+        </a>
+    </div>
+</div>
+            <h1><i class="fas fa-solar-panel"></i> Solar System Calculator - Inverter Selection</h1>
+            <p>Professional tool for selecting solar inverters according to global standards</p>
+            
+            
+            <nav class="nav-links">
+                <a href="engineering.html"><i class="fas fa-arrow-left"></i> Back to Engineering Services</a>
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="#"><i class="fas fa-phone"></i> Contact Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="form-section">
+            <div class="form-row">
+                <div>
+                    <div class="form-group">
+                        <label for="system-size"><i class="fas fa-bolt"></i> Total Solar Capacity (kW):</label>
+                        <input type="number" id="system-size" class="form-control" min="1" step="0.1" placeholder="e.g., 5.5" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="array-config"><i class="fas fa-solar-panel"></i> Panel Array Configuration:</label>
+                        <select id="array-config" class="form-control">
+                            <option value="single">Single String</option>
+                            <option value="multiple">Multiple Parallel</option>
+                            <option value="complex">Complex System</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pv-voltage"><i class="fas fa-plug"></i> Open Circuit Voltage (Voc):</label>
+                        <input type="number" id="pv-voltage" class="form-control" placeholder="Maximum Voltage (V)" step="1">
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="form-group">
+                        <label for="system-type"><i class="fas fa-network-wired"></i> System Type:</label>
+                        <select id="system-type" class="form-control">
+                            <option value="on-grid">Grid-Tie</option>
+                            <option value="hybrid">Hybrid</option>
+                            <option value="off-grid">Off-Grid</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phase-type"><i class="fas fa-bolt"></i> Current System:</label>
+                        <select id="phase-type" class="form-control">
+                            <option value="single">Single Phase</option>
+                            <option value="three">Three Phase</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location"><i class="fas fa-map-marker-alt"></i> Geographic Location:</label>
+                        <select id="location" class="form-control">
+                            <option value="standard">Moderate Climate</option>
+                            <option value="hot">Hot Climate</option>
+                            <option value="cold">Cold Climate</option>
+                            <option value="coastal">Coastal Climate</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <button id="calculate-btn" class="btn">
+            <i class="fas fa-calculator"></i> Calculate Suitable Inverters
+        </button>
+        
+        <div class="inverter-grid" id="inverter-grid">
+            <!-- Will be populated by JavaScript -->
+        </div>
+        
+        <div class="result-section" id="results">
+            <h3><i class="fas fa-chart-bar"></i> Technical Analysis Results</h3>
+            
+            <div class="inverter-specs">
+                <div class="spec-row">
+                    <span class="spec-label">Selected Inverter:</span>
+                    <span id="selected-model">--</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">Rated Power:</span>
+                    <span id="rated-power">--</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">Peak Efficiency:</span>
+                    <span id="peak-efficiency">--</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">MPPT Voltage Range:</span>
+                    <span id="mppt-range">--</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">Global Certifications:</span>
+                    <span id="certifications">--</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-label">Operating Temperature:</span>
+                    <span id="operating-temp">--</span>
+                </div>
+            </div>
+            
+            <div class="technical-note">
+                <h4><i class="fas fa-info-circle"></i> Technical Notes:</h4>
+                <p id="technical-notes">Technical notes will be displayed here after selecting an inverter</p>
+            </div>
+            
+            <button id="export-btn" class="btn" style="margin-top: 20px;">
+                <i class="fas fa-file-export"></i> Export Technical Specifications
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Solar System Calculator | Developed according to IEC 62109 and UL 1741 standards</p>
+            <p>All calculations are based on international electrical safety standards</p>
+        </div>
+    </footer>
+
+    <script>
+        // Inverter data
+        const inverters = [
+            {
+                id: 1,
+                name: "Huawei SUN2000-5KTL-L1",
+                power: "5 kW",
+                efficiency: "98.6%",
+                mpptRange: "80-550V",
+                certifications: "IEC 62109, VDE-AR-N 4105",
+                operatingTemp: "-25°C to 60°C",
+                price: "$850",
+                type: "on-grid",
+                badge: "Recommended",
+                badgeType: "recommended",
+                notes: "Ideal for residential systems, high efficiency, smart monitoring"
+            },
+            {
+                id: 2,
+                name: "Growatt MIN 5000TL-X",
+                power: "5 kW",
+                efficiency: "98.1%",
+                mpptRange: "90-500V",
+                certifications: "IEC 62109, VDE 0126",
+                operatingTemp: "-25°C to 60°C",
+                price: "$720",
+                type: "on-grid",
+                badge: "Economical",
+                badgeType: "alternative",
+                notes: "Affordable price, reliable performance, suitable for limited budgets"
+            },
+            {
+                id: 3,
+                name: "Solis 5K Hybrid",
+                power: "5 kW",
+                efficiency: "97.8%",
+                mpptRange: "120-500V",
+                certifications: "IEC 62109, IEC 61683",
+                operatingTemp: "-25°C to 60°C",
+                price: "$1100",
+                type: "hybrid",
+                badge: "Hybrid",
+                badgeType: "recommended",
+                notes: "Supports batteries, operation during power outages, flexible use"
+            },
+            {
+                id: 4,
+                name: "Victron MultiPlus 48/5000",
+                power: "5 kW",
+                efficiency: "96.5%",
+                mpptRange: "115-450V",
+                certifications: "IEC 62109, UL 1741",
+                operatingTemp: "-20°C to 50°C",
+                price: "$1500",
+                type: "off-grid",
+                badge: "Off-Grid",
+                badgeType: "alternative",
+                notes: "Ideal for standalone systems, robust build, integrated display"
+            },
+            {
+                id: 5,
+                name: "Fronius Symo 5.0-3-M",
+                power: "5 kW",
+                efficiency: "98.2%",
+                mpptRange: "75-700V",
+                certifications: "IEC 62109, VDE-AR-N 4105",
+                operatingTemp: "-25°C to 60°C",
+                price: "$950",
+                type: "three-phase",
+                badge: "Three Phase",
+                badgeType: "recommended",
+                notes: "For commercial use, three-phase, high efficiency in various conditions"
+            },
+            {
+                id: 6,
+                name: "SMA Sunny Boy 5.0",
+                power: "5 kW",
+                efficiency: "98.4%",
+                mpptRange: "175-500V",
+                certifications: "IEC 62109, UL 1741",
+                operatingTemp: "-25°C to 60°C",
+                price: "$1050",
+                type: "on-grid",
+                badge: "German Quality",
+                badgeType: "recommended",
+                notes: "German manufacturing, high reliability, long lifespan"
+            }
+        ];
+
+        // Display inverters
+        function displayInverters() {
+            const systemSize = parseFloat(document.getElementById('system-size').value);
+            const systemType = document.getElementById('system-type').value;
+            const phaseType = document.getElementById('phase-type').value;
+            
+            if (!systemSize) {
+                alert('Please enter the total solar capacity');
+                return;
+            }
+            
+            const container = document.getElementById('inverter-grid');
+            container.innerHTML = '';
+            
+            // Filter suitable inverters
+            const suitableInverters = inverters.filter(inverter => {
+                // Match system type
+                if (systemType === 'three-phase' && inverter.type !== 'three-phase') return false;
+                if (systemType !== 'three-phase' && inverter.type === 'three-phase') return false;
+                
+                // Match power (with ±20% margin)
+                const inverterPower = parseFloat(inverter.power);
+                return Math.abs(inverterPower - systemSize) / systemSize <= 0.2;
+            });
+            
+            if (suitableInverters.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No suitable inverters found for the entered data</p>';
+                return;
+            }
+            
+            suitableInverters.forEach(inverter => {
+                const card = document.createElement('div');
+                card.className = 'inverter-card';
+                
+                card.innerHTML = `
+                    <div class="inverter-header">
+                        <div class="inverter-name">${inverter.name}</div>
+                        <div class="inverter-badge badge-${inverter.badgeType}">${inverter.badge}</div>
+                    </div>
+                    
+                    <div class="inverter-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">Power:</span>
+                            <span class="spec-value">${inverter.power}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Efficiency:</span>
+                            <span class="spec-value">${inverter.efficiency}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">MPPT Range:</span>
+                            <span class="spec-value">${inverter.mpptRange}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Price:</span>
+                            <span class="spec-value">${inverter.price}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="inverter-actions">
+                        <button class="btn-select" onclick="selectInverter(${inverter.id})">
+                            <i class="fas fa-check"></i> Select
+                        </button>
+                        <button class="btn-details" onclick="showDetails(${inverter.id})">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Select inverter
+        function selectInverter(inverterId) {
+            const inverter = inverters.find(inv => inv.id === inverterId);
+            
+            if (inverter) {
+                document.getElementById('selected-model').textContent = inverter.name;
+                document.getElementById('rated-power').textContent = inverter.power;
+                document.getElementById('peak-efficiency').textContent = inverter.efficiency;
+                document.getElementById('mppt-range').textContent = inverter.mpptRange;
+                document.getElementById('certifications').textContent = inverter.certifications;
+                document.getElementById('operating-temp').textContent = inverter.operatingTemp;
+                document.getElementById('technical-notes').textContent = inverter.notes;
+                
+                document.getElementById('results').style.display = 'block';
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Show details
+        function showDetails(inverterId) {
+            const inverter = inverters.find(inv => inv.id === inverterId);
+            if (inverter) {
+                alert(`Details for ${inverter.name}:\n\nPower: ${inverter.power}\nEfficiency: ${inverter.efficiency}\nMPPT Range: ${inverter.mpptRange}\nCertifications: ${inverter.certifications}\nTemperature: ${inverter.operatingTemp}\nPrice: ${inverter.price}\n\n${inverter.notes}`);
+            }
+        }
+
+        // Export specifications
+        document.getElementById('export-btn').addEventListener('click', function() {
+            const model = document.getElementById('selected-model').textContent;
+            if (model === '--') {
+                alert('Please select an inverter first');
+                return;
+            }
+            
+            const specs = `
+Selected Inverter Specifications:
+- Model: ${document.getElementById('selected-model').textContent}
+- Power: ${document.getElementById('rated-power').textContent}
+- Efficiency: ${document.getElementById('peak-efficiency').textContent}
+- MPPT Range: ${document.getElementById('mppt-range').textContent}
+- Certifications: ${document.getElementById('certifications').textContent}
+- Temperature: ${document.getElementById('operating-temp').textContent}
+
+${document.getElementById('technical-notes').textContent}
+            `.trim();
+            
+            // Create text file for download
+            const blob = new Blob([specs], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Inverter-Specifications-${model.replace(/\s+/g, '-')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('calculate-btn').addEventListener('click', displayInverters);
+        });
+        // التحكم بزر التبديل بين اللغات
+const langSwitcher = document.querySelector('.lang-switcher');
+const langToggle = document.getElementById('langToggle');
+
+// فتح/إغلاق القائمة المنسدلة
+langToggle.addEventListener('click', function(e) {
+    e.stopPropagation();
+    langSwitcher.classList.toggle('active');
+});
+
+// إغلاق القائمة عند النقر خارجها
+document.addEventListener('click', function() {
+    langSwitcher.classList.remove('active');
+});
+
+// منع إغلاق القائمة عند النقر داخلها
+langSwitcher.addEventListener('click', function(e) {
+    e.stopPropagation();
+});
+
+// حفظ تفضيل اللغة
+const savedLang = localStorage.getItem('preferredLang');
+if (savedLang) {
+    updateActiveLang(savedLang);
+}
+
+// تحديث اللغة النشطة
+function updateActiveLang(lang) {
+    const langOptions = document.querySelectorAll('.lang-option');
+    langOptions.forEach(option => {
+        option.classList.remove('active');
+        if (option.getAttribute('href').includes(lang)) {
+            option.classList.add('active');
+        }
+    });
+    
+    // تحديث الزر الرئيسي
+    const activeOption = document.querySelector('.lang-option.active');
+    if (activeOption) {
+        const flag = activeOption.querySelector('.flag-icon').textContent;
+        const text = activeOption.querySelector('.lang-text').textContent;
+        langToggle.querySelector('.flag-icon').textContent = flag;
+        langToggle.querySelector('.lang-text').textContent = text;
+    }
+}
+
+// حفظ تفضيل اللغة عند التبديل
+const langOptions = document.querySelectorAll('.lang-option');
+langOptions.forEach(option => {
+    option.addEventListener('click', function(e) {
+        e.preventDefault();
+        const lang = this.getAttribute('href').includes('en') ? 'en' : 'ar';
+        localStorage.setItem('preferredLang', lang);
+        window.location.href = this.getAttribute('href');
+    });
+});
+    </script>
+</body>
+</html>

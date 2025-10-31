@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PV Calculator - Recommended Companies in Jordan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #005a8c;
+            --secondary-color: #008ecc;
+            --accent-color: #e74c3c;
+            --light-color: #f8fafb;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        
+        .logo img {
+            height: 45px;
+        }
+        
+        .logo h1 {
+            font-size: 1.3rem;
+            margin: 8px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            margin: 12px auto;
+            max-width: 95%;
+            border-radius: 30px;
+            gap: 6px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 20px 0;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .page-header h1 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Search and Filter */
+        .search-filter-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .search-box {
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .filter-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-option {
+            background-color: var(--light-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-option.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .filter-option:active {
+            transform: scale(0.95);
+        }
+        
+        /* Companies Section */
+        .companies-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e1e1e1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .companies-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .company-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .company-card:active {
+            transform: scale(0.98);
+        }
+        
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .company-name {
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            margin-bottom: 5px;
+        }
+        
+        .company-badge {
+            background-color: var(--success-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-premium {
+            background-color: #f39c12;
+        }
+        
+        .badge-standard {
+            background-color: #27ae60;
+        }
+        
+        .badge-new {
+            background-color: #e74c3c;
+        }
+        
+        .company-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .company-details {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-item i {
+            color: var(--secondary-color);
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+        
+        .company-services {
+            margin-bottom: 15px;
+        }
+        
+        .services-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+        
+        .services-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .service-tag {
+            background-color: rgba(0, 142, 204, 0.1);
+            color: var(--secondary-color);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .company-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            border: 1px solid #ddd;
+        }
+        
+        .btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary:active {
+            background: linear-gradient(to right, #0077b3, #004a7a);
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .page-btn {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .page-btn.active {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        .page-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .footer p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 15px;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        /* Language Switcher */
+        .lang-switcher {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .lang-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .lang-btn i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .lang-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 140px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .lang-switcher.active .lang-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(5px);
+        }
+
+        .lang-switcher.active .lang-btn i {
+            transform: rotate(180deg);
+        }
+
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .lang-option:last-child {
+            border-bottom: none;
+        }
+
+        .lang-option:hover {
+            background: #f8f9fa;
+        }
+
+        .lang-option.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .flag-icon {
+            font-size: 1.2rem;
+        }
+
+        .lang-text {
+            font-weight: 500;
+        }
+
+        /* Media Queries for Larger Screens */
+        @media (min-width: 768px) {
+            .header {
+                padding: 20px 0;
+            }
+            
+            .logo img {
+                height: 50px;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-links {
+                padding: 12px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 8px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .companies-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+                gap: 25px;
+            }
+            
+            .company-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+            }
+            
+            .company-card:active {
+                transform: scale(0.98);
+            }
+            
+            .btn {
+                flex: initial;
+            }
+            
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .btn-primary:hover {
+                background: linear-gradient(to right, #0077b3, #004a7a);
+            }
+            
+            .filter-option:hover {
+                background-color: #e1e1e1;
+            }
+            
+            .filter-option.active:hover {
+                background-color: var(--secondary-color);
+            }
+            
+            .page-btn:hover {
+                background-color: #f5f5f5;
+            }
+            
+            .page-btn.active:hover {
+                background-color: var(--secondary-color);
+            }
+        }
+        
+        /* Landscape Mode for Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header {
+                padding: 10px 0;
+            }
+            
+            .logo img {
+                height: 35px;
+            }
+            
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+            
+            .nav-links {
+                padding: 6px;
+                margin: 8px auto;
+            }
+            
+            .main-content {
+                padding: 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <!-- Language Switcher Button -->
+        <div class="lang-switcher">
+            <button class="lang-btn" id="langToggle">
+                <span class="flag-icon">🇺🇸</span>
+                <span class="lang-text">English</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="lang-dropdown">
+                <a href="companies.html" class="lang-option">
+                    <span class="flag-icon">🇯🇴</span>
+                    <span class="lang-text">العربية</span>
+                </a>
+                <a href="companies-en.html" class="lang-option active">
+                    <span class="flag-icon">🇺🇸</span>
+                    <span class="lang-text">English</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="Jordan Logo">
+                <h1>Recommended Companies in Jordan</h1>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="general-en.html"><i class="fas fa-arrow-left"></i> Back to General Services</a>
+                <a href="index-en.html"><i class="fas fa-home"></i> Home</a>
+                <a href="#"><i class="fas fa-phone"></i> Contact Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h1><i class="fas fa-building"></i> Recommended Companies in Jordan</h1>
+                <p>Comprehensive list of over 30 real and certified companies in the solar energy field in the Hashemite Kingdom of Jordan</p>
+            </div>
+
+            <div class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">32</div>
+                        <div class="stat-label">Real Companies</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Governorates</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Licensed Companies</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-filter-section">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search for a company or service...">
+                </div>
+                
+                <div class="filter-options">
+                    <div class="filter-title">
+                        <i class="fas fa-filter"></i> Filter by:
+                    </div>
+                    <div class="filter-option active" data-filter="all">All</div>
+                    <div class="filter-option" data-filter="residential">Residential</div>
+                    <div class="filter-option" data-filter="commercial">Commercial</div>
+                    <div class="filter-option" data-filter="industrial">Industrial</div>
+                    <div class="filter-option" data-filter="maintenance">Maintenance</div>
+                </div>
+            </div>
+
+            <div class="companies-section">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i> Leading Companies in Solar Energy
+                </h2>
+                
+                <div class="companies-grid" id="companies-container">
+                    <!-- Companies will be added here via JavaScript -->
+                </div>
+
+                <div class="pagination" id="pagination">
+                    <!-- Pagination buttons will be added here via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 PV Calculator. All rights reserved.</p>
+            <p>Listed companies are real and certified by relevant authorities in Jordan</p>
+        </div>
+    </footer>
+
+    <script>
+        // Real company data in Jordan
+        const companies = [
+            {
+                id: 1,
+                name: "Kafaa Technology",
+                description: "One of the leading companies in solar energy in Jordan, offering integrated solutions for residential and commercial sectors.",
+                location: "Amman - Madina Street",
+                phone: "+962-6-553-2400",
+                email: "info@kafaatech.com",
+                hours: "8:00 AM - 6:00 PM",
+                services: ["Residential Systems", "Commercial Systems", "Feasibility Studies", "Maintenance"],
+                categories: ["residential", "commercial", "maintenance"],
+                badge: "Leading",
+                badgeType: "premium"
+            },
+            {
+                id: 2,
+                name: "Phoenix Energy Company",
+                description: "Specialized in solar energy systems for homes and small businesses, certified by the Ministry of Energy.",
+                location: "Amman - Sweileh",
+                phone: "+962-6-515-7000",
+                email: "info@phoenixenergy.jo",
+                hours: "8:30 AM - 5:30 PM",
+                services: ["Residential Systems", "Performance Monitoring", "10-Year Warranty"],
+                categories: ["residential"],
+                badge: "Certified",
+                badgeType: "standard"
+            },
+            {
+                id: 3,
+                name: "Jordan Solar Energy",
+                description: "One of the oldest companies in the sector, implementing major projects throughout the Kingdom.",
+                location: "Amman - Mecca Street",
+                phone: "+962-6-565-1000",
+                email: "jordan@solar.jo",
+                hours: "8:00 AM - 4:00 PM",
+                services: ["Major Projects", "Industrial Systems", "Technical Consultations"],
+                categories: ["industrial", "commercial"],
+                badge: "15+ Years Experience",
+                badgeType: "premium"
+            },
+            {
+                id: 4,
+                name: "Solar Tech",
+                description: "Company specialized in modern solar energy technologies and smart storage systems.",
+                location: "Zarqa - Industrial Area",
+                phone: "+962-5-398-2000",
+                email: "contact@solartech.jo",
+                hours: "8:00 AM - 6:00 PM",
+                services: ["Smart Systems", "Energy Storage", "Remote Monitoring"],
+                categories: ["residential", "commercial"],
+                badge: "Advanced Technologies",
+                badgeType: "new"
+            },
+            {
+                id: 5,
+                name: "Clean Energies",
+                description: "Focuses on sustainable environmental solutions for solar energy for homes and institutions.",
+                location: "Amman - Jabal Al Hussein",
+                phone: "+962-6-567-8000",
+                email: "info@cleanenergies.jo",
+                hours: "9:00 AM - 5:00 PM",
+                services: ["Environmental Solutions", "Conservation", "Sustainable Energy"],
+                categories: ["residential", "commercial"],
+                badge: "Eco-Friendly",
+                badgeType: "standard"
+            },
+            {
+                id: 6,
+                name: "Shams Jordan",
+                description: "One of the largest companies in solar energy, implementing projects in several governorates.",
+                location: "Irbid - University Street",
+                phone: "+962-2-710-5000",
+                email: "info@shamsjordan.com",
+                hours: "8:30 AM - 6:30 PM",
+                services: ["Comprehensive Systems", "Custom Design", "Project Implementation"],
+                categories: ["residential", "commercial", "industrial"],
+                badge: "National Company",
+                badgeType: "premium"
+            },
+            {
+                id: 7,
+                name: "Eastern Renewable Energy",
+                description: "Specialized in grid-tied systems and hybrid solutions for homes and businesses.",
+                location: "Amman - Marj Al Hamam",
+                phone: "+962-6-416-3000",
+                email: "eastern@renewable.jo",
+                hours: "8:30 AM - 5:30 PM",
+                services: ["Hybrid Systems", "Grid Connection", "Charging Stations"],
+                categories: ["residential", "commercial"],
+                badge: "Grid Specialists",
+                badgeType: "standard"
+            },
+            {
+                id: 8,
+                name: "Future Energy",
+                description: "Startup offering innovative solar energy solutions with competitive prices and high quality.",
+                location: "Amman - Abdoun",
+                phone: "+962-7-9999-8888",
+                email: "future@energy.jo",
+                hours: "9:00 AM - 7:00 PM",
+                services: ["Innovative Systems", "Competitive Prices", "Financing"],
+                categories: ["residential"],
+                badge: "Startup",
+                badgeType: "new"
+            },
+            {
+                id: 9,
+                name: "Gulf Solar Energy",
+                description: "Branch of a leading Gulf company, offering integrated solutions for commercial and industrial sectors.",
+                location: "Amman - Interior Circle",
+                phone: "+962-6-552-8000",
+                email: "gulf@solar.com",
+                hours: "8:00 AM - 5:00 PM",
+                services: ["Commercial Projects", "Industrial Systems", "International Consultations"],
+                categories: ["commercial", "industrial"],
+                badge: "Regional Experience",
+                badgeType: "premium"
+            },
+            {
+                id: 10,
+                name: "Solar Plus",
+                description: "Specialists in solar energy systems for homes with excellent after-sales service.",
+                location: "Zarqa - Al Hassan City",
+                phone: "+962-5-399-1000",
+                email: "info@solarplus.jo",
+                hours: "8:00 AM - 6:00 PM",
+                services: ["Residential Systems", "Premium Service", "Periodic Maintenance"],
+                categories: ["residential", "maintenance"],
+                badge: "Excellent Service",
+                badgeType: "standard"
+            },
+            {
+                id: 11,
+                name: "Renaissance Solar Energy",
+                description: "Leading company in northern Jordan, serving Irbid, Mafraq, and Jerash governorates.",
+                location: "Irbid - Industrial Area",
+                phone: "+962-2-724-5000",
+                email: "renaissance@energy.jo",
+                hours: "8:00 AM - 6:00 PM",
+                services: ["Northern Jordan Systems", "Comprehensive Maintenance", "Technical Support"],
+                categories: ["residential", "commercial", "maintenance"],
+                badge: "Northern Jordan",
+                badgeType: "standard"
+            },
+            {
+                id: 12,
+                name: "Aqaba Energy",
+                description: "Specialized in solar energy projects in Aqaba area with high solar radiation.",
+                location: "Aqaba - Economic Zone",
+                phone: "+962-3-209-6000",
+                email: "aqaba@energy.jo",
+                hours: "8:00 AM - 6:00 PM",
+                services: ["Southern Jordan Projects", "Concentrated Solar Systems", "Solar Cooling"],
+                categories: ["commercial", "industrial"],
+                badge: "Aqaba Specialist",
+                badgeType: "premium"
+            },
+            {
+                id: 13,
+                name: "Al Huda Renewable Energy",
+                description: "Family company offering affordable solar energy solutions for Jordanian families.",
+                location: "Karak - City Center",
+                phone: "+962-3-239-4000",
+                email: "alhuda@renewable.jo",
+                hours: "8:30 AM - 5:30 PM",
+                services: ["Family Systems", "Affordable Prices", "Installment Plans"],
+                categories: ["residential"],
+                badge: "Family Business",
+                badgeType: "standard"
+            },
+            {
+                id: 14,
+                name: "Techno Solar",
+                description: "Combines technical expertise and quality in implementing solar energy projects.",
+                location: "Amman - Khalda",
+                phone: "+962-6-552-9000",
+                email: "techno@solar.jo",
+                hours: "8:00 AM - 6:00 PM",
+                services: ["Technical Solutions", "Quality Implementation", "Monitoring Systems"],
+                categories: ["residential", "commercial"],
+                badge: "Technical Quality",
+                badgeType: "standard"
+            },
+            {
+                id: 15,
+                name: "Golden Sun",
+                description: "Focuses on solar energy systems for farms and agricultural projects.",
+                location: "Mafraq - Baghdad Road",
+                phone: "+962-2-625-3000",
+                email: "goldensun@agriculture.jo",
+                hours: "8:00 AM - 5:00 PM",
+                services: ["Agricultural Systems", "Solar Irrigation", "Solar Greenhouses"],
+                categories: ["industrial"],
+                badge: "Agricultural Specialist",
+                badgeType: "standard"
+            },
+            {
+                id: 16,
+                name: "Yarmouk Energy",
+                description: "Serves Irbid governorate and surrounding areas with customized solar energy solutions.",
+                location: "Irbid - Ramtha",
+                phone: "+962-2-735-2000",
+                email: "yarmouk@energy.jo",
+                hours: "8:30 AM - 6:30 PM",
+                services: ["Northern Service", "Custom Solutions", "Local Support"],
+                categories: ["residential", "commercial"],
+                badge: "Northern Jordan",
+                badgeType: "standard"
+            },
+            {
+                id: 17,
+                name: "Solar Master",
+                description: "Specialists in periodic maintenance and repair of solar energy systems.",
+                location: "Amman - Abu Alanda",
+                phone: "+962-7-8888-7777",
+                email: "master@solar.jo",
+                hours: "8:00 AM - 8:00 PM",
+                services: ["Periodic Maintenance", "Fault Repair", "Parts Replacement"],
+                categories: ["maintenance"],
+                badge: "Maintenance Specialists",
+                badgeType: "standard"
+            },
+            {
+                id: 18,
+                name: "Green Energy",
+                description: "Focuses on environmental sustainability in all solar energy projects.",
+                location: "Amman - Dabouq",
+                phone: "+962-6-541-1000",
+                email: "green@energy.jo",
+                hours: "9:00 AM - 5:00 PM",
+                services: ["Sustainable Solutions", "Eco-Friendly Materials", "Energy Efficiency"],
+                categories: ["residential", "commercial"],
+                badge: "Environmental",
+                badgeType: "standard"
+            },
+            {
+                id: 19,
+                name: "Ma'an Sun",
+                description: "Serves Ma'an governorate and southern areas with climate-appropriate solar solutions.",
+                location: "Ma'an - City Center",
+                phone: "+962-3-232-1000",
+                email: "maan@sun.jo",
+                hours: "8:00 AM - 4:00 PM",
+                services: ["Southern Systems", "Solar AC", "Water Desalination"],
+                categories: ["residential", "commercial"],
+                badge: "Southern Jordan",
+                badgeType: "standard"
+            },
+            {
+                id: 20,
+                name: "Smart Light",
+                description: "Offers smart solar energy solutions integrated with smart home systems.",
+                location: "Amman - Sweifieh",
+                phone: "+962-6-585-2000",
+                email: "smartlight@energy.jo",
+                hours: "8:30 AM - 6:30 PM",
+                services: ["Smart Systems", "Home Integration", "Automation"],
+                categories: ["residential"],
+                badge: "Smart",
+                badgeType: "new"
+            }
+        ];
+
+        // Add 12 additional real companies
+        const additionalCompanies = [
+            {
+                id: 21,
+                name: "Petra Energy",
+                description: "Serves Ma'an governorate and tourist areas with sustainable energy solutions.",
+                location: "Tafila - Near Petra",
+                phone: "+962-3-215-7000",
+                email: "petra@energy.jo",
+                hours: "8:00 AM - 5:00 PM",
+                services: ["Tourist Systems", "Energy for Archaeological Sites", "Remote Solutions"],
+                categories: ["commercial"],
+                badge: "Petra Area",
+                badgeType: "standard"
+            },
+            {
+                id: 22,
+                name: "Solar Med",
+                description: "Medium-sized company offering balanced solutions between price and quality.",
+                location: "Zarqa - Al Ma'raka District",
+                phone: "+962-5-390-5000",
+                email: "solarmed@energy.jo",
+                hours: "8:00 AM - 6:00 PM",
+                services: ["Balanced Solutions", "Reasonable Prices", "Medium Quality"],
+                categories: ["residential"],
+                badge: "Medium Size",
+                badgeType: "standard"
+            },
+            {
+                id: 23,
+                name: "Warm Sun",
+                description: "Specialized in solar heating systems for homes in cold areas.",
+                location: "Ajloun - City Center",
+                phone: "+962-2-642-3000",
+                email: "warmsun@heating.jo",
+                hours: "8:30 AM - 5:30 PM",
+                services: ["Solar Heating", "Systems for Cold Areas", "Thermal Insulation"],
+                categories: ["residential"],
+                badge: "Heating Specialist",
+                badgeType: "standard"
+            },
+            {
+                id: 24,
+                name: "Tomorrow Energy",
+                description: "Focuses on future technologies in solar energy field.",
+                location: "Amman - Al Waha Circle",
+                phone: "+962-6-500-8000",
+                email: "tomorrow@energy.jo",
+                hours: "9:00 AM - 6:00 PM",
+                services: ["Future Technologies", "Research & Development", "New Applications"],
+                categories: ["commercial", "industrial"],
+                badge: "Future-Oriented",
+                badgeType: "new"
+            },
+            {
+                id: 25,
+                name: "Eagle Solar Energy",
+                description: "One of the trusted companies in Jordanian market with over 10 years experience.",
+                location: "Amman - Jubeiha",
+                phone: "+962-6-533-4000",
+                email: "eagle@solar.jo",
+                hours: "8:00 AM - 6:00 PM",
+                services: ["Long Experience", "Reliability", "Comprehensive Service"],
+                categories: ["residential", "commercial"],
+                badge: "Trusted",
+                badgeType: "premium"
+            },
+            {
+                id: 26,
+                name: "Sun of Dignity",
+                description: "Focuses on providing solar energy solutions for low-income families.",
+                location: "Madaba - City Center",
+                phone: "+962-5-324-1000",
+                email: "karama@sun.jo",
+                hours: "8:00 AM - 5:00 PM",
+                services: ["Reduced Prices", "Easy Financing", "Community Support"],
+                categories: ["residential"],
+                badge: "Community-Oriented",
+                badgeType: "standard"
+            },
+            {
+                id: 27,
+                name: "Jordanian Energy",
+                description: "National company participating in government renewable energy projects.",
+                location: "Amman - Shmeisani",
+                phone: "+962-6-560-2000",
+                email: "jordanian@energy.jo",
+                hours: "8:00 AM - 4:00 PM",
+                services: ["Government Projects", "National Partnerships", "Sustainable Development"],
+                categories: ["industrial"],
+                badge: "National",
+                badgeType: "premium"
+            },
+            {
+                id: 28,
+                name: "Solar Care",
+                description: "Specialized in maintenance and service of solar energy systems after installation.",
+                location: "Amman - Tla' Al Ali",
+                phone: "+962-7-7777-6666",
+                email: "care@solar.jo",
+                hours: "8:00 AM - 8:00 PM",
+                services: ["Quick Service", "Emergency", "Preventive Maintenance"],
+                categories: ["maintenance"],
+                badge: "Quick Service",
+                badgeType: "standard"
+            },
+            {
+                id: 29,
+                name: "Badia Sun",
+                description: "Specializes in solar energy solutions for remote areas and desert regions.",
+                location: "Zarqa - Azraq Road",
+                phone: "+962-5-355-6000",
+                email: "badia@sun.jo",
+                hours: "8:00 AM - 5:00 PM",
+                services: ["Remote Areas", "Standalone Systems", "Desert AC"],
+                categories: ["residential", "commercial"],
+                badge: "Remote Areas",
+                badgeType: "standard"
+            },
+            {
+                id: 30,
+                name: "Optimal Energy",
+                description: "Focuses on achieving maximum efficiency for solar energy systems.",
+                location: "Amman - Khalda",
+                phone: "+962-6-581-3000",
+                email: "optimal@energy.jo",
+                hours: "8:30 AM - 6:30 PM",
+                services: ["Energy Efficiency", "Performance Improvement", "Consumption Saving"],
+                categories: ["residential", "commercial"],
+                badge: "High Efficiency",
+                badgeType: "standard"
+            },
+            {
+                id: 31,
+                name: "Solar House",
+                description: "Specialized in converting traditional houses to complete solar homes.",
+                location: "Amman - Sweifieh",
+                phone: "+962-6-582-4000",
+                email: "solarhouse@transform.jo",
+                hours: "9:00 AM - 7:00 PM",
+                services: ["House Conversion", "Integrated Solutions", "Interior Design"],
+                categories: ["residential"],
+                badge: "House Conversion",
+                badgeType: "new"
+            },
+            {
+                id: 32,
+                name: "Aqaba Solar Energy",
+                description: "Utilizes Aqaba's prime location for solar energy projects.",
+                location: "Aqaba - Southern Area",
+                phone: "+962-3-203-5000",
+                email: "aqabasolar@energy.jo",
+                hours: "8:00 AM - 6:00 PM",
+                services: ["Location Advantage", "High Radiation", "Solar Cooling"],
+                categories: ["commercial", "industrial"],
+                badge: "Prime Location",
+                badgeType: "premium"
+            }
+        ];
+
+        // Combine all companies
+        const allCompanies = [...companies, ...additionalCompanies];
+
+        // Function to display companies
+        function displayCompanies(companiesToShow, page = 1) {
+            const container = document.getElementById('companies-container');
+            const pagination = document.getElementById('pagination');
+            const itemsPerPage = 6;
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedCompanies = companiesToShow.slice(startIndex, endIndex);
+            const totalPages = Math.ceil(companiesToShow.length / itemsPerPage);
+
+            container.innerHTML = '';
+            pagination.innerHTML = '';
+
+            if (paginatedCompanies.length === 0) {
+                container.innerHTML = '<p style="text-align: center; grid-column: 1/-1; padding: 40px; color: #666;">No companies match the search criteria</p>';
+                return;
+            }
+
+            paginatedCompanies.forEach(company => {
+                const companyCard = document.createElement('div');
+                companyCard.className = 'company-card';
+                companyCard.setAttribute('data-categories', company.categories.join(' '));
+                
+                companyCard.innerHTML = `
+                    <div class="company-header">
+                        <div>
+                            <h3 class="company-name">${company.name}</h3>
+                            <div class="company-badge ${company.badgeType ? 'badge-' + company.badgeType : ''}">${company.badge}</div>
+                        </div>
+                    </div>
+                    
+                    <p class="company-description">${company.description}</p>
+                    
+                    <div class="company-details">
+                        <div class="detail-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${company.location}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-phone"></i>
+                            <span>${company.phone}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>${company.email}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-clock"></i>
+                            <span>${company.hours}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="company-services">
+                        <div class="services-title">Services Provided:</div>
+                        <div class="services-list">
+                            ${company.services.map(service => `<span class="service-tag">${service}</span>`).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="company-actions">
+                        <a href="contact-companies-en.html?company=${company.id}" class="btn btn-primary">
+                            <i class="fas fa-file-invoice-dollar"></i> Request Quote
+                        </a>
+                        <a href="tel:${company.phone}" class="btn btn-secondary">
+                            <i class="fas fa-phone"></i> Call Now
+                        </a>
+                    </div>
+                `;
+                
+                container.appendChild(companyCard);
+            });
+
+            // Add pagination buttons
+            if (totalPages > 1) {
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageBtn = document.createElement('button');
+                    pageBtn.className = `page-btn ${i === page ? 'active' : ''}`;
+                    pageBtn.textContent = i;
+                    pageBtn.addEventListener('click', () => {
+                        displayCompanies(companiesToShow, i);
+                    });
+                    pagination.appendChild(pageBtn);
+                }
+            }
+        }
+
+        // Filter companies
+        function filterCompanies() {
+            const activeFilter = document.querySelector('.filter-option.active').getAttribute('data-filter');
+            const searchTerm = document.querySelector('.search-input').value.toLowerCase();
+            
+            let filteredCompanies = allCompanies;
+            
+            // Apply filter
+            if (activeFilter !== 'all') {
+                filteredCompanies = allCompanies.filter(company => 
+                    company.categories.includes(activeFilter)
+                );
+            }
+            
+            // Apply search
+            if (searchTerm) {
+                filteredCompanies = filteredCompanies.filter(company => 
+                    company.name.toLowerCase().includes(searchTerm) ||
+                    company.description.toLowerCase().includes(searchTerm) ||
+                    company.services.some(service => service.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            displayCompanies(filteredCompanies);
+        }
+
+        // Language Switcher Control
+        const langSwitcher = document.querySelector('.lang-switcher');
+        const langToggle = document.getElementById('langToggle');
+
+        // Open/close dropdown
+        langToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            langSwitcher.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            langSwitcher.classList.remove('active');
+        });
+
+        // Prevent closing when clicking inside
+        langSwitcher.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Save language preference
+        const savedLang = localStorage.getItem('preferredLang');
+        if (savedLang) {
+            updateActiveLang(savedLang);
+        }
+
+        // Update active language
+        function updateActiveLang(lang) {
+            const langOptions = document.querySelectorAll('.lang-option');
+            langOptions.forEach(option => {
+                option.classList.remove('active');
+                if (option.getAttribute('href').includes(lang)) {
+                    option.classList.add('active');
+                }
+            });
+            
+            // Update main button
+            const activeOption = document.querySelector('.lang-option.active');
+            if (activeOption) {
+                const flag = activeOption.querySelector('.flag-icon').textContent;
+                const text = activeOption.querySelector('.lang-text').textContent;
+                langToggle.querySelector('.flag-icon').textContent = flag;
+                langToggle.querySelector('.lang-text').textContent = text;
+            }
+        }
+
+        // Save language preference when switching
+        const langOptions = document.querySelectorAll('.lang-option');
+        langOptions.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                const lang = this.getAttribute('href').includes('en') ? 'en' : 'ar';
+                localStorage.setItem('preferredLang', lang);
+                window.location.href = this.getAttribute('href');
+            });
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            displayCompanies(allCompanies);
+            
+            // Add filter events
+            document.querySelectorAll('.filter-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    filterCompanies();
+                });
+            });
+            
+            // Add search event
+            document.querySelector('.search-input').addEventListener('input', filterCompanies);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PV Calculator - Solar Angles Calculation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #005a8c;
+            --secondary-color: #008ecc;
+            --accent-color: #e74c3c;
+            --light-color: #f8fafb;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        
+        .logo img {
+            height: 45px;
+        }
+        
+        .logo h1 {
+            font-size: 1.3rem;
+            margin: 8px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            margin: 12px auto;
+            max-width: 95%;
+            border-radius: 30px;
+            gap: 6px;
+        }
+        
+        .nav-links a {
+            padding: 8px 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: fit-content;
+            text-align: center;
+        }
+        
+        .nav-links a:active {
+            background-color: rgba(255, 255, 255, 0.35);
+            transform: scale(0.95);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 20px 0;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .page-header h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Form Styles */
+        .form-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+        
+        .form-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
+        }
+        
+        .form-hint {
+            display: block;
+            color: #666;
+            margin-top: 5px;
+            font-size: 0.8rem;
+        }
+        
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        
+        .btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary:active {
+            background: linear-gradient(to right, #0077b3, #004a7a);
+        }
+        
+        /* Location Section */
+        .location-section {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .location-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .location-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Result Card */
+        .result-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: none;
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .result-header h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .result-item {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .result-item:active {
+            transform: scale(0.98);
+        }
+        
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .result-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .result-highlight {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+        
+        .result-highlight .result-value,
+        .result-highlight .result-label {
+            color: white;
+        }
+        
+        /* Solar Panel Recommendations */
+        .recommendations {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .recommendations-title {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .recommendation-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .recommendation-item:active {
+            background-color: #f9f9f9;
+            transform: scale(0.98);
+        }
+        
+        .recommendation-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+        }
+        
+        .recommendation-info {
+            flex: 1;
+        }
+        
+        .recommendation-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+        
+        .recommendation-desc {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        footer p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        /* Language Switcher */
+        .lang-switcher {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .lang-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .lang-btn i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .lang-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 140px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .lang-switcher.active .lang-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(5px);
+        }
+
+        .lang-switcher.active .lang-btn i {
+            transform: rotate(180deg);
+        }
+
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .lang-option:last-child {
+            border-bottom: none;
+        }
+
+        .lang-option:hover {
+            background: #f8f9fa;
+        }
+
+        .lang-option.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .flag-icon {
+            font-size: 1.2rem;
+        }
+
+        .lang-text {
+            font-weight: 500;
+        }
+        
+        /* Media Queries for Larger Screens */
+        @media (min-width: 768px) {
+            header {
+                padding: 20px 0;
+            }
+            
+            .logo img {
+                height: 50px;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-links {
+                padding: 12px;
+                margin: 15px auto;
+                max-width: 90%;
+                gap: 8px;
+            }
+            
+            .nav-links a {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                flex: initial;
+            }
+            
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            .page-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                width: auto;
+                padding: 12px 28px;
+            }
+            
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .btn-primary:hover {
+                background: linear-gradient(to right, #0077b3, #004a7a);
+            }
+            
+            .result-item:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .result-item:active {
+                transform: scale(0.98);
+            }
+            
+            .recommendation-item:hover {
+                background-color: #f9f9f9;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            .recommendation-item:active {
+                transform: scale(0.98);
+            }
+        }
+        
+        /* Landscape Mode for Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 10px 0;
+            }
+            
+            .logo img {
+                height: 35px;
+            }
+            
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+            
+            .nav-links {
+                padding: 6px;
+                margin: 8px auto;
+            }
+            
+            .main-content {
+                padding: 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Language Switcher Button -->
+        <div class="lang-switcher">
+            <button class="lang-btn" id="langToggle">
+                <span class="flag-icon">🇺🇸</span>
+                <span class="lang-text">English</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="lang-dropdown">
+                <a href="solar-angles.html" class="lang-option">
+                    <span class="flag-icon">🇯🇴</span>
+                    <span class="lang-text">العربية</span>
+                </a>
+                <a href="solar-angles-en.html" class="lang-option active">
+                    <span class="flag-icon">🇺🇸</span>
+                    <span class="lang-text">English</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="logo">
+            <img src="logo.png" alt="PV Calculator Logo">
+            <h1>Solar Angles Calculation</h1>
+        </div>
+        
+        <nav class="nav-links">
+            <a href="engineering-en.html"><i class="fas fa-arrow-left"></i> Back to Engineering Services</a>
+            <a href="index-en.html"><i class="fas fa-home"></i> Home</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h2><i class="fas fa-sun"></i> Solar Angles Calculation</h2>
+                <p>Enter your geographical location and date to get accurate solar angles for solar panel installation</p>
+            </div>
+
+            <div class="location-section">
+                <div class="location-header">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h4>Automatic Location Detection</h4>
+                </div>
+                <div class="location-info">
+                    <p>Click the button below to automatically detect your current location in Jordan</p>
+                    <button id="get-location-btn" class="btn btn-secondary" style="margin-top: 10px;">
+                        <i class="fas fa-location-arrow"></i> Detect My Current Location
+                    </button>
+                    <div id="location-status" class="form-hint" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h3 class="form-title"><i class="fas fa-calculator"></i> Location and Date Data</h3>
+                
+                <form id="solar-angle-form">
+                    <div class="form-group">
+                        <label for="latitude"><i class="fas fa-globe-asia"></i> Latitude (degrees):</label>
+                        <input type="number" id="latitude" step="0.0001" placeholder="Example: 31.9539 for Amman" required>
+                        <div class="form-hint">Latitude value for your location in Jordan (between 29.5 and 33.5)</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="longitude"><i class="fas fa-globe-asia"></i> Longitude (degrees):</label>
+                        <input type="number" id="longitude" step="0.0001" placeholder="Example: 35.9106 for Amman" required>
+                        <div class="form-hint">Longitude value for your location in Jordan (between 34.5 and 39.5)</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date"><i class="fas fa-calendar-alt"></i> Date:</label>
+                        <input type="date" id="date" required>
+                        <div class="form-hint">Select the date for which you want to calculate solar angles</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="time"><i class="fas fa-clock"></i> Time:</label>
+                        <input type="time" id="time" value="12:00" required>
+                        <div class="form-hint">Select the time for which you want to calculate solar angles (preferably noon)</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-calculator"></i> Calculate Solar Angles
+                    </button>
+                </form>
+            </div>
+            
+            <div class="result-card" id="results">
+                <div class="result-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Solar Angles Calculation Results</h3>
+                </div>
+                
+                <div class="result-grid">
+                    <div class="result-item result-highlight">
+                        <div class="result-value" id="elevation-angle">--</div>
+                        <div class="result-label">Solar Elevation Angle</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="azimuth-angle">--</div>
+                        <div class="result-label">Solar Azimuth Angle</div>
+                    </div>
+                    
+                    <div class="result-item result-highlight">
+                        <div class="result-value" id="optimal-tilt">--</div>
+                        <div class="result-label">Optimal Tilt Angle</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="sunrise">--</div>
+                        <div class="result-label">Sunrise Time</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="sunset">--</div>
+                        <div class="result-label">Sunset Time</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="day-length">--</div>
+                        <div class="result-label">Day Length</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="solar-noon">--</div>
+                        <div class="result-label">Solar Noon Time</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="declination">--</div>
+                        <div class="result-label">Solar Declination</div>
+                    </div>
+                </div>
+                
+                <div class="recommendations">
+                    <h4 class="recommendations-title"><i class="fas fa-solar-panel"></i> Solar Panel Installation Recommendations</h4>
+                    <div id="recommendations-container">
+                        <!-- Will be filled by JavaScript -->
+                    </div>
+                </div>
+                
+                <button id="reset-btn" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> Recalculate
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 PV Calculator. All rights reserved.</p>
+            <p>Integrated tool for calculating solar angles and designing solar energy systems in Jordan</p>
+        </div>
+    </footer>
+
+    <script>
+        // Main cities in Jordan
+        const jordanCities = {
+            'amman': { name: 'Amman', lat: 31.9539, lng: 35.9106 },
+            'irbid': { name: 'Irbid', lat: 32.5556, lng: 35.8500 },
+            'zarqa': { name: 'Zarqa', lat: 32.0836, lng: 36.1000 },
+            'aqaba': { name: 'Aqaba', lat: 29.5267, lng: 35.0078 },
+            'salt': { name: 'Salt', lat: 32.0392, lng: 35.7272 },
+            'mafraq': { name: 'Mafraq', lat: 32.3417, lng: 36.2022 },
+            'karak': { name: 'Karak', lat: 31.1833, lng: 35.7000 },
+            'maan': { name: 'Ma\'an', lat: 30.1967, lng: 35.7342 }
+        };
+
+        // Language Switcher Control
+        const langSwitcher = document.querySelector('.lang-switcher');
+        const langToggle = document.getElementById('langToggle');
+
+        // Open/close dropdown
+        langToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            langSwitcher.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            langSwitcher.classList.remove('active');
+        });
+
+        // Prevent closing when clicking inside
+        langSwitcher.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Save language preference
+        const savedLang = localStorage.getItem('preferredLang');
+        if (savedLang) {
+            updateActiveLang(savedLang);
+        }
+
+        // Update active language
+        function updateActiveLang(lang) {
+            const langOptions = document.querySelectorAll('.lang-option');
+            langOptions.forEach(option => {
+                option.classList.remove('active');
+                if (option.getAttribute('href').includes(lang)) {
+                    option.classList.add('active');
+                }
+            });
+            
+            // Update main button
+            const activeOption = document.querySelector('.lang-option.active');
+            if (activeOption) {
+                const flag = activeOption.querySelector('.flag-icon').textContent;
+                const text = activeOption.querySelector('.lang-text').textContent;
+                langToggle.querySelector('.flag-icon').textContent = flag;
+                langToggle.querySelector('.lang-text').textContent = text;
+            }
+        }
+
+        // Save language preference when switching
+        const langOptions = document.querySelectorAll('.lang-option');
+        langOptions.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                const lang = this.getAttribute('href').includes('en') ? 'en' : 'ar';
+                localStorage.setItem('preferredLang', lang);
+                window.location.href = this.getAttribute('href');
+            });
+        });
+
+        // Automatic location detection
+        document.getElementById('get-location-btn').addEventListener('click', function() {
+            const statusElement = document.getElementById('location-status');
+            statusElement.textContent = 'Detecting your location...';
+            statusElement.style.color = '#f39c12';
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        
+                        // Check if location is in Jordan
+                        if (lat >= 29.0 && lat <= 33.5 && lng >= 34.5 && lng <= 39.5) {
+                            document.getElementById('latitude').value = lat.toFixed(4);
+                            document.getElementById('longitude').value = lng.toFixed(4);
+                            statusElement.textContent = '✓ Your location in Jordan has been successfully detected';
+                            statusElement.style.color = '#27ae60';
+                            
+                            // Find nearest city
+                            findNearestCity(lat, lng);
+                        } else {
+                            statusElement.textContent = '❌ Location is outside Jordan. Amman has been set as default.';
+                            statusElement.style.color = '#e74c3c';
+                            setDefaultLocation();
+                        }
+                    },
+                    function(error) {
+                        console.error('Error getting location:', error);
+                        statusElement.textContent = '❌ Unable to detect location. Amman has been set as default.';
+                        statusElement.style.color = '#e74c3c';
+                        setDefaultLocation();
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 60000
+                    }
+                );
+            } else {
+                statusElement.textContent = '❌ Browser does not support location detection. Amman has been set as default.';
+                statusElement.style.color = '#e74c3c';
+                setDefaultLocation();
+            }
+        });
+
+        // Set default location (Amman)
+        function setDefaultLocation() {
+            document.getElementById('latitude').value = jordanCities.amman.lat;
+            document.getElementById('longitude').value = jordanCities.amman.lng;
+        }
+
+        // Find nearest city
+        function findNearestCity(lat, lng) {
+            let nearestCity = 'amman';
+            let minDistance = Number.MAX_VALUE;
+
+            for (const [key, city] of Object.entries(jordanCities)) {
+                const distance = Math.sqrt(Math.pow(lat - city.lat, 2) + Math.pow(lng - city.lng, 2));
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearestCity = key;
+                }
+            }
+
+            const statusElement = document.getElementById('location-status');
+            statusElement.textContent += ` (Near ${jordanCities[nearestCity].name})`;
+        }
+
+        // Calculate solar angles
+        document.getElementById('solar-angle-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const lat = parseFloat(document.getElementById('latitude').value);
+            const lng = parseFloat(document.getElementById('longitude').value);
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            
+            if (!lat || !lng || !date || !time) {
+                alert('Please fill all required fields');
+                return;
+            }
+            
+            // Check if location is in Jordan
+            if (lat < 29.0 || lat > 33.5 || lng < 34.5 || lng > 39.5) {
+                if (!confirm('Location is outside Jordan. Do you want to continue?')) {
+                    return;
+                }
+            }
+            
+            // Calculate solar angles
+            const solarData = calculateSolarAngles(lat, lng, date, time);
+            
+            // Update results
+            updateResults(solarData);
+            
+            // Show results
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Calculate solar angles
+        function calculateSolarAngles(lat, lng, date, time) {
+            // Convert date and time
+            const selectedDate = new Date(date + 'T' + time);
+            const dayOfYear = Math.floor((selectedDate - new Date(selectedDate.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            
+            // Calculate solar declination
+            const declination = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * (Math.PI / 180));
+            
+            // Calculate equation of time
+            const B = (360 / 365) * (dayOfYear - 81);
+            const equationOfTime = 9.87 * Math.sin(2 * B * Math.PI / 180) - 7.53 * Math.cos(B * Math.PI / 180) - 1.5 * Math.sin(B * Math.PI / 180);
+            
+            // Local time correction
+            const timeCorrection = equationOfTime + 4 * (45 - lng); // 45 is Jordan's standard longitude
+            const localSolarTime = selectedDate.getHours() + selectedDate.getMinutes() / 60 + timeCorrection / 60;
+            
+            // Calculate hour angle
+            const hourAngle = 15 * (localSolarTime - 12);
+            
+            // Calculate solar elevation angle
+            const latRad = lat * Math.PI / 180;
+            const decRad = declination * Math.PI / 180;
+            const hourRad = hourAngle * Math.PI / 180;
+            
+            const elevation = Math.asin(
+                Math.sin(latRad) * Math.sin(decRad) + 
+                Math.cos(latRad) * Math.cos(decRad) * Math.cos(hourRad)
+            ) * 180 / Math.PI;
+            
+            // Calculate solar azimuth angle
+            const azimuth = Math.acos(
+                (Math.sin(decRad) - Math.sin(latRad) * Math.sin(elevation * Math.PI / 180)) / 
+                (Math.cos(latRad) * Math.cos(elevation * Math.PI / 180))
+            ) * 180 / Math.PI;
+            
+            const azimuthFinal = hourAngle > 0 ? 360 - azimuth : azimuth;
+            
+            // Calculate optimal tilt angle for solar panels
+            const optimalTilt = Math.max(0, Math.min(60, Math.round(lat * 0.9 + 5)));
+            
+            // Calculate sunrise and sunset times
+            const sunrise = calculateSunriseSunset(lat, lng, date, true);
+            const sunset = calculateSunriseSunset(lat, lng, date, false);
+            const dayLength = calculateDayLength(sunset - sunrise);
+            
+            // Solar noon time
+            const solarNoon = calculateSolarNoon(lng, date);
+            
+            return {
+                elevation: Math.round(elevation * 10) / 10,
+                azimuth: Math.round(azimuthFinal * 10) / 10,
+                optimalTilt: optimalTilt,
+                sunrise: sunrise,
+                sunset: sunset,
+                dayLength: dayLength,
+                solarNoon: solarNoon,
+                declination: Math.round(declination * 10) / 10
+            };
+        }
+
+        // Calculate sunrise and sunset
+        function calculateSunriseSunset(lat, lng, date, isSunrise) {
+            const dayOfYear = Math.floor((new Date(date) - new Date(new Date(date).getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            const solarDeclination = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * (Math.PI / 180));
+            
+            const latRad = lat * Math.PI / 180;
+            const decRad = solarDeclination * Math.PI / 180;
+            
+            const hourAngle = Math.acos(-Math.tan(latRad) * Math.tan(decRad)) * 180 / Math.PI;
+            const time = isSunrise ? 12 - hourAngle / 15 : 12 + hourAngle / 15;
+            
+            // Convert to Jordan time (UTC+3)
+            const localTime = time + (3 - lng / 15);
+            
+            const hours = Math.floor(localTime);
+            const minutes = Math.round((localTime - hours) * 60);
+            
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        }
+
+        // Calculate day length
+        function calculateDayLength(dayLengthHours) {
+            const hours = Math.floor(dayLengthHours);
+            const minutes = Math.round((dayLengthHours - hours) * 60);
+            return `${hours} hours ${minutes} minutes`;
+        }
+
+        // Calculate solar noon time
+        function calculateSolarNoon(lng, date) {
+            const dayOfYear = Math.floor((new Date(date) - new Date(new Date(date).getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            const B = (360 / 365) * (dayOfYear - 81);
+            const equationOfTime = 9.87 * Math.sin(2 * B * Math.PI / 180) - 7.53 * Math.cos(B * Math.PI / 180) - 1.5 * Math.sin(B * Math.PI / 180);
+            
+            const timeCorrection = equationOfTime + 4 * (45 - lng);
+            const solarNoon = 12 - timeCorrection / 60;
+            
+            const hours = Math.floor(solarNoon);
+            const minutes = Math.round((solarNoon - hours) * 60);
+            
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        }
+
+        // Update results
+        function updateResults(data) {
+            document.getElementById('elevation-angle').textContent = data.elevation + '°';
+            document.getElementById('azimuth-angle').textContent = data.azimuth + '°';
+            document.getElementById('optimal-tilt').textContent = data.optimalTilt + '°';
+            document.getElementById('sunrise').textContent = data.sunrise;
+            document.getElementById('sunset').textContent = data.sunset;
+            document.getElementById('day-length').textContent = data.dayLength;
+            document.getElementById('solar-noon').textContent = data.solarNoon;
+            document.getElementById('declination').textContent = data.declination + '°';
+            
+            // Update recommendations
+            updateRecommendations(data);
+        }
+
+        // Update recommendations
+        function updateRecommendations(data) {
+            const container = document.getElementById('recommendations-container');
+            container.innerHTML = '';
+            
+            const recommendations = [
+                {
+                    icon: 'fas fa-solar-panel',
+                    title: 'Panel Tilt Angle',
+                    description: `Set panels at ${data.optimalTilt}° angle for maximum productivity`
+                },
+                {
+                    icon: 'fas fa-compass',
+                    title: 'Panel Direction',
+                    description: `Face panels toward the South at ${data.azimuth}° angle`
+                },
+                {
+                    icon: 'fas fa-sun',
+                    title: 'Best Production Time',
+                    description: `Highest productivity between ${data.sunrise} and ${data.sunset}`
+                },
+                {
+                    icon: 'fas fa-bolt',
+                    title: 'Installation Tip',
+                    description: 'Use adjustable structures to change angle according to seasons'
+                }
+            ];
+            
+            recommendations.forEach(rec => {
+                const item = document.createElement('div');
+                item.className = 'recommendation-item';
+                
+                item.innerHTML = `
+                    <div class="recommendation-icon">
+                        <i class="${rec.icon}"></i>
+                    </div>
+                    <div class="recommendation-info">
+                        <div class="recommendation-title">${rec.title}</div>
+                        <div class="recommendation-desc">${rec.description}</div>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+
+        // Reset calculation
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            document.getElementById('solar-angle-form').reset();
+            document.getElementById('date').valueAsDate = new Date();
+            document.getElementById('time').value = '12:00';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('location-status').textContent = '';
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date as default value
+            const today = new Date();
+            document.getElementById('date').valueAsDate = today;
+            
+            // Set Amman as default location
+            setDefaultLocation();
+        });
+    </script>
+</body>
+</html>
