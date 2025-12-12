@@ -1,20 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battery Capacity Calculator - Off-Grid Systems | Jordan</title>
+    <title>PV Calculator - Battery Sizing</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="header-lang-switcher.css">
     <style>
         :root {
-            --primary-color: #005a8c;
-            --secondary-color: #008ecc;
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
             --accent-color: #e74c3c;
-            --light-color: #f8fafb;
+            --light-color: #ecf0f1;
             --dark-color: #2c3e50;
             --success-color: #27ae60;
-            --warning-color: #f39c12;
         }
         
         * {
@@ -27,7 +25,6 @@
             margin: 0;
             padding: 0;
             line-height: 1.6;
-            color: #333;
         }
         
         header {
@@ -35,37 +32,28 @@
             color: white;
             padding: 15px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
         }
         
         .logo img {
-            height: 45px;
+            width: 50px;
+            margin-bottom: 10px;
         }
         
         .logo h1 {
-            font-size: 1.3rem;
-            margin: 8px 0;
+            font-size: 1.4rem;
+            margin: 10px 0;
         }
         
         .nav-links {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            background-color: rgba(255, 255, 255, 0.15);
-            padding: 10px;
-            margin: 12px auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            margin: 15px auto;
             max-width: 95%;
-            border-radius: 30px;
-            gap: 6px;
+            border-radius: 50px;
+            gap: 8px;
         }
         
         .nav-links a {
@@ -73,7 +61,7 @@
             background-color: rgba(255, 255, 255, 0.2);
             color: white;
             text-decoration: none;
-            border-radius: 30px;
+            border-radius: 50px;
             font-weight: 500;
             transition: all 0.3s;
             font-size: 0.85rem;
@@ -83,7 +71,7 @@
         }
         
         .nav-links a:active {
-            background-color: rgba(255, 255, 255, 0.35);
+            background-color: rgba(255, 255, 255, 0.3);
             transform: scale(0.95);
         }
         
@@ -97,71 +85,62 @@
             background-color: white;
             border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             margin-bottom: 20px;
         }
         
-        h1, h2, h3 {
+        .form-container h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
             color: var(--primary-color);
         }
         
-        h2 {
-            border-bottom: 2px solid #e1e1e1;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-        
-        h3 {
-            font-size: 1.15rem;
-            margin-bottom: 15px;
-        }
-        
-        .form-section {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .form-container p {
+            font-size: 0.95rem;
+            color: #555;
             margin-bottom: 20px;
         }
         
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
         
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--primary-color);
+            color: var(--dark-color);
             font-size: 0.95rem;
         }
         
-        .form-group input, .form-group select {
+        .form-group input, 
+        .form-group select {
             width: 100%;
             padding: 14px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
-            transition: border 0.3s;
+            transition: all 0.3s;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus, 
+        .form-group select:focus {
             border-color: var(--secondary-color);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
         
         .form-group small {
             display: block;
-            color: #666;
             margin-top: 5px;
+            color: #7f8c8d;
             font-size: 0.8rem;
         }
         
         .btn {
             display: inline-block;
-            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            background-color: var(--secondary-color);
             color: white;
             padding: 14px 25px;
             border: none;
@@ -170,24 +149,29 @@
             font-size: 16px;
             font-weight: 600;
             transition: all 0.3s;
-            width: 100%;
-            margin-top: 15px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 100%;
+            text-align: center;
         }
         
         .btn:active {
-            background: linear-gradient(to right, #0077b3, #004a7a);
+            background-color: #2980b9;
             transform: translateY(-2px);
         }
         
         .result-card {
-            background-color: var(--light-color);
-            border-radius: 10px;
+            background-color: #ecf0f1;
+            border-radius: 12px;
             padding: 20px;
-            margin-top: 25px;
+            margin-top: 30px;
             border-left: 4px solid var(--secondary-color);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             display: none;
+        }
+        
+        .result-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
         }
         
         .result-item {
@@ -195,8 +179,7 @@
             justify-content: space-between;
             margin-bottom: 12px;
             padding-bottom: 12px;
-            border-bottom: 1px solid #e1e1e1;
-            font-size: 0.95rem;
+            border-bottom: 1px solid #ddd;
         }
         
         .result-item:last-child {
@@ -205,69 +188,77 @@
         
         .result-item span:first-child {
             font-weight: 600;
-            color: var(--primary-color);
+            color: var(--dark-color);
         }
         
         .result-item span:last-child {
-            font-weight: 500;
-            color: #333;
+            color: var(--primary-color);
             text-align: right;
         }
         
-        .note {
-            background-color: #fff9e6;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid var(--warning-color);
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: #666;
+        .recommendation-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--success-color);
+            display: none;
         }
         
-        .battery-types {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 15px;
-        }
-        
-        .battery-type {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .battery-type:active {
-            border-color: var(--secondary-color);
-            background-color: rgba(0, 142, 204, 0.05);
-            transform: scale(0.98);
-        }
-        
-        .battery-type.selected {
-            border-color: var(--success-color);
-            background-color: rgba(39, 174, 96, 0.05);
-        }
-        
-        .battery-type h4 {
-            margin-top: 0;
+        .recommendation-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
             color: var(--primary-color);
-            font-size: 1.05rem;
         }
         
-        .battery-type ul {
-            padding-left: 18px;
-            font-size: 0.85rem;
-            margin: 8px 0 0 0;
+        .recommendation-item {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
         }
         
-        .battery-type li {
+        .recommendation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .battery-model {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .battery-price {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+        
+        .battery-details {
+            font-size: 0.9rem;
+            color: #555;
             margin-bottom: 5px;
         }
         
+        .battery-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        
+        .feature-tag {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
         footer {
-            background-color: var(--primary-color);
+            background-color: var(--dark-color);
             color: white;
             padding: 20px 15px;
             text-align: center;
@@ -279,25 +270,25 @@
             margin: 5px 0;
         }
         
-        /* تحسينات للشاشات المتوسطة والكبيرة */
+        /* Medium and large screen improvements */
         @media (min-width: 768px) {
             header {
                 padding: 20px 0;
             }
             
             .logo img {
-                height: 50px;
+                width: 60px;
             }
             
             .logo h1 {
-                font-size: 1.6rem;
+                font-size: 1.8rem;
             }
             
             .nav-links {
-                padding: 12px;
+                padding: 15px;
                 margin: 15px auto;
                 max-width: 90%;
-                gap: 8px;
+                gap: 10px;
             }
             
             .nav-links a {
@@ -307,78 +298,60 @@
             }
             
             .nav-links a:hover {
-                background-color: rgba(255, 255, 255, 0.35);
-                transform: translateY(-2px);
+                background-color: rgba(255, 255, 255, 0.3);
+                transform: translateY(-3px);
             }
             
             .container {
-                max-width: 850px;
+                max-width: 800px;
                 margin: 30px auto;
                 padding: 0 20px;
             }
             
             .form-container {
-                padding: 25px;
+                padding: 30px;
             }
             
-            .form-section {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                gap: 25px;
-            }
-            
-            h2 {
+            .form-container h2 {
                 font-size: 1.5rem;
-            }
-            
-            h3 {
-                font-size: 1.25rem;
             }
             
             .btn {
                 width: auto;
-                padding: 12px 28px;
+                padding: 12px 25px;
             }
             
             .btn:hover {
-                background: linear-gradient(to right, #0077b3, #004a7a);
+                background-color: #2980b9;
                 transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
             
-            .battery-types {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 15px;
-            }
-            
-            .battery-type:hover {
-                border-color: var(--secondary-color);
-                background-color: rgba(0, 142, 204, 0.05);
+            .recommendation-item {
+                padding: 20px;
             }
         }
         
-        /* تحسينات للوضع الأفقي على الهواتف */
+        /* Landscape mode improvements for phones */
         @media (max-height: 500px) and (orientation: landscape) {
             header {
                 padding: 10px 0;
             }
             
             .logo img {
-                height: 35px;
+                width: 40px;
             }
             
             .logo h1 {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
             }
             
             .nav-links {
-                padding: 6px;
-                margin: 8px auto;
+                padding: 8px;
+                margin: 10px auto;
             }
             
             .container {
-                margin: 10px auto;
+                margin: 15px auto;
             }
             
             .form-container {
@@ -389,284 +362,439 @@
 </head>
 <body>
     <header>
-        <!-- Language Switcher Button -->
-        <div class="lang-switcher">
-            <button class="lang-btn" id="langToggle">
-                <span class="flag-icon">🇺🇸</span>
-                <span class="lang-text">English</span>
-                <i class="fas fa-chevron-down"></i>
-            </button>
-            <div class="lang-dropdown">
-                <a href="battery-selection.html" class="lang-option">
-                    <span class="flag-icon">🇯🇴</span>
-                    <span class="lang-text">العربية</span>
-                </a>
-                <a href="battery-selection-en.html" class="lang-option active">
-                    <span class="flag-icon">🇺🇸</span>
-                    <span class="lang-text">English</span>
-                </a>
-            </div>
-        </div>
-
         <div class="logo">
-            <img src="logo.png" alt="Jordan Logo">
-            <h1>Battery Capacity Calculator for Off-Grid Systems</h1>
+            <img src="logo.png" alt="PV Calculator Logo">
+            <h1>Battery Sizing Calculator</h1>
         </div>
         
         <div class="nav-links">
-            <a href="engineering-en.html"><i class="fas fa-arrow-left"></i> Back to Engineering Services</a>
-            <a href="index-en.html"><i class="fas fa-home"></i> Home</a>
-            <a href="#"><i class="fas fa-phone"></i> Contact Us</a>
+            <a href="engineering.html"><i class="fas fa-arrow-right"></i> Back to Engineering Services</a>
+            <a href="index.html"><i class="fas fa-home"></i> Home</a>
         </div>
     </header>
 
     <div class="container">
         <div class="form-container">
-            <h2><i class="fas fa-battery-three-quarters"></i> Calculate Required Battery Capacity</h2>
-            <p>Enter your solar energy system data to calculate the required battery capacity for storage</p>
+            <h2><i class="fas fa-car-battery"></i> Battery Capacity Calculator</h2>
+            <p>Enter your system data to determine the appropriate battery capacity (calculations customized for the Jordanian market)</p>
             
             <form id="battery-form">
-                <div class="form-section">
-                    <div>
-                        <div class="form-group">
-                            <label for="daily-consumption"><i class="fas fa-plug"></i> Daily Consumption (kWh):</label>
-                            <input type="number" id="daily-consumption" min="1" step="0.1" placeholder="Example: 10.5" required>
-                            <small>Total energy consumed daily by loads</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="autonomy-days"><i class="fas fa-calendar-day"></i> Autonomy Days (Days):</label>
-                            <input type="number" id="autonomy-days" min="1" value="3" required>
-                            <small>Number of days batteries should cover without sunlight</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="battery-voltage"><i class="fas fa-bolt"></i> Battery System Voltage (V):</label>
-                            <select id="battery-voltage" required>
-                                <option value="12">12 Volts</option>
-                                <option value="24">24 Volts</option>
-                                <option value="48" selected>48 Volts</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="form-group">
-                            <label for="depth-discharge"><i class="fas fa-battery-quarter"></i> Depth of Discharge (DOD):</label>
-                            <select id="depth-discharge" required>
-                                <option value="50">50% (Recommended for lead-acid batteries)</option>
-                                <option value="80">80% (For new generation batteries)</option>
-                                <option value="90">90% (For lithium batteries)</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="temperature"><i class="fas fa-temperature-low"></i> Ambient Temperature:</label>
-                            <select id="temperature" required>
-                                <option value="1.0">25°C (Ideal temperature)</option>
-                                <option value="0.9">30°C</option>
-                                <option value="0.8">35°C</option>
-                                <option value="1.1">20°C</option>
-                                <option value="1.2">15°C</option>
-                            </select>
-                            <small>Temperature affects battery performance</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="efficiency"><i class="fas fa-tachometer-alt"></i> System Efficiency (%):</label>
-                            <input type="number" id="efficiency" min="70" max="100" value="85" required>
-                            <small>Typically between 80-90%</small>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="daily-consumption">Daily Consumption (Watt-hours):</label>
+                    <input type="number" id="daily-consumption" min="1" placeholder="Example: 5000" required>
+                    <small>Total daily energy consumption of electrical appliances</small>
                 </div>
                 
-                <h3><i class="fas fa-car-battery"></i> Choose Battery Type:</h3>
-                <div class="battery-types">
-                    <div class="battery-type" data-type="lead-acid">
-                        <h4>Lead-Acid Batteries</h4>
-                        <ul>
-                            <li>Low cost</li>
-                            <li>3-5 years lifespan</li>
-                            <li>50% DOD recommended</li>
-                            <li>Approximate price: 120-180 JOD/kWh</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="battery-type" data-type="gel">
-                        <h4>Gel Batteries</h4>
-                        <ul>
-                            <li>Low maintenance</li>
-                            <li>5-7 years lifespan</li>
-                            <li>Up to 80% DOD</li>
-                            <li>Approximate price: 200-280 JOD/kWh</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="battery-type" data-type="lithium">
-                        <h4>Lithium Batteries</h4>
-                        <ul>
-                            <li>High efficiency</li>
-                            <li>8-15 years lifespan</li>
-                            <li>Up to 90% DOD</li>
-                            <li>Approximate price: 350-500 JOD/kWh</li>
-                        </ul>
-                    </div>
+                <div class="form-group">
+                    <label for="autonomy-days">Required Storage Days:</label>
+                    <input type="number" id="autonomy-days" min="1" value="2" required>
+                    <small>Number of days the system needs to operate without charging</small>
                 </div>
                 
-                <button type="submit" class="btn"><i class="fas fa-calculator"></i> Calculate Battery Requirements</button>
+                <div class="form-group">
+                    <label for="system-voltage">System Voltage (Volts):</label>
+                    <select id="system-voltage" required>
+                        <option value="12">12 Volts</option>
+                        <option value="24">24 Volts</option>
+                        <option value="48" selected>48 Volts</option>
+                    </select>
+                    <small>Solar power system voltage</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dod">Depth of Discharge (DOD %):</label>
+                    <input type="number" id="dod" min="10" max="100" value="50" required>
+                    <small>Percentage of energy that can be consumed from the battery</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="battery-type">Battery Type:</label>
+                    <select id="battery-type" required>
+                        <option value="lifepo4">LiFePO₄ Lithium</option>
+                        <option value="lead-acid">Lead-Acid</option>
+                        <option value="lithium-ion">Lithium Ion</option>
+                    </select>
+                    <small>Choose the appropriate battery type for your system</small>
+                </div>
+                
+                <button type="submit" class="btn">Calculate Batteries <i class="fas fa-calculator"></i></button>
             </form>
             
             <div class="result-card" id="results">
-                <h3><i class="fas fa-chart-pie"></i> Calculation Results:</h3>
+                <h3><i class="fas fa-battery-three-quarters"></i> Calculation Results:</h3>
                 
                 <div class="result-item">
-                    <span>Daily Energy Required:</span>
-                    <span id="daily-energy">--</span>
+                    <span>Total Energy Required:</span>
+                    <span id="total-energy">--</span>
                 </div>
                 
                 <div class="result-item">
-                    <span>Total Storage Capacity Required:</span>
+                    <span>Required Capacity:</span>
                     <span id="total-capacity">--</span>
                 </div>
                 
                 <div class="result-item">
-                    <span>Capacity After Efficiency Adjustment:</span>
-                    <span id="adjusted-capacity">--</span>
+                    <span>Recommended Configuration:</span>
+                    <span id="recommended-config">--</span>
                 </div>
                 
                 <div class="result-item">
-                    <span>Number of Batteries Required:</span>
-                    <span id="battery-count">--</span>
+                    <span>Estimated Cost:</span>
+                    <span id="estimated-cost">--</span>
                 </div>
                 
                 <div class="result-item">
-                    <span>Selected Battery Type:</span>
-                    <span id="battery-type">--</span>
+                    <span>Expected Lifespan:</span>
+                    <span id="battery-life">--</span>
                 </div>
                 
-                <div class="result-item" style="font-weight: bold; color: var(--primary-color);">
-                    <span>Approximate Cost (Jordanian Dinar):</span>
-                    <span id="battery-cost">--</span>
+                <div class="result-item">
+                    <span>Approximate Weight:</span>
+                    <span id="total-weight">--</span>
                 </div>
                 
-                <div class="note">
-                    <i class="fas fa-info-circle"></i> <strong>Technical Notes:</strong>
-                    <ul id="technical-notes">
-                        <!-- Will be filled by JavaScript -->
-                    </ul>
+                <div class="result-item">
+                    <span>Approximate Space:</span>
+                    <span id="total-space">--</span>
+                </div>
+                
+                <div class="result-item">
+                    <span>Expected Cycles:</span>
+                    <span id="cycle-life">--</span>
+                </div>
+            </div>
+            
+            <div class="recommendation-section" id="recommendations">
+                <h3><i class="fas fa-lightbulb"></i> Available Battery Recommendations in Jordan:</h3>
+                <div id="recommendation-list">
+                    <!-- Will be populated by JavaScript -->
                 </div>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>© 2025 Solar Systems Calculator - Jordan | All prices include sales tax</p>
+        <p>© 2025 PV Calculator. All Rights Reserved.</p>
+        <p>Custom calculations for Jordanian markets - Prices include tax</p>
     </footer>
 
     <script>
+        // Battery database available in the Jordanian market
+        const batteryDatabase = [
+            {
+                capacity: 100,
+                voltage: 12,
+                model: "LiFePO₄ 12V (General)",
+                price: 543,
+                type: "lifepo4",
+                weight: 15,
+                dimensions: "25×20×15 cm",
+                cycles: 4000,
+                life: "8-10 years",
+                features: ["Suitable for small needs", "Daily storage", "Lightweight"],
+                source: "Ubuy Jordan",
+                url: "https://www.ubuy.com.jo/en/product/2PW1S2QO-lifepo4-100ah-200ah-300ah-400ah-12v-lithium-ion-battery-for-solar-system-motor-home-boat-golf-carts-"
+            },
+            {
+                capacity: 200,
+                voltage: 12,
+                model: "LiFePO₄ 12V",
+                price: 650,
+                type: "lifepo4",
+                weight: 25,
+                dimensions: "30×25×20 cm",
+                cycles: 5000,
+                life: "10-12 years",
+                features: ["Suitable for small homes", "High efficiency", "Built-in BMS"],
+                source: "Ubuy Jordan",
+                url: "https://www.ubuy.com.jo/en/product/2PW1S2QO-lifepo4-100ah-200ah-300ah-400ah-12v-lithium-ion-battery-for-solar-system-motor-home-boat-golf-carts-"
+            },
+            {
+                capacity: 300,
+                voltage: 12,
+                model: "LiFePO₄ 12V",
+                price: 800,
+                type: "lifepo4",
+                weight: 35,
+                dimensions: "35×30×25 cm",
+                cycles: 6000,
+                life: "12-15 years",
+                features: ["Large capacity", "Suitable for medium homes", "Long life"],
+                source: "Ubuy Jordan",
+                url: "https://www.ubuy.com.jo/en/product/2PW1S2QO-lifepo4-100ah-200ah-300ah-400ah-12v-lithium-ion-battery-for-solar-system-motor-home-boat-golf-carts-"
+            },
+            {
+                capacity: 400,
+                voltage: 12,
+                model: "SHUNBIN LiFePO₄ 12V",
+                price: 543,
+                type: "lifepo4",
+                weight: 45,
+                dimensions: "40×35×30 cm",
+                cycles: 4000,
+                life: "10 years",
+                features: ["Smart BMS", "Suitable for solar", "Long life"],
+                source: "Ubuy Jordan",
+                url: "https://www.ubuy.com.jo/en/product/2PW1S2QO-lifepo4-100ah-200ah-300ah-400ah-12v-lithium-ion-battery-for-solar-system-motor-home-boat-golf-carts-"
+            },
+            {
+                capacity: 400,
+                voltage: 12,
+                model: "SOKERDY LiFePO₄ with Strong BMS",
+                price: 342,
+                type: "lifepo4",
+                weight: 40,
+                dimensions: "40×30×25 cm",
+                cycles: 4000,
+                life: "10 years",
+                features: ["400A BMS", "Suitable for backup", "Cost-effective"],
+                source: "Ubuy Jordan",
+                url: "https://www.ubuy.com.jo/en/product/4EHQZ2O0C-sokerdy-25-6v-200ah-lifepo4-battery-200a-bms-4000-cycles-5120wh-10-year-life-deep-cycle-lithium-rechargeable-battery-for-solar-system-marine"
+            },
+            {
+                capacity: 100,
+                voltage: 12,
+                model: "12V Lead-Acid Battery",
+                price: 120,
+                type: "lead-acid",
+                weight: 30,
+                dimensions: "30×25×20 cm",
+                cycles: 500,
+                life: "3-5 years",
+                features: ["Low price", "Locally available", "Regular maintenance"],
+                source: "Local Market",
+                url: ""
+            },
+            {
+                capacity: 200,
+                voltage: 12,
+                model: "12V Lead-Acid Battery",
+                price: 220,
+                type: "lead-acid",
+                weight: 60,
+                dimensions: "50×25×30 cm",
+                cycles: 800,
+                life: "5-7 years",
+                features: ["Medium capacity", "Suitable for small projects", "Reasonable cost"],
+                source: "Local Market",
+                url: ""
+            }
+        ];
+
         document.getElementById('battery-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
             // Get input values
             const dailyConsumption = parseFloat(document.getElementById('daily-consumption').value);
-            const autonomyDays = parseInt(document.getElementById('autonomy-days').value);
-            const batteryVoltage = parseInt(document.getElementById('battery-voltage').value);
-            const depthDischarge = parseInt(document.getElementById('depth-discharge').value);
-            const tempFactor = parseFloat(document.getElementById('temperature').value);
-            const systemEfficiency = parseInt(document.getElementById('efficiency').value);
+            const autonomyDays = parseFloat(document.getElementById('autonomy-days').value);
+            const systemVoltage = parseFloat(document.getElementById('system-voltage').value);
+            const dod = parseFloat(document.getElementById('dod').value);
+            const batteryType = document.getElementById('battery-type').value;
             
-            // Determine selected battery type
-            const selectedBattery = document.querySelector('.battery-type.selected');
-            if (!selectedBattery) {
-                alert('Please select a battery type');
-                return;
+            // Calculate total energy required (Watt-hours)
+            const totalEnergyWh = dailyConsumption * autonomyDays;
+            const totalEnergyKWh = totalEnergyWh / 1000;
+            
+            // Calculate required capacity (Ampere-hours)
+            const totalCapacityAh = totalEnergyWh / (systemVoltage * (dod / 100));
+            
+            // Find suitable batteries from database
+            const suitableBatteries = batteryDatabase.filter(battery => 
+                battery.type === batteryType && battery.voltage === systemVoltage
+            );
+            
+            // Calculate best configuration
+            let bestConfiguration = calculateBestConfiguration(totalCapacityAh, suitableBatteries, systemVoltage);
+            
+            // Calculate total cost
+            const totalCost = bestConfiguration.reduce((sum, config) => 
+                sum + (config.count * config.battery.price), 0
+            );
+            
+            // Calculate total weight
+            const totalWeight = bestConfiguration.reduce((sum, config) => 
+                sum + (config.count * config.battery.weight), 0
+            );
+            
+            // Calculate approximate space
+            const batteryCount = bestConfiguration.reduce((sum, config) => sum + config.count, 0);
+            const totalSpace = `${batteryCount} batteries (approx. ${Math.ceil(batteryCount * 0.03)} m²)`;
+            
+            // Expected lifespan
+            let batteryLife = "";
+            let cycleLife = "";
+            if (bestConfiguration.length > 0) {
+                batteryLife = bestConfiguration[0].battery.life;
+                cycleLife = bestConfiguration[0].battery.cycles.toLocaleString('en-US') + " cycles";
             }
-            const batteryType = selectedBattery.dataset.type;
-            
-            // Calculate required capacity
-            const totalEnergy = dailyConsumption * autonomyDays; // kWh
-            const adjustedEnergy = totalEnergy / (depthDischarge / 100); // Adjust for depth of discharge
-            const efficiencyAdjusted = adjustedEnergy / (systemEfficiency / 100); // Adjust for efficiency
-            const tempAdjusted = efficiencyAdjusted / tempFactor; // Adjust for temperature
-            
-            // Convert to ampere-hours
-            const ahRequired = (tempAdjusted * 1000) / batteryVoltage;
-            
-            // Determine appropriate battery capacity based on type
-            let batteryCapacity;
-            let batteryPricePerKwh;
-            let batteryNotes = [];
-            
-            if (batteryType === 'lead-acid') {
-                batteryCapacity = 200; // Ampere-hours per battery
-                batteryPricePerKwh = 150; // Jordanian Dinar per kWh
-                batteryNotes = [
-                    'Avoid discharging lead-acid batteries more than 50%',
-                    'Requires periodic maintenance (distilled water refill)',
-                    'Should be installed in a well-ventilated area'
-                ];
-            } 
-            else if (batteryType === 'gel') {
-                batteryCapacity = 150; // Ampere-hours per battery
-                batteryPricePerKwh = 240;
-                batteryNotes = [
-                    'No periodic maintenance required',
-                    'Better performance in high temperatures',
-                    'Longer lifespan than lead-acid batteries'
-                ];
-            } 
-            else { // lithium
-                batteryCapacity = 100; // Ampere-hours per battery
-                batteryPricePerKwh = 400;
-                batteryNotes = [
-                    'No maintenance required',
-                    'Charge/discharge efficiency up to 95%',
-                    'Long lifespan up to 10 years with proper use'
-                ];
-            }
-            
-            // Calculate number of batteries required
-            const batteryCount = Math.ceil(ahRequired / batteryCapacity);
-            
-            // Calculate approximate cost
-            const batteryCost = (tempAdjusted * batteryPricePerKwh).toFixed(0);
             
             // Display results
-            document.getElementById('daily-energy').textContent = dailyConsumption + ' kWh';
-            document.getElementById('total-capacity').textContent = totalEnergy.toFixed(2) + ' kWh';
-            document.getElementById('adjusted-capacity').textContent = tempAdjusted.toFixed(2) + ' kWh (' + ahRequired.toFixed(0) + ' Ah)';
-            document.getElementById('battery-count').textContent = batteryCount + ' batteries (' + batteryCapacity + ' Ah each)';
-            document.getElementById('battery-type').textContent = 
-                batteryType === 'lead-acid' ? 'Lead-Acid' : 
-                batteryType === 'gel' ? 'Gel' : 'Lithium';
-            document.getElementById('battery-cost').textContent = batteryCost + ' Jordanian Dinar';
+            document.getElementById('total-energy').textContent = 
+                `${totalEnergyWh.toLocaleString('en-US')} Watt-hours (${totalEnergyKWh.toFixed(2)} kWh)`;
             
-            // Display technical notes
-            const notesList = document.getElementById('technical-notes');
-            notesList.innerHTML = '';
-            batteryNotes.forEach(note => {
-                const li = document.createElement('li');
-                li.textContent = note;
-                notesList.appendChild(li);
-            });
+            document.getElementById('total-capacity').textContent = 
+                `${Math.ceil(totalCapacityAh).toLocaleString('en-US')} Ampere-hours`;
+            
+            document.getElementById('recommended-config').textContent = 
+                bestConfiguration.map(config => 
+                    `${config.count} × ${config.battery.capacity}Ah`
+                ).join(' + ') || "No suitable batteries found";
+            
+            document.getElementById('estimated-cost').textContent = 
+                `${Math.round(totalCost).toLocaleString('en-US')} Jordanian Dinar`;
+            
+            document.getElementById('battery-life').textContent = batteryLife;
+            document.getElementById('total-weight').textContent = `${Math.round(totalWeight)} kg`;
+            document.getElementById('total-space').textContent = totalSpace;
+            document.getElementById('cycle-life').textContent = cycleLife;
             
             document.getElementById('results').style.display = 'block';
             
-            // Scroll to results smoothly
+            // Display recommendations
+            displayRecommendations(suitableBatteries, totalCapacityAh);
+            document.getElementById('recommendations').style.display = 'block';
+            
+            // Scroll to results
             document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
         });
         
-        // Battery type selection
-        document.querySelectorAll('.battery-type').forEach(type => {
-            type.addEventListener('click', function() {
-                document.querySelectorAll('.battery-type').forEach(t => t.classList.remove('selected'));
-                this.classList.add('selected');
+        // Function to calculate best battery configuration
+        function calculateBestConfiguration(requiredCapacity, batteries, systemVoltage) {
+            if (batteries.length === 0) return [];
+            
+            // Sort batteries by capacity
+            batteries.sort((a, b) => a.capacity - b.capacity);
+            
+            let bestConfig = [];
+            let remainingCapacity = requiredCapacity;
+            
+            // Start with largest capacity first
+            for (let i = batteries.length - 1; i >= 0; i--) {
+                const battery = batteries[i];
+                const count = Math.ceil(remainingCapacity / battery.capacity);
+                
+                if (count > 0) {
+                    // If battery capacity is less than remaining, add it
+                    if (remainingCapacity > 0) {
+                        bestConfig.push({
+                            battery: battery,
+                            count: count
+                        });
+                        remainingCapacity -= count * battery.capacity;
+                    }
+                }
+                
+                if (remainingCapacity <= 0) break;
+            }
+            
+            // If there's significant excess capacity, try to optimize configuration
+            if (bestConfig.length > 0) {
+                const totalCapacity = bestConfig.reduce((sum, config) => 
+                    sum + (config.count * config.battery.capacity), 0
+                );
+                
+                // If excess capacity is large, try to find better configuration
+                if (totalCapacity - requiredCapacity > batteries[0].capacity) {
+                    // Alternative: Use smaller batteries to reduce excess capacity
+                    const smallerConfig = [];
+                    let remaining = requiredCapacity;
+                    
+                    for (let i = 0; i < batteries.length; i++) {
+                        const battery = batteries[i];
+                        if (remaining >= battery.capacity) {
+                            const count = Math.floor(remaining / battery.capacity);
+                            if (count > 0) {
+                                smallerConfig.push({
+                                    battery: battery,
+                                    count: count
+                                });
+                                remaining -= count * battery.capacity;
+                            }
+                        }
+                    }
+                    
+                    // If smaller configuration provides better capacity match
+                    const smallerTotalCapacity = smallerConfig.reduce((sum, config) => 
+                        sum + (config.count * config.battery.capacity), 0
+                    );
+                    
+                    if (Math.abs(smallerTotalCapacity - requiredCapacity) < Math.abs(totalCapacity - requiredCapacity)) {
+                        return smallerConfig;
+                    }
+                }
+            }
+            
+            return bestConfig;
+        }
+        
+        // Function to display recommendations
+        function displayRecommendations(batteries, requiredCapacity) {
+            const container = document.getElementById('recommendation-list');
+            container.innerHTML = '';
+            
+            if (batteries.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666;">No batteries available for this type and voltage</p>';
+                return;
+            }
+            
+            // Sort batteries by capacity
+            batteries.sort((a, b) => a.capacity - b.capacity);
+            
+            batteries.forEach(battery => {
+                const item = document.createElement('div');
+                item.className = 'recommendation-item';
+                
+                // Calculate number of batteries needed
+                const batteriesNeeded = Math.ceil(requiredCapacity / battery.capacity);
+                const totalPrice = batteriesNeeded * battery.price;
+                
+                item.innerHTML = `
+                    <div class="recommendation-header">
+                        <div class="battery-model">${battery.capacity}Ah - ${battery.model}</div>
+                        <div class="battery-price">${battery.price.toLocaleString('en-US')} JOD</div>
+                    </div>
+                    <div class="battery-details">
+                        <strong>Source:</strong> ${battery.source}<br>
+                        <strong>Required Quantity:</strong> ${batteriesNeeded} batteries<br>
+                        <strong>Total Cost:</strong> ${Math.round(totalPrice).toLocaleString('en-US')} Jordanian Dinar<br>
+                        <strong>Dimensions:</strong> ${battery.dimensions}<br>
+                        <strong>Weight:</strong> ${battery.weight} kg
+                    </div>
+                    <div class="battery-features">
+                        ${battery.features.map(feature => 
+                            `<span class="feature-tag">${feature}</span>`
+                        ).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(item);
             });
+        }
+        
+        // Update default DOD based on battery type
+        document.getElementById('battery-type').addEventListener('change', function() {
+            const batteryType = this.value;
+            const dodInput = document.getElementById('dod');
+            
+            switch(batteryType) {
+                case 'lifepo4':
+                    dodInput.value = 80;
+                    break;
+                case 'lithium-ion':
+                    dodInput.value = 90;
+                    break;
+                case 'lead-acid':
+                    dodInput.value = 50;
+                    break;
+            }
         });
         
-        // Set default type
-        document.querySelector('.battery-type[data-type="lead-acid"]').classList.add('selected');
+        // Set default value for daily consumption
+        document.getElementById('daily-consumption').addEventListener('focus', function() {
+            if (!this.value) {
+                this.value = 5000;
+            }
+        });
     </script>
-    <script src="script.js"></script>
 </body>
 </html>
