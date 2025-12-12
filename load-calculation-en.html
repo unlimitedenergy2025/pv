@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PV Calculator - Electrical Load Calculation</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #005a8c;
@@ -14,6 +16,12 @@
             --dark-color: #2c3e50;
             --success-color: #27ae60;
             --warning-color: #f39c12;
+            --chart-color-1: #005a8c;
+            --chart-color-2: #008ecc;
+            --chart-color-3: #2ecc71;
+            --chart-color-4: #e74c3c;
+            --total-line-color: #e74c3c;
+            --cumulative-color: #9b59b6;
         }
         
         * {
@@ -23,10 +31,11 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: #f5f5f5;
             line-height: 1.6;
             color: #333;
+            padding-bottom: 20px;
         }
         
         .container {
@@ -36,12 +45,14 @@
             padding: 0 15px;
         }
         
-        /* Header Styles */
         header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             padding: 15px 0;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
         .logo {
@@ -58,7 +69,7 @@
         }
         
         .logo h1 {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             margin: 8px 0;
         }
         
@@ -88,12 +99,10 @@
             text-align: center;
         }
         
-        .nav-links a:active {
-            background-color: rgba(255, 255, 255, 0.35);
-            transform: scale(0.95);
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.3);
         }
         
-        /* Main Content */
         .main-content {
             padding: 20px 0;
         }
@@ -105,7 +114,7 @@
         
         .page-header h2 {
             color: var(--primary-color);
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
@@ -115,12 +124,11 @@
         
         .page-header p {
             color: #666;
-            font-size: 0.95rem;
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
+            font-size: 1.05rem;
         }
         
-        /* Form Styles */
         .form-card {
             background-color: white;
             border-radius: 12px;
@@ -131,7 +139,7 @@
         
         .form-title {
             color: var(--primary-color);
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -153,7 +161,7 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: var(--primary-color);
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
         
         .form-group input, 
@@ -164,7 +172,7 @@
             border-radius: 8px;
             font-size: 16px;
             transition: all 0.3s;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         
         .form-group input:focus, 
@@ -174,7 +182,78 @@
             box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
         }
         
-        /* Button Styles */
+        .time-slots-container {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .time-slot {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .time-range {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex: 1;
+            flex-wrap: wrap;
+        }
+        
+        .time-range select {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .remove-slot {
+            background-color: #ffebee;
+            color: #d32f2f;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        
+        .remove-slot:hover {
+            background-color: #ffcdd2;
+        }
+        
+        .add-slot-btn {
+            background-color: #e8f5e8;
+            color: #388e3c;
+            border: 1px dashed #4caf50;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            width: 100%;
+            justify-content: center;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+        }
+        
+        .add-slot-btn:hover {
+            background-color: #c8e6c9;
+        }
+        
         .btn {
             display: inline-flex;
             align-items: center;
@@ -188,9 +267,14 @@
             text-decoration: none;
             transition: all 0.3s;
             cursor: pointer;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
             width: 100%;
             text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .btn-primary {
@@ -198,9 +282,17 @@
             color: white;
         }
         
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+        
         .btn-success {
             background-color: var(--success-color);
             color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219a52;
         }
         
         .btn-danger {
@@ -208,15 +300,10 @@
             color: white;
         }
         
-        .btn:active {
-            transform: translateY(-2px);
+        .btn-danger:hover {
+            background-color: #c0392b;
         }
         
-        .btn-primary:active {
-            background: linear-gradient(to right, #0077b3, #004a7a);
-        }
-        
-        /* Device List */
         .device-list {
             background-color: white;
             border-radius: 12px;
@@ -236,24 +323,6 @@
             border-bottom: 2px solid #f0f0f0;
         }
         
-        .device-list-title {
-            color: var(--primary-color);
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .device-count {
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
         .device-item {
             display: flex;
             justify-content: space-between;
@@ -263,11 +332,7 @@
             transition: all 0.3s;
         }
         
-        .device-item:last-child {
-            border-bottom: none;
-        }
-        
-        .device-item:active {
+        .device-item:hover {
             background-color: #f9f9f9;
         }
         
@@ -279,22 +344,26 @@
             font-weight: 600;
             color: var(--primary-color);
             margin-bottom: 5px;
+            font-size: 1.1rem;
         }
         
-        .device-details {
-            font-size: 0.85rem;
+        .device-details, .device-time-slots {
+            font-size: 0.9rem;
             color: #666;
+            margin-bottom: 3px;
         }
         
         .device-consumption {
             text-align: right;
             font-weight: 600;
             color: var(--primary-color);
+            min-width: 120px;
+            text-align: center;
         }
         
         .device-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             margin-left: 15px;
         }
         
@@ -310,23 +379,27 @@
         }
         
         .btn-edit {
-            background-color: rgba(52, 152, 219, 0.1);
-            color: var(--secondary-color);
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .btn-edit:hover {
+            background-color: #bbdefb;
         }
         
         .btn-delete {
-            background-color: rgba(231, 76, 60, 0.1);
-            color: var(--accent-color);
+            background-color: #ffebee;
+            color: #d32f2f;
         }
         
-        .btn-icon:active {
-            transform: scale(0.9);
+        .btn-delete:hover {
+            background-color: #ffcdd2;
         }
         
         .empty-state {
             text-align: center;
             padding: 40px 20px;
-            color: #666;
+            color: #888;
         }
         
         .empty-state i {
@@ -335,7 +408,11 @@
             color: #ddd;
         }
         
-        /* Result Card */
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
         .result-card {
             background-color: white;
             border-radius: 12px;
@@ -351,331 +428,286 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 20px;
-        }
-        
-        .result-header h3 {
             color: var(--primary-color);
-            font-size: 1.2rem;
         }
         
         .result-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .result-item {
             background-color: var(--light-color);
             border-radius: 8px;
-            padding: 15px;
+            padding: 20px 15px;
             text-align: center;
+            transition: all 0.3s;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .result-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .result-value {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--primary-color);
             margin-bottom: 5px;
         }
         
         .result-label {
-            font-size: 0.85rem;
             color: #666;
+            font-size: 0.9rem;
         }
         
-        .consumption-chart {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #f0f0f0;
+        .chart-container {
+            margin-top: 30px;
+            margin-bottom: 20px;
         }
         
         .chart-title {
+            margin-bottom: 20px;
             color: var(--primary-color);
-            font-size: 1rem;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .chart-bars {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .chart-bar {
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
-        .chart-label {
-            width: 120px;
-            font-size: 0.85rem;
-            color: #666;
+        .load-curve-container {
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
         }
         
-        .chart-bar-container {
-            flex: 1;
-            height: 20px;
-            background-color: #f0f0f0;
-            border-radius: 10px;
-            overflow: hidden;
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 400px;
         }
         
-        .chart-bar-fill {
-            height: 100%;
-            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-        
-        .chart-value {
-            width: 80px;
-            text-align: right;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-        
-        /* Footer */
-        footer {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-            margin-top: 40px;
-        }
-        
-        footer p {
-            margin: 5px 0;
-            font-size: 0.85rem;
-        }
-        
-        /* Language Switcher */
-        .lang-switcher {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
-        .lang-btn {
+        .chart-tabs {
             display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .chart-tab {
+            padding: 10px 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 0.85rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .lang-btn i {
-            font-size: 0.8rem;
-            transition: transform 0.3s ease;
-        }
-
-        .lang-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            min-width: 140px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            z-index: 1001;
-        }
-
-        .lang-switcher.active .lang-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(5px);
-        }
-
-        .lang-switcher.active .lang-btn i {
-            transform: rotate(180deg);
-        }
-
-        .lang-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 15px;
-            text-decoration: none;
-            color: #333;
-            transition: all 0.3s ease;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .lang-option:last-child {
-            border-bottom: none;
-        }
-
-        .lang-option:hover {
-            background: #f8f9fa;
-        }
-
-        .lang-option.active {
-            background: var(--secondary-color);
-            color: white;
-        }
-
-        .flag-icon {
-            font-size: 1.2rem;
-        }
-
-        .lang-text {
-            font-weight: 500;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
         }
         
-        /* Media Queries for Larger Screens */
-        @media (min-width: 768px) {
-            header {
-                padding: 20px 0;
+        .chart-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        
+        .chart-tab:hover:not(.active) {
+            color: var(--secondary-color);
+        }
+        
+        .chart-content {
+            display: none;
+        }
+        
+        .chart-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .chart-wrapper {
+                height: 300px;
             }
             
-            .logo img {
-                height: 50px;
+            .result-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
             
-            .logo h1 {
-                font-size: 1.6rem;
+            .device-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
             }
             
-            .nav-links {
-                padding: 12px;
-                margin: 15px auto;
-                max-width: 90%;
-                gap: 8px;
+            .device-consumption {
+                text-align: left;
+                min-width: auto;
+                align-self: flex-start;
+            }
+            
+            .device-actions {
+                align-self: flex-start;
+                margin-left: 0;
+            }
+            
+            .time-range {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .time-range select {
+                width: 100%;
+                min-width: 100%;
             }
             
             .nav-links a {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-                flex: initial;
+                font-size: 0.8rem;
+                padding: 6px 10px;
             }
             
-            .nav-links a:hover {
-                background-color: rgba(255, 255, 255, 0.35);
-                transform: translateY(-2px);
+            .chart-tabs {
+                flex-direction: column;
+                border-bottom: none;
             }
             
-            .page-header h2 {
-                font-size: 1.8rem;
+            .chart-tab {
+                border-bottom: 1px solid #e0e0e0;
+                border-left: 3px solid transparent;
             }
             
-            .form-grid {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-            
-            .btn {
-                width: auto;
-                padding: 12px 28px;
-            }
-            
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
-            
-            .btn-primary:hover {
-                background: linear-gradient(to right, #0077b3, #004a7a);
-            }
-            
-            .device-item:hover {
-                background-color: #f9f9f9;
-            }
-            
-            .btn-icon:hover {
-                transform: scale(1.1);
-            }
-            
-            .btn-icon:active {
-                transform: scale(0.9);
+            .chart-tab.active {
+                border-left-color: var(--primary-color);
+                border-bottom-color: #e0e0e0;
             }
         }
         
-        /* Landscape Mode for Mobile */
-        @media (max-height: 500px) and (orientation: landscape) {
-            header {
-                padding: 10px 0;
+        @media (max-width: 480px) {
+            .chart-wrapper {
+                height: 250px;
             }
             
-            .logo img {
-                height: 35px;
+            .result-grid {
+                grid-template-columns: 1fr;
             }
             
             .logo h1 {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
             }
             
-            .nav-links {
-                padding: 6px;
-                margin: 8px auto;
+            .form-title, .page-header h2 {
+                font-size: 1.3rem;
             }
             
-            .main-content {
-                padding: 15px 0;
+            .page-header p {
+                font-size: 0.95rem;
             }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+        }
+        
+        /* Mobile optimizations for very small screens */
+        @media (max-width: 360px) {
+            .chart-wrapper {
+                height: 220px;
+            }
+            
+            .result-value {
+                font-size: 1.5rem;
+            }
+            
+            .device-name {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Large screen optimizations */
+        @media (min-width: 1200px) {
+            .chart-wrapper {
+                height: 450px;
+            }
+        }
+        
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        
+        .summary-box {
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .summary-box h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .summary-value {
+            font-weight: 700;
+            color: var(--primary-color);
         }
     </style>
 </head>
 <body>
     <header>
-        <!-- Language Switcher Button -->
-        <div class="lang-switcher">
-            <button class="lang-btn" id="langToggle">
-                <span class="flag-icon">🇺🇸</span>
-                <span class="lang-text">English</span>
-                <i class="fas fa-chevron-down"></i>
-            </button>
-            <div class="lang-dropdown">
-                <a href="load-calculation.html" class="lang-option">
-                    <span class="flag-icon">🇯🇴</span>
-                    <span class="lang-text">العربية</span>
-                </a>
-                <a href="load-calculation-en.html" class="lang-option active">
-                    <span class="flag-icon">🇺🇸</span>
-                    <span class="lang-text">English</span>
-                </a>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="PV Calculator Logo">
+                <h1>Electrical Load Calculator</h1>
             </div>
+            
+            <nav class="nav-links">
+                <a href="engineering.html"><i class="fas fa-arrow-left"></i> Back to Engineering Services</a>
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            </nav>
         </div>
-
-        <div class="logo">
-            <img src="logo.png" alt="PV Calculator Logo">
-            <h1>Electrical Load Calculation</h1>
-        </div>
-        
-        <nav class="nav-links">
-            <a href="engineering-en.html"><i class="fas fa-arrow-left"></i> Back to Engineering Services</a>
-            <a href="index-en.html"><i class="fas fa-home"></i> Home</a>
-        </nav>
     </header>
 
     <div class="container">
         <div class="main-content">
             <div class="page-header">
                 <h2><i class="fas fa-bolt"></i> Electrical Load Calculation</h2>
-                <p>Add electrical devices to calculate total daily energy consumption and design the appropriate solar system</p>
+                <p>Add electrical appliances with their operating schedules to calculate total energy consumption and load distribution throughout the day</p>
             </div>
 
             <div class="form-card">
@@ -685,7 +717,7 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="device-name"><i class="fas fa-plug"></i> Device Name:</label>
-                            <input type="text" id="device-name" placeholder="Example: Refrigerator, TV, AC..." required>
+                            <input type="text" id="device-name" placeholder="Example: Refrigerator, TV, Air Conditioner..." required>
                         </div>
                         
                         <div class="form-group">
@@ -694,13 +726,15 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="device-hours"><i class="fas fa-clock"></i> Daily Operating Hours:</label>
-                            <input type="number" id="device-hours" min="0.1" step="0.1" max="24" placeholder="8" required>
+                            <label for="device-quantity"><i class="fas fa-calculator"></i> Quantity:</label>
+                            <input type="number" id="device-quantity" min="1" value="1" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="device-quantity"><i class="fas fa-calculator"></i> Quantity:</label>
-                            <input type="number" id="device-quantity" min="1" value="1" required>
+                            <label><i class="fas fa-clock"></i> Operating Hours:</label>
+                            <div class="time-slots-container" id="time-slots-container">
+                                <!-- Will be filled by JavaScript -->
+                            </div>
                         </div>
                     </div>
                     
@@ -715,20 +749,20 @@
                     <div class="device-list-title">
                         <i class="fas fa-list"></i> Device List
                     </div>
-                    <div class="device-count" id="device-count">0 devices</div>
+                    <div class="device-count" id="device-count">0 Devices</div>
                 </div>
                 
                 <div id="devices-container">
                     <div class="empty-state">
                         <i class="fas fa-plug"></i>
-                        <h3>No devices added</h3>
-                        <p>Add electrical devices to start calculation</p>
+                        <h3>No Devices Added</h3>
+                        <p>Add electrical appliances to start calculation</p>
                     </div>
                 </div>
             </div>
             
             <button id="calculate-btn" class="btn btn-success">
-                <i class="fas fa-calculator"></i> Calculate Total Load
+                <i class="fas fa-calculator"></i> Calculate Total Load & Draw Load Curve
             </button>
             
             <div class="result-card" id="results">
@@ -740,29 +774,74 @@
                 <div class="result-grid">
                     <div class="result-item">
                         <div class="result-value" id="total-consumption">0</div>
-                        <div class="result-label">Watt-hours daily</div>
+                        <div class="result-label">Watt-hours Daily</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-value" id="peak-power">0</div>
+                        <div class="result-label">Peak Load (Watts)</div>
                     </div>
                     
                     <div class="result-item">
                         <div class="result-value" id="monthly-consumption">0</div>
-                        <div class="result-label">kWh monthly</div>
-                    </div>
-                    
-                    <div class="result-item">
-                        <div class="result-value" id="yearly-consumption">0</div>
-                        <div class="result-label">kWh yearly</div>
+                        <div class="result-label">kWh Monthly</div>
                     </div>
                     
                     <div class="result-item">
                         <div class="result-value" id="system-size">0</div>
-                        <div class="result-label">kW solar system</div>
+                        <div class="result-label">kW Solar System</div>
                     </div>
                 </div>
                 
-                <div class="consumption-chart">
-                    <h4 class="chart-title"><i class="fas fa-chart-bar"></i> Consumption Distribution</h4>
-                    <div class="chart-bars" id="consumption-chart">
-                        <!-- Will be filled by JavaScript -->
+                <div class="summary-box">
+                    <h4><i class="fas fa-info-circle"></i> Electrical Load Summary</h4>
+                    <div class="summary-item">
+                        <span class="summary-label">Total Daily Energy Consumption:</span>
+                        <span class="summary-value" id="summary-total">0 Watt-hours</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Average Daily Load:</span>
+                        <span class="summary-value" id="summary-average">0 Watts</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Peak Hour:</span>
+                        <span class="summary-value" id="summary-peak-hour">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Daily Usage Rate:</span>
+                        <span class="summary-value" id="summary-usage-rate">0%</span>
+                    </div>
+                </div>
+                
+                <div class="load-curve-container">
+                    <div class="chart-tabs">
+                        <div class="chart-tab active" data-tab="total-load">Total Load Curve</div>
+                        <div class="chart-tab" data-tab="cumulative">Cumulative Curve</div>
+                        <div class="chart-tab" data-tab="comparison">Comparison</div>
+                    </div>
+                    
+                    <div class="chart-content active" id="total-load-chart">
+                        <h4 class="chart-title"><i class="fas fa-chart-line"></i> Total Load Curve Over 24 Hours</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="load-curve-chart" class="chart-canvas"></canvas>
+                        </div>
+                        <div class="chart-legend" id="total-chart-legend"></div>
+                    </div>
+                    
+                    <div class="chart-content" id="cumulative-chart">
+                        <h4 class="chart-title"><i class="fas fa-chart-area"></i> Cumulative Energy Consumption Curve</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="cumulative-chart-canvas" class="chart-canvas"></canvas>
+                        </div>
+                        <div class="chart-legend" id="cumulative-chart-legend"></div>
+                    </div>
+                    
+                    <div class="chart-content" id="comparison-chart">
+                        <h4 class="chart-title"><i class="fas fa-chart-bar"></i> Total vs Cumulative Load Comparison</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="comparison-chart-canvas" class="chart-canvas"></canvas>
+                        </div>
+                        <div class="chart-legend" id="comparison-chart-legend"></div>
                     </div>
                 </div>
                 
@@ -773,125 +852,246 @@
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>© 2025 PV Calculator. All rights reserved.</p>
-            <p>Integrated tool for calculating electrical loads and designing solar energy systems</p>
-        </div>
-    </footer>
-
     <script>
-        // Device data
         let devices = [];
         let editIndex = -1;
+        let loadChart = null;
+        let cumulativeChart = null;
+        let comparisonChart = null;
+        let currentTab = 'total-load';
 
-        // Language Switcher Control
-        const langSwitcher = document.querySelector('.lang-switcher');
-        const langToggle = document.getElementById('langToggle');
-
-        // Open/close dropdown
-        langToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            langSwitcher.classList.toggle('active');
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function() {
-            langSwitcher.classList.remove('active');
-        });
-
-        // Prevent closing when clicking inside
-        langSwitcher.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-
-        // Save language preference
-        const savedLang = localStorage.getItem('preferredLang');
-        if (savedLang) {
-            updateActiveLang(savedLang);
+        // Function to generate time options
+        function generateTimeOptions() {
+            let options = '';
+            for (let i = 0; i <= 24; i++) {
+                const h = i % 12 || 12;
+                const ampm = i < 12 ? 'AM' : 'PM';
+                const selected = i === 24 ? 'selected' : '';
+                options += `<option value="${i}" ${selected}>${h}:00 ${ampm}</option>`;
+            }
+            return options;
         }
 
-        // Update active language
-        function updateActiveLang(lang) {
-            const langOptions = document.querySelectorAll('.lang-option');
-            langOptions.forEach(option => {
-                option.classList.remove('active');
-                if (option.getAttribute('href').includes(lang)) {
-                    option.classList.add('active');
+        // Function to generate time from options (0-23)
+        function generateTimeFromOptions() {
+            let options = '';
+            for (let i = 0; i < 24; i++) {
+                const h = i % 12 || 12;
+                const ampm = i < 12 ? 'AM' : 'PM';
+                options += `<option value="${i}">${h}:00 ${ampm}</option>`;
+            }
+            return options;
+        }
+
+        // Function to create a time slot
+        function createTimeSlot(isFirst = false) {
+            const timeSlot = document.createElement('div');
+            timeSlot.className = 'time-slot';
+            timeSlot.innerHTML = `
+                <div class="time-range">
+                    From
+                    <select class="time-from">
+                        ${generateTimeFromOptions()}
+                    </select>
+                    To
+                    <select class="time-to">
+                        ${generateTimeOptions()}
+                    </select>
+                </div>
+                <button type="button" class="remove-slot" onclick="removeTimeSlot(this)" ${isFirst ? 'style="display: none;"' : ''}>
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            return timeSlot;
+        }
+
+        // Initialize time slots
+        function initializeTimeSlots() {
+            const container = document.getElementById('time-slots-container');
+            container.innerHTML = '';
+            
+            // Add first time slot
+            container.appendChild(createTimeSlot(true));
+            
+            // Add add button
+            const addButton = document.createElement('button');
+            addButton.type = 'button';
+            addButton.className = 'add-slot-btn';
+            addButton.innerHTML = '<i class="fas fa-plus"></i> Add Another Time Slot';
+            addButton.onclick = addTimeSlot;
+            container.appendChild(addButton);
+        }
+
+        function addTimeSlot() {
+            const container = document.getElementById('time-slots-container');
+            const timeSlots = container.querySelectorAll('.time-slot');
+            
+            // Show delete buttons in all slots
+            timeSlots.forEach(slot => {
+                const removeBtn = slot.querySelector('.remove-slot');
+                if (removeBtn) {
+                    removeBtn.style.display = 'flex';
                 }
             });
             
-            // Update main button
-            const activeOption = document.querySelector('.lang-option.active');
-            if (activeOption) {
-                const flag = activeOption.querySelector('.flag-icon').textContent;
-                const text = activeOption.querySelector('.lang-text').textContent;
-                langToggle.querySelector('.flag-icon').textContent = flag;
-                langToggle.querySelector('.lang-text').textContent = text;
+            // Add new time slot before add button
+            const newTimeSlot = createTimeSlot();
+            const addButton = container.querySelector('.add-slot-btn');
+            container.insertBefore(newTimeSlot, addButton);
+        }
+
+        function removeTimeSlot(button) {
+            const timeSlot = button.closest('.time-slot');
+            const container = document.getElementById('time-slots-container');
+            const timeSlots = container.querySelectorAll('.time-slot');
+            
+            if (timeSlots.length > 1) {
+                timeSlot.remove();
+                
+                // If only one slot remains, hide delete button
+                if (container.querySelectorAll('.time-slot').length === 1) {
+                    const remainingSlot = container.querySelector('.time-slot');
+                    const removeBtn = remainingSlot.querySelector('.remove-slot');
+                    if (removeBtn) {
+                        removeBtn.style.display = 'none';
+                    }
+                }
             }
         }
 
-        // Save language preference when switching
-        const langOptions = document.querySelectorAll('.lang-option');
-        langOptions.forEach(option => {
-            option.addEventListener('click', function(e) {
-                e.preventDefault();
-                const lang = this.getAttribute('href').includes('en') ? 'en' : 'ar';
-                localStorage.setItem('preferredLang', lang);
-                window.location.href = this.getAttribute('href');
+        function getTimeSlots() {
+            const slots = [];
+            const timeSlots = document.querySelectorAll('.time-slot');
+            
+            timeSlots.forEach(slot => {
+                const from = parseInt(slot.querySelector('.time-from').value);
+                const to = parseInt(slot.querySelector('.time-to').value);
+                
+                if (from < to) {
+                    slots.push({ from, to });
+                }
             });
-        });
+            
+            return slots;
+        }
 
-        // Add new device
+        function validateAndMergeTimeSlots(slots) {
+            if (!slots || slots.length === 0) return [];
+            
+            slots.sort((a, b) => a.from - b.from);
+            const merged = [];
+            let current = { ...slots[0] };
+
+            for (let i = 1; i < slots.length; i++) {
+                const next = slots[i];
+                if (next.from <= current.to) {
+                    current.to = Math.max(current.to, next.to);
+                } else {
+                    merged.push(current);
+                    current = { ...next };
+                }
+            }
+            merged.push(current);
+            return merged;
+        }
+
+        function calculateTotalHours(timeSlots) {
+            let totalHours = 0;
+            timeSlots.forEach(slot => {
+                totalHours += (slot.to - slot.from);
+            });
+            return totalHours;
+        }
+
+        function generateOperatingHours(timeSlots) {
+            const hours = new Array(24).fill(0);
+            timeSlots.forEach(slot => {
+                const from = Math.max(0, Math.floor(slot.from));
+                const to = Math.min(24, Math.ceil(slot.to));
+                for (let h = from; h < to; h++) {
+                    hours[h] = 1;
+                }
+            });
+            return hours;
+        }
+
         document.getElementById('add-btn').addEventListener('click', function() {
             const name = document.getElementById('device-name').value.trim();
             const wattage = parseFloat(document.getElementById('device-wattage').value);
-            const hours = parseFloat(document.getElementById('device-hours').value);
             const quantity = parseInt(document.getElementById('device-quantity').value);
+            const rawSlots = getTimeSlots();
+            const timeSlots = validateAndMergeTimeSlots(rawSlots);
             
-            if (!name || !wattage || !hours || !quantity) {
-                alert('Please fill all required fields');
+            if (!name || !wattage || !quantity || timeSlots.length === 0) {
+                alert('Please fill all required fields correctly');
                 return;
             }
+            
+            if (wattage <= 0 || quantity <= 0) {
+                alert('Please enter valid values for power and quantity');
+                return;
+            }
+            
+            const totalHours = calculateTotalHours(timeSlots);
+            const operatingHours = generateOperatingHours(timeSlots);
             
             const device = {
                 name,
                 wattage,
-                hours,
                 quantity,
-                dailyConsumption: wattage * hours * quantity
+                timeSlots,
+                totalHours,
+                operatingHours,
+                dailyConsumption: wattage * totalHours * quantity,
+                powerPerHour: wattage * quantity,
+                color: getDeviceColor(devices.length)
             };
             
             if (editIndex === -1) {
-                // Add new device
                 devices.push(device);
             } else {
-                // Edit existing device
                 devices[editIndex] = device;
                 editIndex = -1;
                 document.getElementById('add-btn').innerHTML = '<i class="fas fa-plus"></i> Add Device';
             }
             
             // Reset form
-            document.getElementById('add-device-form').reset();
+            document.getElementById('device-name').value = '';
+            document.getElementById('device-wattage').value = '';
+            document.getElementById('device-quantity').value = '1';
+            initializeTimeSlots();
             
-            // Update list
             updateDeviceList();
         });
 
-        // Update device list
+        function getDeviceColor(index) {
+            const colors = [
+                '#005a8c', // Dark Blue
+                '#008ecc', // Light Blue
+                '#2ecc71', // Green
+                '#e74c3c', // Red
+                '#9b59b6', // Purple
+                '#f39c12', // Orange
+                '#1abc9c', // Teal
+                '#34495e', // Dark Gray
+                '#d35400', // Dark Orange
+                '#c0392b'  // Dark Red
+            ];
+            return colors[index % colors.length];
+        }
+
         function updateDeviceList() {
             const container = document.getElementById('devices-container');
             const countElement = document.getElementById('device-count');
             
-            countElement.textContent = `${devices.length} devices`;
+            countElement.textContent = `${devices.length} ${devices.length === 1 ? 'Device' : 'Devices'}`;
             
             if (devices.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-plug"></i>
-                        <h3>No devices added</h3>
-                        <p>Add electrical devices to start calculation</p>
+                        <h3>No Devices Added</h3>
+                        <p>Add electrical appliances to start calculation</p>
                     </div>
                 `;
                 return;
@@ -903,15 +1103,26 @@
                 const deviceElement = document.createElement('div');
                 deviceElement.className = 'device-item';
                 
+                const timeTexts = device.timeSlots.map(slot => {
+                    const fromHour = slot.from % 12 || 12;
+                    const fromAmpm = slot.from < 12 ? 'AM' : 'PM';
+                    const toHour = (slot.to % 12 || 12);
+                    const toAmpm = slot.to < 12 ? 'AM' : 'PM';
+                    return `${fromHour}${fromAmpm}-${toHour}${toAmpm}`;
+                });
+                
                 deviceElement.innerHTML = `
                     <div class="device-info">
                         <div class="device-name">${device.name}</div>
                         <div class="device-details">
-                            ${device.wattage} W × ${device.hours} hours × ${device.quantity} device(s)
+                            ${device.wattage} Watts × ${device.quantity} Device × ${device.totalHours} Hours
+                        </div>
+                        <div class="device-time-slots">
+                            ${timeTexts.join(', ')}
                         </div>
                     </div>
                     <div class="device-consumption">
-                        ${device.dailyConsumption.toLocaleString()} Wh
+                        ${device.dailyConsumption.toLocaleString()} Watt-hours
                     </div>
                     <div class="device-actions">
                         <div class="btn-icon btn-edit" onclick="editDevice(${index})">
@@ -927,23 +1138,69 @@
             });
         }
 
-        // Edit device
         function editDevice(index) {
             const device = devices[index];
             
             document.getElementById('device-name').value = device.name;
             document.getElementById('device-wattage').value = device.wattage;
-            document.getElementById('device-hours').value = device.hours;
             document.getElementById('device-quantity').value = device.quantity;
+            
+            // Set time slots
+            const container = document.getElementById('time-slots-container');
+            container.innerHTML = '';
+            
+            device.timeSlots.forEach((slot, i) => {
+                const timeSlot = document.createElement('div');
+                timeSlot.className = 'time-slot';
+                
+                let fromOptions = '';
+                for (let h = 0; h < 24; h++) {
+                    const hour = h % 12 || 12;
+                    const ampm = h < 12 ? 'AM' : 'PM';
+                    const selected = h === slot.from ? 'selected' : '';
+                    fromOptions += `<option value="${h}" ${selected}>${hour}:00 ${ampm}</option>`;
+                }
+                
+                let toOptions = '';
+                for (let h = 0; h <= 24; h++) {
+                    const hour = h % 12 || 12;
+                    const ampm = h < 12 ? 'AM' : 'PM';
+                    const selected = h === slot.to ? 'selected' : '';
+                    toOptions += `<option value="${h}" ${selected}>${hour}:00 ${ampm}</option>`;
+                }
+                
+                timeSlot.innerHTML = `
+                    <div class="time-range">
+                        From
+                        <select class="time-from">
+                            ${fromOptions}
+                        </select>
+                        To
+                        <select class="time-to">
+                            ${toOptions}
+                        </select>
+                    </div>
+                    <button type="button" class="remove-slot" onclick="removeTimeSlot(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                container.appendChild(timeSlot);
+            });
+            
+            // Add add button
+            const addButton = document.createElement('button');
+            addButton.type = 'button';
+            addButton.className = 'add-slot-btn';
+            addButton.innerHTML = '<i class="fas fa-plus"></i> Add Another Time Slot';
+            addButton.onclick = addTimeSlot;
+            container.appendChild(addButton);
             
             editIndex = index;
             document.getElementById('add-btn').innerHTML = '<i class="fas fa-save"></i> Save Changes';
             
-            // Scroll to form
             document.getElementById('add-device-form').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Delete device
         function deleteDevice(index) {
             if (confirm('Are you sure you want to delete this device?')) {
                 devices.splice(index, 1);
@@ -951,60 +1208,481 @@
             }
         }
 
-        // Calculate total load
+        function calculateLoadData() {
+            const hourlyLoad = new Array(24).fill(0);
+            const hourlyDeviceLoads = {};
+            let peakPower = 0;
+            let peakHour = 0;
+            let totalWh = 0;
+            
+            devices.forEach((device, deviceIndex) => {
+                hourlyDeviceLoads[deviceIndex] = new Array(24).fill(0);
+                for (let h = 0; h < 24; h++) {
+                    if (device.operatingHours[h]) {
+                        hourlyDeviceLoads[deviceIndex][h] = device.powerPerHour;
+                        hourlyLoad[h] += device.powerPerHour;
+                        
+                        if (hourlyLoad[h] > peakPower) {
+                            peakPower = hourlyLoad[h];
+                            peakHour = h;
+                        }
+                    }
+                }
+                totalWh += device.dailyConsumption;
+            });
+            
+            // Calculate cumulative curve
+            const cumulativeLoad = new Array(24).fill(0);
+            let runningTotal = 0;
+            for (let h = 0; h < 24; h++) {
+                runningTotal += hourlyLoad[h];
+                cumulativeLoad[h] = runningTotal;
+            }
+            
+            return {
+                hourlyLoad,
+                hourlyDeviceLoads,
+                cumulativeLoad,
+                peakPower,
+                peakHour,
+                totalWh
+            };
+        }
+
+        function updateSummary(data) {
+            const averageLoad = data.totalWh / 24;
+            const usageRate = (data.hourlyLoad.filter(p => p > 0).length / 24 * 100).toFixed(1);
+            const peakHourDisplay = `${data.peakHour % 12 || 12} ${data.peakHour < 12 ? 'AM' : 'PM'}`;
+            
+            document.getElementById('summary-total').textContent = data.totalWh.toLocaleString() + ' Watt-hours';
+            document.getElementById('summary-average').textContent = Math.round(averageLoad).toLocaleString() + ' Watts';
+            document.getElementById('summary-peak-hour').textContent = peakHourDisplay;
+            document.getElementById('summary-usage-rate').textContent = usageRate + '%';
+        }
+
         document.getElementById('calculate-btn').addEventListener('click', function() {
             if (devices.length === 0) {
                 alert('Please add devices first');
                 return;
             }
             
-            const totalDailyConsumption = devices.reduce((sum, device) => sum + device.dailyConsumption, 0);
-            const monthlyConsumption = (totalDailyConsumption * 30) / 1000; // Convert to kWh
-            const yearlyConsumption = monthlyConsumption * 12;
+            const data = calculateLoadData();
             
-            // Calculate required solar system size (assuming 5 peak sun hours)
-            const systemSize = (totalDailyConsumption / 1000) / 5;
+            const monthlyConsumption = (data.totalWh * 30) / 1000;
+            const systemSize = (data.totalWh / 1000) / 5;
             
-            // Update results
-            document.getElementById('total-consumption').textContent = totalDailyConsumption.toLocaleString();
+            document.getElementById('total-consumption').textContent = data.totalWh.toLocaleString();
+            document.getElementById('peak-power').textContent = data.peakPower.toLocaleString();
             document.getElementById('monthly-consumption').textContent = monthlyConsumption.toFixed(1);
-            document.getElementById('yearly-consumption').textContent = yearlyConsumption.toFixed(1);
             document.getElementById('system-size').textContent = systemSize.toFixed(2);
             
-            // Update consumption chart
-            updateConsumptionChart();
+            updateSummary(data);
+            drawTotalLoadChart(data.hourlyLoad, data.hourlyDeviceLoads);
+            drawCumulativeChart(data.cumulativeLoad);
+            drawComparisonChart(data.hourlyLoad, data.cumulativeLoad);
             
-            // Show results
             document.getElementById('results').style.display = 'block';
             document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
         });
 
-        // Update consumption chart
-        function updateConsumptionChart() {
-            const chartContainer = document.getElementById('consumption-chart');
-            chartContainer.innerHTML = '';
+        function drawTotalLoadChart(hourlyLoad, hourlyDeviceLoads = null) {
+            const ctx = document.getElementById('load-curve-chart');
+            if (!ctx) return;
+
+            if (loadChart) loadChart.destroy();
+
+            const labels = Array.from({ length: 24 }, (_, i) => {
+                const h = i % 12 || 12;
+                const ampm = i < 12 ? 'AM' : 'PM';
+                return `${h} ${ampm}`;
+            });
+
+            const datasets = [];
             
-            const totalConsumption = devices.reduce((sum, device) => sum + device.dailyConsumption, 0);
+            if (hourlyDeviceLoads && Object.keys(hourlyDeviceLoads).length > 0) {
+                devices.forEach((device, deviceIndex) => {
+                    datasets.push({
+                        label: device.name,
+                        data: hourlyDeviceLoads[deviceIndex],
+                        borderColor: device.color,
+                        backgroundColor: device.color + '40',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.35,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        stack: 'stack'
+                    });
+                });
+            }
             
-            devices.forEach(device => {
-                const percentage = ((device.dailyConsumption / totalConsumption) * 100).toFixed(1);
-                
-                const chartBar = document.createElement('div');
-                chartBar.className = 'chart-bar';
-                
-                chartBar.innerHTML = `
-                    <div class="chart-label">${device.name}</div>
-                    <div class="chart-bar-container">
-                        <div class="chart-bar-fill" style="width: ${percentage}%"></div>
-                    </div>
-                    <div class="chart-value">${percentage}%</div>
-                `;
-                
-                chartContainer.appendChild(chartBar);
+            // Add total load line on top of stack
+            datasets.push({
+                label: 'Total Load',
+                data: hourlyLoad,
+                borderColor: '#e74c3c',
+                backgroundColor: 'transparent',
+                borderWidth: 4,
+                borderDash: [5, 5],
+                fill: false,
+                tension: 0.35,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                pointBackgroundColor: '#e74c3c'
+            });
+
+            loadChart = new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed.y.toLocaleString() + ' Watts';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Hour',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Power (Watts)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            updateTotalChartLegend();
+        }
+
+        function drawCumulativeChart(cumulativeLoad) {
+            const ctx = document.getElementById('cumulative-chart-canvas');
+            if (!ctx) return;
+
+            if (cumulativeChart) cumulativeChart.destroy();
+
+            const labels = Array.from({ length: 24 }, (_, i) => {
+                const h = i % 12 || 12;
+                const ampm = i < 12 ? 'AM' : 'PM';
+                return `${h} ${ampm}`;
+            });
+
+            cumulativeChart = new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Cumulative Energy Consumed',
+                        data: cumulativeLoad,
+                        borderColor: '#9b59b6',
+                        backgroundColor: 'rgba(155, 89, 182, 0.2)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.35,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `Cumulative Energy: ${context.parsed.y.toLocaleString()} Watt-hours`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Hour',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Cumulative Energy (Watt-hours)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            updateCumulativeChartLegend();
+        }
+
+        function drawComparisonChart(hourlyLoad, cumulativeLoad) {
+            const ctx = document.getElementById('comparison-chart-canvas');
+            if (!ctx) return;
+
+            if (comparisonChart) comparisonChart.destroy();
+
+            const labels = Array.from({ length: 24 }, (_, i) => {
+                const h = i % 12 || 12;
+                const ampm = i < 12 ? 'AM' : 'PM';
+                return `${h} ${ampm}`;
+            });
+
+            // Convert cumulative values to kWh for clarity
+            const cumulativeKWh = cumulativeLoad.map(value => value / 1000);
+
+            comparisonChart = new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Instant Load (Watts)',
+                            data: hourlyLoad,
+                            backgroundColor: 'rgba(0, 90, 140, 0.7)',
+                            borderColor: '#005a8c',
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Cumulative Energy (kWh)',
+                            data: cumulativeKWh,
+                            type: 'line',
+                            borderColor: '#9b59b6',
+                            backgroundColor: 'rgba(155, 89, 182, 0.2)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.35,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.datasetIndex === 0) {
+                                        label += context.parsed.y.toLocaleString() + ' Watts';
+                                    } else {
+                                        label += context.parsed.y.toFixed(2) + ' kWh';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Hour',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Instant Load (Watts)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Cumulative Energy (kWh)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            beginAtZero: true,
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    }
+                }
             });
         }
 
-        // Reset calculation
+        function updateTotalChartLegend() {
+            const legendContainer = document.getElementById('total-chart-legend');
+            if (!legendContainer) return;
+            
+            if (devices.length === 0) {
+                legendContainer.innerHTML = '';
+                return;
+            }
+            
+            let legendHTML = '';
+            devices.forEach((device, index) => {
+                legendHTML += `
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: ${device.color}"></div>
+                        <span>${device.name}</span>
+                    </div>
+                `;
+            });
+            
+            legendHTML += `
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e74c3c; border: 2px dashed #e74c3c"></div>
+                    <span>Total Load</span>
+                </div>
+            `;
+            
+            legendContainer.innerHTML = legendHTML;
+        }
+
+        function updateCumulativeChartLegend() {
+            const legendContainer = document.getElementById('cumulative-chart-legend');
+            if (!legendContainer) return;
+            
+            legendContainer.innerHTML = `
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #9b59b6"></div>
+                    <span>Cumulative Energy</span>
+                </div>
+            `;
+        }
+
+        function updateComparisonChartLegend() {
+            const legendContainer = document.getElementById('comparison-chart-legend');
+            if (!legendContainer) return;
+            
+            legendContainer.innerHTML = `
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #005a8c"></div>
+                    <span>Instant Load (Watts)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #9b59b6"></div>
+                    <span>Cumulative Energy (kWh)</span>
+                </div>
+            `;
+        }
+
         document.getElementById('reset-btn').addEventListener('click', function() {
             if (confirm('Do you want to start a new calculation? All added devices will be deleted.')) {
                 devices = [];
@@ -1013,43 +1691,128 @@
                 document.getElementById('add-device-form').reset();
                 document.getElementById('add-btn').innerHTML = '<i class="fas fa-plus"></i> Add Device';
                 document.getElementById('results').style.display = 'none';
+                
+                if (loadChart) loadChart.destroy();
+                if (cumulativeChart) cumulativeChart.destroy();
+                if (comparisonChart) comparisonChart.destroy();
+                
+                loadChart = null;
+                cumulativeChart = null;
+                comparisonChart = null;
+                
+                initializeTimeSlots();
+                updateTotalChartLegend();
+                updateCumulativeChartLegend();
+                updateComparisonChartLegend();
             }
         });
 
-        // Add some sample devices for demonstration
+        // Switch between chart tabs
+        document.querySelectorAll('.chart-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                switchTab(tabId);
+            });
+        });
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            
+            // Set active tab
+            document.querySelectorAll('.chart-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-tab') === tabId) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Set active content
+            document.querySelectorAll('.chart-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.getElementById(`${tabId}-chart`).classList.add('active');
+            
+            // Redraw chart if needed
+            if (tabId === 'total-load' && loadChart) {
+                setTimeout(() => loadChart.resize(), 100);
+            } else if (tabId === 'cumulative' && cumulativeChart) {
+                setTimeout(() => cumulativeChart.resize(), 100);
+            } else if (tabId === 'comparison' && comparisonChart) {
+                setTimeout(() => comparisonChart.resize(), 100);
+            }
+        }
+
+        // Add sample devices for demonstration
         function addSampleDevices() {
             if (devices.length === 0) {
                 devices = [
                     {
                         name: "Refrigerator",
                         wattage: 150,
-                        hours: 8,
                         quantity: 1,
-                        dailyConsumption: 1200
+                        timeSlots: [{ from: 0, to: 24 }],
+                        totalHours: 24,
+                        operatingHours: new Array(24).fill(1),
+                        dailyConsumption: 150 * 24,
+                        powerPerHour: 150,
+                        color: getDeviceColor(0)
                     },
                     {
                         name: "LED TV",
                         wattage: 100,
-                        hours: 5,
                         quantity: 1,
-                        dailyConsumption: 500
+                        timeSlots: [{ from: 18, to: 23 }],
+                        totalHours: 5,
+                        operatingHours: Array.from({length: 24}, (_, i) => i >= 18 && i < 23 ? 1 : 0),
+                        dailyConsumption: 100 * 5,
+                        powerPerHour: 100,
+                        color: getDeviceColor(1)
                     },
                     {
                         name: "LED Lighting",
                         wattage: 10,
-                        hours: 6,
                         quantity: 8,
-                        dailyConsumption: 480
+                        timeSlots: [{ from: 18, to: 24 }],
+                        totalHours: 6,
+                        operatingHours: Array.from({length: 24}, (_, i) => i >= 18 ? 1 : 0),
+                        dailyConsumption: 10 * 8 * 6,
+                        powerPerHour: 80,
+                        color: getDeviceColor(2)
                     }
                 ];
                 updateDeviceList();
             }
         }
 
-        // Initialize page
+        // Mobile optimization on load
+        function adjustForMobile() {
+            if (window.innerWidth <= 768) {
+                // Hide excessive icons on mobile for better space usage
+                const pageHeaderIcon = document.querySelector('.page-header h2 i');
+                if (pageHeaderIcon) {
+                    pageHeaderIcon.style.display = 'none';
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Add sample devices for demonstration
+            // Initialize time slots when page loads
+            initializeTimeSlots();
+            
             addSampleDevices();
+            adjustForMobile();
+            
+            // Reset layout on window resize
+            window.addEventListener('resize', function() {
+                if (loadChart) loadChart.resize();
+                if (cumulativeChart) cumulativeChart.resize();
+                if (comparisonChart) comparisonChart.resize();
+                adjustForMobile();
+            });
+            
+            // Debug: Log when page loads
+            console.log('Page loaded. Sample devices added:', devices.length);
         });
     </script>
 </body>
