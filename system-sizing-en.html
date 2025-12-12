@@ -36,7 +36,6 @@
             padding: 0 15px;
         }
         
-        /* Header Styles */
         header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
@@ -88,12 +87,6 @@
             text-align: center;
         }
         
-        .nav-links a:active {
-            background-color: rgba(255, 255, 255, 0.35);
-            transform: scale(0.95);
-        }
-        
-        /* Main Content */
         .main-content {
             padding: 20px 0;
         }
@@ -120,7 +113,6 @@
             margin: 0 auto;
         }
         
-        /* Form Styles */
         .form-card {
             background-color: white;
             border-radius: 12px;
@@ -178,7 +170,6 @@
             font-size: 0.8rem;
         }
         
-        /* Button Styles */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -209,15 +200,6 @@
             margin-top: 10px;
         }
         
-        .btn:active {
-            transform: translateY(-2px);
-        }
-        
-        .btn-primary:active {
-            background: linear-gradient(to right, #0077b3, #004a7a);
-        }
-        
-        /* Location Section */
         .location-section {
             background-color: var(--light-color);
             border-radius: 8px;
@@ -238,7 +220,6 @@
             color: #666;
         }
         
-        /* Result Card */
         .result-card {
             background-color: white;
             border-radius: 12px;
@@ -276,10 +257,6 @@
             transition: all 0.3s;
         }
         
-        .result-item:active {
-            transform: scale(0.98);
-        }
-        
         .result-value {
             font-size: 1.5rem;
             font-weight: 700;
@@ -302,7 +279,6 @@
             color: white;
         }
         
-        /* Solar Panel Recommendations */
         .recommendations {
             margin-top: 25px;
             padding-top: 20px;
@@ -327,11 +303,6 @@
             border-radius: 8px;
             margin-bottom: 10px;
             transition: all 0.3s;
-        }
-        
-        .recommendation-item:active {
-            background-color: #f9f9f9;
-            transform: scale(0.98);
         }
         
         .recommendation-icon {
@@ -361,7 +332,6 @@
             color: #666;
         }
         
-        /* Footer */
         footer {
             background-color: var(--primary-color);
             color: white;
@@ -375,228 +345,33 @@
             font-size: 0.85rem;
         }
         
-        /* Language Switcher */
-        .lang-switcher {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
-        .lang-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 0.85rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .lang-btn i {
-            font-size: 0.8rem;
-            transition: transform 0.3s ease;
-        }
-
-        .lang-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            min-width: 140px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            z-index: 1001;
-        }
-
-        .lang-switcher.active .lang-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(5px);
-        }
-
-        .lang-switcher.active .lang-btn i {
-            transform: rotate(180deg);
-        }
-
-        .lang-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 15px;
-            text-decoration: none;
-            color: #333;
-            transition: all 0.3s ease;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .lang-option:last-child {
-            border-bottom: none;
-        }
-
-        .lang-option:hover {
-            background: #f8f9fa;
-        }
-
-        .lang-option.active {
-            background: var(--secondary-color);
-            color: white;
-        }
-
-        .flag-icon {
-            font-size: 1.2rem;
-        }
-
-        .lang-text {
-            font-weight: 500;
-        }
-        
-        /* Media Queries for Larger Screens */
         @media (min-width: 768px) {
-            header {
-                padding: 20px 0;
-            }
-            
-            .logo img {
-                height: 50px;
-            }
-            
-            .logo h1 {
-                font-size: 1.6rem;
-            }
-            
-            .nav-links {
-                padding: 12px;
-                margin: 15px auto;
-                max-width: 90%;
-                gap: 8px;
-            }
-            
-            .nav-links a {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-                flex: initial;
-            }
-            
-            .nav-links a:hover {
-                background-color: rgba(255, 255, 255, 0.35);
-                transform: translateY(-2px);
-            }
-            
-            .page-header h2 {
-                font-size: 1.8rem;
-            }
-            
             .btn {
                 width: auto;
                 padding: 12px 28px;
-            }
-            
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
-            
-            .btn-primary:hover {
-                background: linear-gradient(to right, #0077b3, #004a7a);
-            }
-            
-            .result-item:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
-            
-            .result-item:active {
-                transform: scale(0.98);
-            }
-            
-            .recommendation-item:hover {
-                background-color: #f9f9f9;
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
-            
-            .recommendation-item:active {
-                transform: scale(0.98);
-            }
-        }
-        
-        /* Landscape Mode for Mobile */
-        @media (max-height: 500px) and (orientation: landscape) {
-            header {
-                padding: 10px 0;
-            }
-            
-            .logo img {
-                height: 35px;
-            }
-            
-            .logo h1 {
-                font-size: 1.1rem;
-            }
-            
-            .nav-links {
-                padding: 6px;
-                margin: 8px auto;
-            }
-            
-            .main-content {
-                padding: 15px 0;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <!-- Language Switcher Button -->
-        <div class="lang-switcher">
-            <button class="lang-btn" id="langToggle">
-                <span class="flag-icon">🇺🇸</span>
-                <span class="lang-text">English</span>
-                <i class="fas fa-chevron-down"></i>
-            </button>
-            <div class="lang-dropdown">
-                <a href="system-sizing.html" class="lang-option">
-                    <span class="flag-icon">🇯🇴</span>
-                    <span class="lang-text">العربية</span>
-                </a>
-                <a href="system-sizing-en.html" class="lang-option active">
-                    <span class="flag-icon">🇺🇸</span>
-                    <span class="lang-text">English</span>
-                </a>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="PV Calculator Logo">
+                <h1>Solar System Sizing Calculator</h1>
             </div>
+            
+            <nav class="nav-links">
+                <a href="engineering.html"><i class="fas fa-arrow-right"></i> Back to Engineering Services</a>
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            </nav>
         </div>
-
-        <div class="logo">
-            <img src="logo.png" alt="PV Calculator Logo">
-            <h1>Solar System Sizing</h1>
-        </div>
-        
-        <nav class="nav-links">
-            <a href="engineering-en.html"><i class="fas fa-arrow-left"></i> Back to Engineering Services</a>
-            <a href="index-en.html"><i class="fas fa-home"></i> Home</a>
-        </nav>
     </header>
 
     <div class="container">
         <div class="main-content">
             <div class="page-header">
-                <h2><i class="fas fa-solar-panel"></i> Solar System Sizing</h2>
+                <h2><i class="fas fa-solar-panel"></i> Solar System Sizing Calculator</h2>
                 <p>Enter your daily consumption data to determine the required solar system size in Jordan</p>
             </div>
 
@@ -627,11 +402,11 @@
                     <div class="form-group">
                         <label for="location"><i class="fas fa-sun"></i> Location in Jordan:</label>
                         <select id="location" required>
-                            <option value="5.8">Amman and Central Areas</option>
-                            <option value="6.2">Aqaba and Southern Areas</option>
-                            <option value="5.5">Irbid and Northern Areas</option>
-                            <option value="5.3">Zarqa and Eastern Areas</option>
-                            <option value="custom">Custom Selection</option>
+                            <option value="5.8">Amman & Central Regions</option>
+                            <option value="6.2">Aqaba & Southern Regions</option>
+                            <option value="5.5">Irbid & Northern Regions</option>
+                            <option value="5.3">Zarqa & Eastern Regions</option>
+                            <option value="custom">Custom Setting</option>
                         </select>
                         <div class="form-hint">Average Peak Sun Hours (PSH) varies by region</div>
                     </div>
@@ -652,24 +427,24 @@
                         </select>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group" id="system-efficiency-group">
                         <label for="system-efficiency"><i class="fas fa-tachometer-alt"></i> System Efficiency (%):</label>
                         <input type="number" id="system-efficiency" min="1" max="100" value="78" required>
                         <div class="form-hint">System efficiency is affected by losses in wiring, inverter, batteries, etc.</div>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group" id="days-autonomy-group">
                         <label for="days-autonomy"><i class="fas fa-battery-full"></i> Required Storage Days:</label>
                         <input type="number" id="days-autonomy" min="1" value="2" required>
                         <div class="form-hint">Number of days the system should operate without sunlight</div>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group" id="battery-voltage-group">
                         <label for="battery-voltage"><i class="fas fa-car-battery"></i> Battery System Voltage:</label>
                         <select id="battery-voltage" required>
-                            <option value="12">12 Volt</option>
-                            <option value="24">24 Volt</option>
-                            <option value="48" selected>48 Volt</option>
+                            <option value="12">12 Volts</option>
+                            <option value="24">24 Volts</option>
+                            <option value="48" selected>48 Volts</option>
                         </select>
                     </div>
                     
@@ -682,18 +457,18 @@
             <div class="result-card" id="results">
                 <div class="result-header">
                     <i class="fas fa-chart-line"></i>
-                    <h3>Solar System Sizing Results</h3>
+                    <h3>Solar System Calculation Results</h3>
                 </div>
                 
                 <div class="result-grid">
                     <div class="result-item result-highlight">
                         <div class="result-value" id="panel-capacity">--</div>
-                        <div class="result-label">Solar Panel Capacity</div>
+                        <div class="result-label">Required Solar Panel Capacity</div>
                     </div>
                     
                     <div class="result-item">
                         <div class="result-value" id="panel-count">--</div>
-                        <div class="result-label">Number of Panels (400W)</div>
+                        <div class="result-label">Number of Panels (400W each)</div>
                     </div>
                     
                     <div class="result-item result-highlight">
@@ -703,7 +478,7 @@
                     
                     <div class="result-item">
                         <div class="result-value" id="battery-count">--</div>
-                        <div class="result-label">Number of Batteries (200Ah)</div>
+                        <div class="result-label">Number of Batteries (200Ah each)</div>
                     </div>
                     
                     <div class="result-item">
@@ -713,7 +488,7 @@
                     
                     <div class="result-item">
                         <div class="result-value" id="required-area">--</div>
-                        <div class="result-label">Approximate Area Required</div>
+                        <div class="result-label">Approximate Required Area</div>
                     </div>
                     
                     <div class="result-item">
@@ -723,19 +498,19 @@
                     
                     <div class="result-item">
                         <div class="result-value" id="system-cost">--</div>
-                        <div class="result-label">Approximate Cost</div>
+                        <div class="result-label">Approximate System Cost (JOD)</div>
                     </div>
                 </div>
                 
                 <div class="recommendations">
-                    <h4 class="recommendations-title"><i class="fas fa-solar-panel"></i> Solar System Recommendations</h4>
+                    <h4 class="recommendations-title"><i class="fas fa-solar-panel"></i> System Recommendations</h4>
                     <div id="recommendations-container">
-                        <!-- Will be filled by JavaScript -->
+                        <!-- Will be populated by JavaScript -->
                     </div>
                 </div>
                 
                 <button id="reset-btn" class="btn btn-secondary">
-                    <i class="fas fa-redo"></i> Recalculate
+                    <i class="fas fa-redo"></i> Reset Calculation
                 </button>
             </div>
         </div>
@@ -743,80 +518,36 @@
 
     <footer>
         <div class="container">
-            <p>© 2025 PV Calculator. All rights reserved.</p>
-            <p>Integrated tool for solar system sizing and designing solar energy systems in Jordan</p>
+            <p>© 2025 PV Calculator. All Rights Reserved.</p>
+            <p>Comprehensive tool for solar system sizing and solar energy system design in Jordan</p>
         </div>
     </footer>
 
     <script>
-        // Main cities in Jordan
+        // Major cities in Jordan
         const jordanCities = {
             'amman': { name: 'Amman', lat: 31.9539, lng: 35.9106, psh: 5.8 },
             'irbid': { name: 'Irbid', lat: 32.5556, lng: 35.8500, psh: 5.5 },
             'zarqa': { name: 'Zarqa', lat: 32.0836, lng: 36.1000, psh: 5.3 },
             'aqaba': { name: 'Aqaba', lat: 29.5267, lng: 35.0078, psh: 6.2 },
-            'salt': { name: 'Salt', lat: 32.0392, lng: 35.7272, psh: 5.7 },
+            'salt': { name: 'Al-Salt', lat: 32.0392, lng: 35.7272, psh: 5.7 },
             'mafraq': { name: 'Mafraq', lat: 32.3417, lng: 36.2022, psh: 5.4 },
-            'karak': { name: 'Karak', lat: 31.1833, lng: 35.7000, psh: 5.9 },
+            'karak': { name: 'Al-Karak', lat: 31.1833, lng: 35.7000, psh: 5.9 },
             'maan': { name: 'Ma\'an', lat: 30.1967, lng: 35.7342, psh: 6.1 }
         };
 
-        // Language Switcher Control
-        const langSwitcher = document.querySelector('.lang-switcher');
-        const langToggle = document.getElementById('langToggle');
+        // Hide system efficiency field
+        document.getElementById('system-efficiency-group').style.display = 'none';
 
-        // Open/close dropdown
-        langToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            langSwitcher.classList.toggle('active');
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function() {
-            langSwitcher.classList.remove('active');
-        });
-
-        // Prevent closing when clicking inside
-        langSwitcher.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-
-        // Save language preference
-        const savedLang = localStorage.getItem('preferredLang');
-        if (savedLang) {
-            updateActiveLang(savedLang);
-        }
-
-        // Update active language
-        function updateActiveLang(lang) {
-            const langOptions = document.querySelectorAll('.lang-option');
-            langOptions.forEach(option => {
-                option.classList.remove('active');
-                if (option.getAttribute('href').includes(lang)) {
-                    option.classList.add('active');
-                }
-            });
-            
-            // Update main button
-            const activeOption = document.querySelector('.lang-option.active');
-            if (activeOption) {
-                const flag = activeOption.querySelector('.flag-icon').textContent;
-                const text = activeOption.querySelector('.lang-text').textContent;
-                langToggle.querySelector('.flag-icon').textContent = flag;
-                langToggle.querySelector('.lang-text').textContent = text;
+        // Function to automatically calculate efficiency based on system type
+        function getSystemEfficiency(systemType) {
+            switch(systemType) {
+                case 'on-grid': return 0.82;
+                case 'off-grid': return 0.78;
+                case 'hybrid': return 0.80;
+                default: return 0.78;
             }
         }
-
-        // Save language preference when switching
-        const langOptions = document.querySelectorAll('.lang-option');
-        langOptions.forEach(option => {
-            option.addEventListener('click', function(e) {
-                e.preventDefault();
-                const lang = this.getAttribute('href').includes('en') ? 'en' : 'ar';
-                localStorage.setItem('preferredLang', lang);
-                window.location.href = this.getAttribute('href');
-            });
-        });
 
         // Automatic location detection
         document.getElementById('get-location-btn').addEventListener('click', function() {
@@ -835,17 +566,17 @@
                             // Find nearest city
                             const nearestCity = findNearestCity(lat, lng);
                             document.getElementById('location').value = nearestCity.psh;
-                            statusElement.textContent = `✓ Your location in Jordan has been detected (Near ${nearestCity.name})`;
+                            statusElement.textContent = `✓ Location detected in Jordan (near ${nearestCity.name})`;
                             statusElement.style.color = '#27ae60';
                         } else {
-                            statusElement.textContent = '❌ Location is outside Jordan. Amman has been set as default.';
+                            statusElement.textContent = '❌ Location outside Jordan. Amman set as default.';
                             statusElement.style.color = '#e74c3c';
                             setDefaultLocation();
                         }
                     },
                     function(error) {
                         console.error('Error getting location:', error);
-                        statusElement.textContent = '❌ Unable to detect location. Amman has been set as default.';
+                        statusElement.textContent = '❌ Unable to detect location. Amman set as default.';
                         statusElement.style.color = '#e74c3c';
                         setDefaultLocation();
                     },
@@ -856,7 +587,7 @@
                     }
                 );
             } else {
-                statusElement.textContent = '❌ Browser does not support location detection. Amman has been set as default.';
+                statusElement.textContent = '❌ Browser does not support location detection. Amman set as default.';
                 statusElement.style.color = '#e74c3c';
                 setDefaultLocation();
             }
@@ -895,14 +626,29 @@
             }
         });
 
-        // Calculate solar system
+        // Manage system type
+        document.getElementById('system-type').addEventListener('change', function () {
+            const systemType = this.value;
+            const storageGroup = document.getElementById('days-autonomy-group');
+            const batteryGroup = document.getElementById('battery-voltage-group');
+
+            if (systemType === 'on-grid') {
+                storageGroup.style.display = 'none';
+                batteryGroup.style.display = 'none';
+            } else {
+                storageGroup.style.display = 'block';
+                batteryGroup.style.display = 'block';
+            }
+        });
+
+        // Solar system calculation
         document.getElementById('system-sizing-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const dailyUsage = parseFloat(document.getElementById('daily-usage').value);
             
             if (!dailyUsage || dailyUsage <= 0) {
-                alert('Please enter a valid daily consumption');
+                alert('Please enter valid daily consumption');
                 return;
             }
             
@@ -914,27 +660,32 @@
                 sunHours = parseFloat(document.getElementById('location').value);
             }
             
-            const systemEfficiency = parseFloat(document.getElementById('system-efficiency').value) / 100;
-            const daysAutonomy = parseFloat(document.getElementById('days-autonomy').value);
-            const batteryVoltage = parseFloat(document.getElementById('battery-voltage').value);
             const systemType = document.getElementById('system-type').value;
+            const systemEfficiency = getSystemEfficiency(systemType);
+            const batteryVoltage = parseFloat(document.getElementById('battery-voltage').value);
             
             // Basic calculations
             const requiredEnergy = dailyUsage / systemEfficiency;
             const panelCapacityKW = requiredEnergy / sunHours;
             const panelCapacityW = panelCapacityKW * 1000;
-            const panelWattage = 400; // watts per panel
+            const panelWattage = 400; // Watts per panel
             const panelCount = Math.ceil(panelCapacityW / panelWattage);
             
-            // Calculate battery capacity
-            const batteryCapacityAh = (dailyUsage * daysAutonomy) / (batteryVoltage * 0.5); // assuming 50% discharge
-            const batteryCount = Math.ceil(batteryCapacityAh / 200); // assuming 200Ah battery
+            // Calculate battery capacity only if not on-grid
+            let batteryCapacityAh = 0;
+            let batteryCount = 0;
+            
+            if (systemType !== 'on-grid') {
+                const daysAutonomy = parseFloat(document.getElementById('days-autonomy').value);
+                batteryCapacityAh = (dailyUsage * daysAutonomy) / (batteryVoltage * 0.5); // Assuming 50% discharge
+                batteryCount = Math.ceil(batteryCapacityAh / 200); // Assuming 200Ah battery
+            }
             
             // Calculate inverter size
-            const inverterSize = Math.ceil(dailyUsage / 5 * 1.2); // rough estimate with 20% safety margin
+            const inverterSize = Math.ceil(dailyUsage / 5 * 1.2); // Approximate estimation with 20% safety margin
             
             // Calculate area
-            const panelArea = panelCount * 1.6; // assuming 1.6 m² for 400W panel
+            const panelArea = panelCount * 1.6; // Assuming 1.6 m² per 400W panel
             
             // Calculate daily production
             const dailyProduction = (panelCapacityKW * sunHours * systemEfficiency).toFixed(2);
@@ -955,32 +706,33 @@
             });
             
             // Update recommendations
-            updateRecommendations(systemType, daysAutonomy, batteryCount, panelCount);
+            updateRecommendations(systemType, batteryCount, panelCount);
             
             // Show results
             document.getElementById('results').style.display = 'block';
             document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
         });
 
-        // Calculate system cost
+        // Calculate system cost in Jordanian Dinar (JOD)
         function calculateSystemCost(panelCount, batteryCount, inverterSize, systemType) {
-            const panelCost = panelCount * 400 * 0.8; // 0.8 dollars per watt
-            const batteryCost = batteryCount * 350; // 350 dollars per battery
-            const inverterCost = inverterSize * 500; // 500 dollars per kW
-            const structureCost = panelCount * 1.6 * 50; // 50 dollars per square meter
-            
-            let additionalCost = 0;
-            if (systemType === 'on-grid') {
-                additionalCost = inverterSize * 200; // additional cost for grid-tied systems
-            } else if (systemType === 'off-grid') {
-                additionalCost = inverterSize * 300; // additional cost for off-grid systems
-            } else {
-                additionalCost = inverterSize * 400; // additional cost for hybrid systems
-            }
-            
-            const installationCost = (panelCost + batteryCost + inverterCost + structureCost + additionalCost) * 0.2; // 20% of equipment cost
-            
-            return panelCost + batteryCost + inverterCost + structureCost + additionalCost + installationCost;
+            // Panel prices in JOD (average price)
+            const panelPricePerWatt = 0.09; // 0.09 JOD per watt
+            const panelCost = panelCount * 400 * panelPricePerWatt;
+
+            // Battery prices
+            const batteryCost = batteryCount * 650; // 650 JOD for 200Ah battery
+
+            // Inverter prices
+            let inverterCost = 0;
+            if (inverterSize <= 6) inverterCost = inverterSize * 650;
+            else if (inverterSize <= 12) inverterCost = inverterSize * 800;
+            else inverterCost = inverterSize * 900;
+
+            // Structure and installation costs
+            const structureCost = panelCount * 1.6 * 25; // 25 JOD per square meter
+            const installationCost = (panelCost + batteryCost + inverterCost + structureCost) * 0.25; // 25% installation
+
+            return panelCost + batteryCost + inverterCost + structureCost + installationCost;
         }
 
         // Update results
@@ -992,11 +744,11 @@
             document.getElementById('inverter-size').textContent = data.inverterSize + ' kW';
             document.getElementById('required-area').textContent = data.requiredArea + ' m²';
             document.getElementById('daily-production').textContent = data.dailyProduction + ' kWh';
-            document.getElementById('system-cost').textContent = '$' + data.systemCost;
+            document.getElementById('system-cost').textContent = data.systemCost + ' JOD';
         }
 
         // Update recommendations
-        function updateRecommendations(systemType, daysAutonomy, batteryCount, panelCount) {
+        function updateRecommendations(systemType, batteryCount, panelCount) {
             const container = document.getElementById('recommendations-container');
             container.innerHTML = '';
             
@@ -1007,10 +759,10 @@
                 icon: 'fas fa-solar-panel',
                 title: 'System Type',
                 description: systemType === 'on-grid' ? 
-                    'Grid-tied system - suitable if you have grid connection' :
+                    'Grid-tied system - Suitable if you have grid connection' :
                     systemType === 'off-grid' ?
-                    'Off-grid system - ideal for remote areas without grid connection' :
-                    'Hybrid system - combines advantages of both grid-tied and off-grid systems'
+                    'Off-grid system - Ideal for remote areas without grid' :
+                    'Hybrid system - Combines advantages of both grid-tied and off-grid systems'
             });
             
             // Battery recommendations
@@ -1018,13 +770,13 @@
                 recommendations.push({
                     icon: 'fas fa-car-battery',
                     title: 'Battery System',
-                    description: 'We recommend using lithium batteries to save space and increase lifespan'
+                    description: 'We recommend using Lithium batteries to save space and increase lifespan'
                 });
-            } else {
+            } else if (batteryCount > 0) {
                 recommendations.push({
                     icon: 'fas fa-car-battery',
                     title: 'Battery System',
-                    description: 'Lead-acid batteries can be used to save cost while ensuring good performance'
+                    description: 'You can use Lead-Acid batteries for cost savings with good performance'
                 });
             }
             
@@ -1033,25 +785,16 @@
                 recommendations.push({
                     icon: 'fas fa-sun',
                     title: 'Panel Installation',
-                    description: 'We recommend using durable and wind-resistant mounting structures to ensure system safety'
+                    description: 'We recommend using durable, wind-resistant mounting structures for system safety'
                 });
             }
             
             // Maintenance recommendations
             recommendations.push({
                 icon: 'fas fa-tools',
-                title: 'Periodic Maintenance',
+                title: 'Regular Maintenance',
                 description: 'Clean solar panels every 3 months and check batteries monthly to ensure system efficiency'
             });
-            
-            // Additional recommendations based on storage days
-            if (daysAutonomy > 3) {
-                recommendations.push({
-                    icon: 'fas fa-battery-full',
-                    title: 'Storage Capacity',
-                    description: 'You have high storage capacity - suitable for areas with frequent cloudy days'
-                });
-            }
             
             recommendations.forEach(rec => {
                 const item = document.createElement('div');
@@ -1077,12 +820,19 @@
             document.getElementById('results').style.display = 'none';
             document.getElementById('location-status').textContent = '';
             document.getElementById('custom-location').style.display = 'none';
+            
+            // Show storage and battery fields again
+            document.getElementById('days-autonomy-group').style.display = 'block';
+            document.getElementById('battery-voltage-group').style.display = 'block';
         });
 
-        // Initialize page
+        // Page initialization
         document.addEventListener('DOMContentLoaded', function() {
-            // Set Amman as default location
+            // Set Amman as default
             setDefaultLocation();
+            
+            // Hide storage and battery fields if system is grid-tied
+            document.getElementById('system-type').dispatchEvent(new Event('change'));
         });
     </script>
 </body>
