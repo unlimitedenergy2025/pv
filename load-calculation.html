@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PV Calculator - حساب الحمل الكهربائي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #005a8c;
@@ -14,6 +16,12 @@
             --dark-color: #2c3e50;
             --success-color: #27ae60;
             --warning-color: #f39c12;
+            --chart-color-1: #005a8c;
+            --chart-color-2: #008ecc;
+            --chart-color-3: #2ecc71;
+            --chart-color-4: #e74c3c;
+            --total-line-color: #e74c3c;
+            --cumulative-color: #9b59b6;
         }
         
         * {
@@ -27,6 +35,7 @@
             background-color: #f5f5f5;
             line-height: 1.6;
             color: #333;
+            padding-bottom: 20px;
         }
         
         .container {
@@ -36,12 +45,14 @@
             padding: 0 15px;
         }
         
-        /* Header Styles */
         header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             padding: 15px 0;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
         .logo {
@@ -88,12 +99,10 @@
             text-align: center;
         }
         
-        .nav-links a:active {
-            background-color: rgba(255, 255, 255, 0.35);
-            transform: scale(0.95);
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.3);
         }
         
-        /* Main Content */
         .main-content {
             padding: 20px 0;
         }
@@ -115,12 +124,10 @@
         
         .page-header p {
             color: #666;
-            font-size: 0.95rem;
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
         }
         
-        /* Form Styles */
         .form-card {
             background-color: white;
             border-radius: 12px;
@@ -174,7 +181,78 @@
             box-shadow: 0 0 0 3px rgba(0, 142, 204, 0.1);
         }
         
-        /* Button Styles */
+        .time-slots-container {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .time-slot {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .time-range {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex: 1;
+            flex-wrap: wrap;
+        }
+        
+        .time-range select {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .remove-slot {
+            background-color: #ffebee;
+            color: #d32f2f;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        
+        .remove-slot:hover {
+            background-color: #ffcdd2;
+        }
+        
+        .add-slot-btn {
+            background-color: #e8f5e8;
+            color: #388e3c;
+            border: 1px dashed #4caf50;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            width: 100%;
+            justify-content: center;
+            transition: all 0.3s;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+        }
+        
+        .add-slot-btn:hover {
+            background-color: #c8e6c9;
+        }
+        
         .btn {
             display: inline-flex;
             align-items: center;
@@ -193,9 +271,18 @@
             text-align: center;
         }
         
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
         .btn-primary {
             background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
             color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
         }
         
         .btn-success {
@@ -203,20 +290,19 @@
             color: white;
         }
         
+        .btn-success:hover {
+            background-color: #219a52;
+        }
+        
         .btn-danger {
             background-color: var(--accent-color);
             color: white;
         }
         
-        .btn:active {
-            transform: translateY(-2px);
+        .btn-danger:hover {
+            background-color: #c0392b;
         }
         
-        .btn-primary:active {
-            background: linear-gradient(to right, #0077b3, #004a7a);
-        }
-        
-        /* Device List */
         .device-list {
             background-color: white;
             border-radius: 12px;
@@ -236,24 +322,6 @@
             border-bottom: 2px solid #f0f0f0;
         }
         
-        .device-list-title {
-            color: var(--primary-color);
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .device-count {
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
         .device-item {
             display: flex;
             justify-content: space-between;
@@ -263,11 +331,7 @@
             transition: all 0.3s;
         }
         
-        .device-item:last-child {
-            border-bottom: none;
-        }
-        
-        .device-item:active {
+        .device-item:hover {
             background-color: #f9f9f9;
         }
         
@@ -279,22 +343,26 @@
             font-weight: 600;
             color: var(--primary-color);
             margin-bottom: 5px;
+            font-size: 1.1rem;
         }
         
-        .device-details {
-            font-size: 0.85rem;
+        .device-details, .device-time-slots {
+            font-size: 0.9rem;
             color: #666;
+            margin-bottom: 3px;
         }
         
         .device-consumption {
             text-align: left;
             font-weight: 600;
             color: var(--primary-color);
+            min-width: 120px;
+            text-align: center;
         }
         
         .device-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             margin-right: 15px;
         }
         
@@ -310,23 +378,27 @@
         }
         
         .btn-edit {
-            background-color: rgba(52, 152, 219, 0.1);
-            color: var(--secondary-color);
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .btn-edit:hover {
+            background-color: #bbdefb;
         }
         
         .btn-delete {
-            background-color: rgba(231, 76, 60, 0.1);
-            color: var(--accent-color);
+            background-color: #ffebee;
+            color: #d32f2f;
         }
         
-        .btn-icon:active {
-            transform: scale(0.9);
+        .btn-delete:hover {
+            background-color: #ffcdd2;
         }
         
         .empty-state {
             text-align: center;
             padding: 40px 20px;
-            color: #666;
+            color: #888;
         }
         
         .empty-state i {
@@ -335,7 +407,11 @@
             color: #ddd;
         }
         
-        /* Result Card */
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
         .result-card {
             background-color: white;
             border-radius: 12px;
@@ -351,203 +427,265 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 20px;
-        }
-        
-        .result-header h3 {
             color: var(--primary-color);
-            font-size: 1.2rem;
         }
         
         .result-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .result-item {
             background-color: var(--light-color);
             border-radius: 8px;
-            padding: 15px;
+            padding: 20px 15px;
             text-align: center;
+            transition: all 0.3s;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .result-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .result-value {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--primary-color);
             margin-bottom: 5px;
         }
         
         .result-label {
-            font-size: 0.85rem;
             color: #666;
+            font-size: 0.9rem;
         }
         
-        .consumption-chart {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #f0f0f0;
+        .chart-container {
+            margin-top: 30px;
+            margin-bottom: 20px;
         }
         
         .chart-title {
+            margin-bottom: 20px;
             color: var(--primary-color);
-            font-size: 1rem;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .chart-bars {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .chart-bar {
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
-        .chart-label {
-            width: 120px;
-            font-size: 0.85rem;
-            color: #666;
+        .load-curve-container {
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
         }
         
-        .chart-bar-container {
-            flex: 1;
-            height: 20px;
-            background-color: #f0f0f0;
-            border-radius: 10px;
-            overflow: hidden;
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 400px;
         }
         
-        .chart-bar-fill {
-            height: 100%;
-            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
-            border-radius: 10px;
-            transition: width 0.5s ease;
+        .chart-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
         }
         
-        .chart-value {
-            width: 80px;
-            text-align: left;
-            font-size: 0.85rem;
+        .chart-tab {
+            padding: 10px 20px;
+            cursor: pointer;
             font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .chart-tab.active {
             color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
         }
         
-        /* Footer */
-        footer {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-            margin-top: 40px;
+        .chart-tab:hover:not(.active) {
+            color: var(--secondary-color);
         }
         
-        footer p {
-            margin: 5px 0;
-            font-size: 0.85rem;
+        .chart-content {
+            display: none;
         }
         
-        /* Media Queries for Larger Screens */
-        @media (min-width: 768px) {
-            header {
-                padding: 20px 0;
+        .chart-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .chart-wrapper {
+                height: 300px;
             }
             
-            .logo img {
-                height: 50px;
+            .result-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
             
-            .logo h1 {
-                font-size: 1.6rem;
+            .device-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
             }
             
-            .nav-links {
-                padding: 12px;
-                margin: 15px auto;
-                max-width: 90%;
-                gap: 8px;
+            .device-consumption {
+                text-align: right;
+                min-width: auto;
+                align-self: flex-end;
+            }
+            
+            .device-actions {
+                align-self: flex-end;
+                margin-right: 0;
+            }
+            
+            .time-range {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .time-range select {
+                width: 100%;
+                min-width: 100%;
             }
             
             .nav-links a {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-                flex: initial;
+                font-size: 0.8rem;
+                padding: 6px 10px;
             }
             
-            .nav-links a:hover {
-                background-color: rgba(255, 255, 255, 0.35);
-                transform: translateY(-2px);
+            .chart-tabs {
+                flex-direction: column;
+                border-bottom: none;
             }
             
-            .page-header h2 {
-                font-size: 1.8rem;
+            .chart-tab {
+                border-bottom: 1px solid #e0e0e0;
+                border-right: 3px solid transparent;
             }
             
-            .form-grid {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-            
-            .btn {
-                width: auto;
-                padding: 12px 28px;
-            }
-            
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
-            
-            .btn-primary:hover {
-                background: linear-gradient(to right, #0077b3, #004a7a);
-            }
-            
-            .device-item:hover {
-                background-color: #f9f9f9;
-            }
-            
-            .btn-icon:hover {
-                transform: scale(1.1);
-            }
-            
-            .btn-icon:active {
-                transform: scale(0.9);
+            .chart-tab.active {
+                border-right-color: var(--primary-color);
+                border-bottom-color: #e0e0e0;
             }
         }
         
-        /* Landscape Mode for Mobile */
-        @media (max-height: 500px) and (orientation: landscape) {
-            header {
-                padding: 10px 0;
+        @media (max-width: 480px) {
+            .chart-wrapper {
+                height: 250px;
             }
             
-            .logo img {
-                height: 35px;
+            .result-grid {
+                grid-template-columns: 1fr;
             }
             
             .logo h1 {
                 font-size: 1.1rem;
             }
             
-            .nav-links {
-                padding: 6px;
-                margin: 8px auto;
+            .form-title, .page-header h2 {
+                font-size: 1.2rem;
             }
             
-            .main-content {
-                padding: 15px 0;
+            .page-header p {
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 15px;
             }
         }
+        
+        /* تحسينات للهواتف الصغيرة جداً */
+        @media (max-width: 360px) {
+            .chart-wrapper {
+                height: 220px;
+            }
+            
+            .result-value {
+                font-size: 1.5rem;
+            }
+            
+            .device-name {
+                font-size: 1rem;
+            }
+        }
+        
+        /* تحسينات لشاشات كبيرة */
+        @media (min-width: 1200px) {
+            .chart-wrapper {
+                height: 450px;
+            }
+        }
+        
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        
+        .summary-box {
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border-right: 4px solid var(--secondary-color);
+        }
+        
+        .summary-box h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .summary-value {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -568,7 +706,7 @@
         <div class="main-content">
             <div class="page-header">
                 <h2><i class="fas fa-bolt"></i> حساب الحمل الكهربائي</h2>
-                <p>أضف الأجهزة الكهربائية لحساب إجمالي استهلاك الطاقة اليومي وتصميم النظام الشمسي المناسب</p>
+                <p>أضف الأجهزة الكهربائية مع جدول التشغيل الزمني لحساب إجمالي استهلاك الطاقة وتوزيع الحمل على مدار اليوم</p>
             </div>
 
             <div class="form-card">
@@ -587,13 +725,15 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="device-hours"><i class="fas fa-clock"></i> ساعات التشغيل اليومية:</label>
-                            <input type="number" id="device-hours" min="0.1" step="0.1" max="24" placeholder="8" required>
+                            <label for="device-quantity"><i class="fas fa-calculator"></i> الكمية:</label>
+                            <input type="number" id="device-quantity" min="1" value="1" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="device-quantity"><i class="fas fa-calculator"></i> الكمية:</label>
-                            <input type="number" id="device-quantity" min="1" value="1" required>
+                            <label><i class="fas fa-clock"></i> أوقات التشغيل:</label>
+                            <div class="time-slots-container" id="time-slots-container">
+                                <!-- سيتم ملؤها بواسطة JavaScript -->
+                            </div>
                         </div>
                     </div>
                     
@@ -621,7 +761,7 @@
             </div>
             
             <button id="calculate-btn" class="btn btn-success">
-                <i class="fas fa-calculator"></i> حساب الحمل الكلي
+                <i class="fas fa-calculator"></i> حساب الحمل الكلي ورسم كيرف اللود
             </button>
             
             <div class="result-card" id="results">
@@ -637,13 +777,13 @@
                     </div>
                     
                     <div class="result-item">
-                        <div class="result-value" id="monthly-consumption">0</div>
-                        <div class="result-label">كيلوواط/ساعة شهرياً</div>
+                        <div class="result-value" id="peak-power">0</div>
+                        <div class="result-label">أقصى حمل (واط)</div>
                     </div>
                     
                     <div class="result-item">
-                        <div class="result-value" id="yearly-consumption">0</div>
-                        <div class="result-label">كيلوواط/ساعة سنوياً</div>
+                        <div class="result-value" id="monthly-consumption">0</div>
+                        <div class="result-label">كيلوواط/ساعة شهرياً</div>
                     </div>
                     
                     <div class="result-item">
@@ -652,10 +792,55 @@
                     </div>
                 </div>
                 
-                <div class="consumption-chart">
-                    <h4 class="chart-title"><i class="fas fa-chart-bar"></i> توزيع الاستهلاك</h4>
-                    <div class="chart-bars" id="consumption-chart">
-                        <!-- سيتم ملؤها بالجافاسكريبت -->
+                <div class="summary-box">
+                    <h4><i class="fas fa-info-circle"></i> ملخص الحمل الكهربائي</h4>
+                    <div class="summary-item">
+                        <span class="summary-label">إجمالي استهلاك الطاقة اليومي:</span>
+                        <span class="summary-value" id="summary-total">0 واط/ساعة</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">متوسط الحمل اليومي:</span>
+                        <span class="summary-value" id="summary-average">0 واط</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">ساعة الذروة:</span>
+                        <span class="summary-value" id="summary-peak-hour">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">معدل الاستخدام اليومي:</span>
+                        <span class="summary-value" id="summary-usage-rate">0%</span>
+                    </div>
+                </div>
+                
+                <div class="load-curve-container">
+                    <div class="chart-tabs">
+                        <div class="chart-tab active" data-tab="total-load">منحنى الحمل الكلي</div>
+                        <div class="chart-tab" data-tab="cumulative">المنحنى التراكمي</div>
+                        <div class="chart-tab" data-tab="comparison">المقارنة</div>
+                    </div>
+                    
+                    <div class="chart-content active" id="total-load-chart">
+                        <h4 class="chart-title"><i class="fas fa-chart-line"></i> منحنى الحمل الكلي على مدار 24 ساعة</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="load-curve-chart" class="chart-canvas"></canvas>
+                        </div>
+                        <div class="chart-legend" id="total-chart-legend"></div>
+                    </div>
+                    
+                    <div class="chart-content" id="cumulative-chart">
+                        <h4 class="chart-title"><i class="fas fa-chart-area"></i> المنحنى التراكمي للطاقة المستهلكة</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="cumulative-chart-canvas" class="chart-canvas"></canvas>
+                        </div>
+                        <div class="chart-legend" id="cumulative-chart-legend"></div>
+                    </div>
+                    
+                    <div class="chart-content" id="comparison-chart">
+                        <h4 class="chart-title"><i class="fas fa-chart-bar"></i> مقارنة الحمل الكلي والتراكمي</h4>
+                        <div class="chart-wrapper">
+                            <canvas id="comparison-chart-canvas" class="chart-canvas"></canvas>
+                        </div>
+                        <div class="chart-legend" id="comparison-chart-legend"></div>
                     </div>
                 </div>
                 
@@ -666,61 +851,239 @@
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>© 2025 PV Calculator. جميع الحقوق محفوظة.</p>
-            <p>أداة متكاملة لحساب الأحمال الكهربائية وتصميم أنظمة الطاقة الشمسية</p>
-        </div>
-    </footer>
-
     <script>
-        // بيانات الأجهزة
         let devices = [];
         let editIndex = -1;
+        let loadChart = null;
+        let cumulativeChart = null;
+        let comparisonChart = null;
+        let currentTab = 'total-load';
 
-        // إضافة جهاز جديد
+        // دالة لإنشاء خيارات الوقت
+        function generateTimeOptions() {
+            let options = '';
+            for (let i = 0; i <= 24; i++) {
+                const h = i % 12 || 12;
+                const ampm = i < 12 ? 'ص' : 'م';
+                const selected = i === 24 ? 'selected' : '';
+                options += `<option value="${i}" ${selected}>${h}:00 ${ampm}</option>`;
+            }
+            return options;
+        }
+
+        // دالة لإنشاء خيارات الوقت من 0 إلى 23
+        function generateTimeFromOptions() {
+            let options = '';
+            for (let i = 0; i < 24; i++) {
+                const h = i % 12 || 12;
+                const ampm = i < 12 ? 'ص' : 'م';
+                options += `<option value="${i}">${h}:00 ${ampm}</option>`;
+            }
+            return options;
+        }
+
+        // دالة لإنشاء فترة زمنية
+        function createTimeSlot(isFirst = false) {
+            const timeSlot = document.createElement('div');
+            timeSlot.className = 'time-slot';
+            timeSlot.innerHTML = `
+                <div class="time-range">
+                    من
+                    <select class="time-from">
+                        ${generateTimeFromOptions()}
+                    </select>
+                    إلى
+                    <select class="time-to">
+                        ${generateTimeOptions()}
+                    </select>
+                </div>
+                <button type="button" class="remove-slot" onclick="removeTimeSlot(this)" ${isFirst ? 'style="display: none;"' : ''}>
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            return timeSlot;
+        }
+
+        // تهيئة فترات الوقت
+        function initializeTimeSlots() {
+            const container = document.getElementById('time-slots-container');
+            container.innerHTML = '';
+            
+            // إضافة الفترة الأولى
+            container.appendChild(createTimeSlot(true));
+            
+            // إضافة زر إضافة فترة
+            const addButton = document.createElement('button');
+            addButton.type = 'button';
+            addButton.className = 'add-slot-btn';
+            addButton.innerHTML = '<i class="fas fa-plus"></i> إضافة فترة تشغيل أخرى';
+            addButton.onclick = addTimeSlot;
+            container.appendChild(addButton);
+        }
+
+        function addTimeSlot() {
+            const container = document.getElementById('time-slots-container');
+            const timeSlots = container.querySelectorAll('.time-slot');
+            
+            // إظهار أزرار الحذف في جميع الفترات
+            timeSlots.forEach(slot => {
+                const removeBtn = slot.querySelector('.remove-slot');
+                if (removeBtn) {
+                    removeBtn.style.display = 'flex';
+                }
+            });
+            
+            // إضافة فترة جديدة قبل زر الإضافة
+            const newTimeSlot = createTimeSlot();
+            const addButton = container.querySelector('.add-slot-btn');
+            container.insertBefore(newTimeSlot, addButton);
+        }
+
+        function removeTimeSlot(button) {
+            const timeSlot = button.closest('.time-slot');
+            const container = document.getElementById('time-slots-container');
+            const timeSlots = container.querySelectorAll('.time-slot');
+            
+            if (timeSlots.length > 1) {
+                timeSlot.remove();
+                
+                // إذا بقي فترة واحدة فقط، إخفاء زر الحذف
+                if (container.querySelectorAll('.time-slot').length === 1) {
+                    const remainingSlot = container.querySelector('.time-slot');
+                    const removeBtn = remainingSlot.querySelector('.remove-slot');
+                    if (removeBtn) {
+                        removeBtn.style.display = 'none';
+                    }
+                }
+            }
+        }
+
+        function getTimeSlots() {
+            const slots = [];
+            const timeSlots = document.querySelectorAll('.time-slot');
+            
+            timeSlots.forEach(slot => {
+                const from = parseInt(slot.querySelector('.time-from').value);
+                const to = parseInt(slot.querySelector('.time-to').value);
+                
+                if (from < to) {
+                    slots.push({ from, to });
+                }
+            });
+            
+            return slots;
+        }
+
+        function validateAndMergeTimeSlots(slots) {
+            if (!slots || slots.length === 0) return [];
+            
+            slots.sort((a, b) => a.from - b.from);
+            const merged = [];
+            let current = { ...slots[0] };
+
+            for (let i = 1; i < slots.length; i++) {
+                const next = slots[i];
+                if (next.from <= current.to) {
+                    current.to = Math.max(current.to, next.to);
+                } else {
+                    merged.push(current);
+                    current = { ...next };
+                }
+            }
+            merged.push(current);
+            return merged;
+        }
+
+        function calculateTotalHours(timeSlots) {
+            let totalHours = 0;
+            timeSlots.forEach(slot => {
+                totalHours += (slot.to - slot.from);
+            });
+            return totalHours;
+        }
+
+        function generateOperatingHours(timeSlots) {
+            const hours = new Array(24).fill(0);
+            timeSlots.forEach(slot => {
+                const from = Math.max(0, Math.floor(slot.from));
+                const to = Math.min(24, Math.ceil(slot.to));
+                for (let h = from; h < to; h++) {
+                    hours[h] = 1;
+                }
+            });
+            return hours;
+        }
+
         document.getElementById('add-btn').addEventListener('click', function() {
             const name = document.getElementById('device-name').value.trim();
             const wattage = parseFloat(document.getElementById('device-wattage').value);
-            const hours = parseFloat(document.getElementById('device-hours').value);
             const quantity = parseInt(document.getElementById('device-quantity').value);
+            const rawSlots = getTimeSlots();
+            const timeSlots = validateAndMergeTimeSlots(rawSlots);
             
-            if (!name || !wattage || !hours || !quantity) {
-                alert('الرجاء ملء جميع الحقول المطلوبة');
+            if (!name || !wattage || !quantity || timeSlots.length === 0) {
+                alert('الرجاء ملء جميع الحقول المطلوبة بشكل صحيح');
                 return;
             }
+            
+            if (wattage <= 0 || quantity <= 0) {
+                alert('الرجاء إدخال قيم صحيحة للقدرة والكمية');
+                return;
+            }
+            
+            const totalHours = calculateTotalHours(timeSlots);
+            const operatingHours = generateOperatingHours(timeSlots);
             
             const device = {
                 name,
                 wattage,
-                hours,
                 quantity,
-                dailyConsumption: wattage * hours * quantity
+                timeSlots,
+                totalHours,
+                operatingHours,
+                dailyConsumption: wattage * totalHours * quantity,
+                powerPerHour: wattage * quantity,
+                color: getDeviceColor(devices.length)
             };
             
             if (editIndex === -1) {
-                // إضافة جهاز جديد
                 devices.push(device);
             } else {
-                // تعديل جهاز موجود
                 devices[editIndex] = device;
                 editIndex = -1;
                 document.getElementById('add-btn').innerHTML = '<i class="fas fa-plus"></i> إضافة جهاز';
             }
             
             // إعادة تعيين النموذج
-            document.getElementById('add-device-form').reset();
+            document.getElementById('device-name').value = '';
+            document.getElementById('device-wattage').value = '';
+            document.getElementById('device-quantity').value = '1';
+            initializeTimeSlots();
             
-            // تحديث القائمة
             updateDeviceList();
         });
 
-        // تحديث قائمة الأجهزة
+        function getDeviceColor(index) {
+            const colors = [
+                '#005a8c', // أزرق داكن
+                '#008ecc', // أزرق فاتح
+                '#2ecc71', // أخضر
+                '#e74c3c', // أحمر
+                '#9b59b6', // بنفسجي
+                '#f39c12', // برتقالي
+                '#1abc9c', // فيروزي
+                '#34495e', // رمادي داكن
+                '#d35400', // برتقالي داكن
+                '#c0392b'  // أحمر داكن
+            ];
+            return colors[index % colors.length];
+        }
+
         function updateDeviceList() {
             const container = document.getElementById('devices-container');
             const countElement = document.getElementById('device-count');
             
-            countElement.textContent = `${devices.length} أجهزة`;
+            countElement.textContent = `${devices.length} ${devices.length === 1 ? 'جهاز' : 'أجهزة'}`;
             
             if (devices.length === 0) {
                 container.innerHTML = `
@@ -739,11 +1102,22 @@
                 const deviceElement = document.createElement('div');
                 deviceElement.className = 'device-item';
                 
+                const timeTexts = device.timeSlots.map(slot => {
+                    const fromHour = slot.from % 12 || 12;
+                    const fromAmpm = slot.from < 12 ? 'ص' : 'م';
+                    const toHour = (slot.to % 12 || 12);
+                    const toAmpm = slot.to < 12 ? 'ص' : 'م';
+                    return `${fromHour}${fromAmpm}-${toHour}${toAmpm}`;
+                });
+                
                 deviceElement.innerHTML = `
                     <div class="device-info">
                         <div class="device-name">${device.name}</div>
                         <div class="device-details">
-                            ${device.wattage} واط × ${device.hours} ساعة × ${device.quantity} جهاز
+                            ${device.wattage} واط × ${device.quantity} جهاز × ${device.totalHours} ساعة
+                        </div>
+                        <div class="device-time-slots">
+                            ${timeTexts.join('، ')}
                         </div>
                     </div>
                     <div class="device-consumption">
@@ -763,23 +1137,69 @@
             });
         }
 
-        // تعديل جهاز
         function editDevice(index) {
             const device = devices[index];
             
             document.getElementById('device-name').value = device.name;
             document.getElementById('device-wattage').value = device.wattage;
-            document.getElementById('device-hours').value = device.hours;
             document.getElementById('device-quantity').value = device.quantity;
+            
+            // تعيين فترات الوقت
+            const container = document.getElementById('time-slots-container');
+            container.innerHTML = '';
+            
+            device.timeSlots.forEach((slot, i) => {
+                const timeSlot = document.createElement('div');
+                timeSlot.className = 'time-slot';
+                
+                let fromOptions = '';
+                for (let h = 0; h < 24; h++) {
+                    const hour = h % 12 || 12;
+                    const ampm = h < 12 ? 'ص' : 'م';
+                    const selected = h === slot.from ? 'selected' : '';
+                    fromOptions += `<option value="${h}" ${selected}>${hour}:00 ${ampm}</option>`;
+                }
+                
+                let toOptions = '';
+                for (let h = 0; h <= 24; h++) {
+                    const hour = h % 12 || 12;
+                    const ampm = h < 12 ? 'ص' : 'م';
+                    const selected = h === slot.to ? 'selected' : '';
+                    toOptions += `<option value="${h}" ${selected}>${hour}:00 ${ampm}</option>`;
+                }
+                
+                timeSlot.innerHTML = `
+                    <div class="time-range">
+                        من
+                        <select class="time-from">
+                            ${fromOptions}
+                        </select>
+                        إلى
+                        <select class="time-to">
+                            ${toOptions}
+                        </select>
+                    </div>
+                    <button type="button" class="remove-slot" onclick="removeTimeSlot(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                container.appendChild(timeSlot);
+            });
+            
+            // إضافة زر الإضافة
+            const addButton = document.createElement('button');
+            addButton.type = 'button';
+            addButton.className = 'add-slot-btn';
+            addButton.innerHTML = '<i class="fas fa-plus"></i> إضافة فترة تشغيل أخرى';
+            addButton.onclick = addTimeSlot;
+            container.appendChild(addButton);
             
             editIndex = index;
             document.getElementById('add-btn').innerHTML = '<i class="fas fa-save"></i> حفظ التعديلات';
             
-            // التمرير إلى النموذج
             document.getElementById('add-device-form').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // حذف جهاز
         function deleteDevice(index) {
             if (confirm('هل أنت متأكد من حذف هذا الجهاز؟')) {
                 devices.splice(index, 1);
@@ -787,60 +1207,480 @@
             }
         }
 
-        // حساب الحمل الكلي
+        function calculateLoadData() {
+            const hourlyLoad = new Array(24).fill(0);
+            const hourlyDeviceLoads = {};
+            let peakPower = 0;
+            let peakHour = 0;
+            let totalWh = 0;
+            
+            devices.forEach((device, deviceIndex) => {
+                hourlyDeviceLoads[deviceIndex] = new Array(24).fill(0);
+                for (let h = 0; h < 24; h++) {
+                    if (device.operatingHours[h]) {
+                        hourlyDeviceLoads[deviceIndex][h] = device.powerPerHour;
+                        hourlyLoad[h] += device.powerPerHour;
+                        
+                        if (hourlyLoad[h] > peakPower) {
+                            peakPower = hourlyLoad[h];
+                            peakHour = h;
+                        }
+                    }
+                }
+                totalWh += device.dailyConsumption;
+            });
+            
+            // حساب المنحنى التراكمي
+            const cumulativeLoad = new Array(24).fill(0);
+            let runningTotal = 0;
+            for (let h = 0; h < 24; h++) {
+                runningTotal += hourlyLoad[h];
+                cumulativeLoad[h] = runningTotal;
+            }
+            
+            return {
+                hourlyLoad,
+                hourlyDeviceLoads,
+                cumulativeLoad,
+                peakPower,
+                peakHour,
+                totalWh
+            };
+        }
+
+        function updateSummary(data) {
+            const averageLoad = data.totalWh / 24;
+            const usageRate = (data.hourlyLoad.filter(p => p > 0).length / 24 * 100).toFixed(1);
+            
+            document.getElementById('summary-total').textContent = data.totalWh.toLocaleString() + ' واط/ساعة';
+            document.getElementById('summary-average').textContent = averageLoad.toLocaleString('ar-EG', { maximumFractionDigits: 0 }) + ' واط';
+            document.getElementById('summary-peak-hour').textContent = `${data.peakHour % 12 || 12} ${data.peakHour < 12 ? 'ص' : 'م'}`;
+            document.getElementById('summary-usage-rate').textContent = usageRate + '%';
+        }
+
         document.getElementById('calculate-btn').addEventListener('click', function() {
             if (devices.length === 0) {
                 alert('الرجاء إضافة الأجهزة أولاً');
                 return;
             }
             
-            const totalDailyConsumption = devices.reduce((sum, device) => sum + device.dailyConsumption, 0);
-            const monthlyConsumption = (totalDailyConsumption * 30) / 1000; // تحويل إلى كيلوواط/ساعة
-            const yearlyConsumption = monthlyConsumption * 12;
+            const data = calculateLoadData();
             
-            // حساب حجم النظام الشمسي المطلوب (افتراض 5 ساعات ذروة شمسية)
-            const systemSize = (totalDailyConsumption / 1000) / 5;
+            const monthlyConsumption = (data.totalWh * 30) / 1000;
+            const systemSize = (data.totalWh / 1000) / 5;
             
-            // تحديث النتائج
-            document.getElementById('total-consumption').textContent = totalDailyConsumption.toLocaleString();
+            document.getElementById('total-consumption').textContent = data.totalWh.toLocaleString();
+            document.getElementById('peak-power').textContent = data.peakPower.toLocaleString();
             document.getElementById('monthly-consumption').textContent = monthlyConsumption.toFixed(1);
-            document.getElementById('yearly-consumption').textContent = yearlyConsumption.toFixed(1);
             document.getElementById('system-size').textContent = systemSize.toFixed(2);
             
-            // تحديث مخطط الاستهلاك
-            updateConsumptionChart();
+            updateSummary(data);
+            drawTotalLoadChart(data.hourlyLoad, data.hourlyDeviceLoads);
+            drawCumulativeChart(data.cumulativeLoad);
+            drawComparisonChart(data.hourlyLoad, data.cumulativeLoad);
             
-            // إظهار النتائج
             document.getElementById('results').style.display = 'block';
             document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
         });
 
-        // تحديث مخطط الاستهلاك
-        function updateConsumptionChart() {
-            const chartContainer = document.getElementById('consumption-chart');
-            chartContainer.innerHTML = '';
+        function drawTotalLoadChart(hourlyLoad, hourlyDeviceLoads = null) {
+            const ctx = document.getElementById('load-curve-chart');
+            if (!ctx) return;
+
+            if (loadChart) loadChart.destroy();
+
+            const labels = Array.from({ length: 24 }, (_, i) => {
+                const h = i % 12 || 12;
+                const ampm = i < 12 ? 'ص' : 'م';
+                return `${h} ${ampm}`;
+            });
+
+            const datasets = [];
             
-            const totalConsumption = devices.reduce((sum, device) => sum + device.dailyConsumption, 0);
+            if (hourlyDeviceLoads && Object.keys(hourlyDeviceLoads).length > 0) {
+                devices.forEach((device, deviceIndex) => {
+                    datasets.push({
+                        label: device.name,
+                        data: hourlyDeviceLoads[deviceIndex],
+                        borderColor: device.color,
+                        backgroundColor: device.color + '40',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.35,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        stack: 'stack'
+                    });
+                });
+            }
             
-            devices.forEach(device => {
-                const percentage = ((device.dailyConsumption / totalConsumption) * 100).toFixed(1);
-                
-                const chartBar = document.createElement('div');
-                chartBar.className = 'chart-bar';
-                
-                chartBar.innerHTML = `
-                    <div class="chart-label">${device.name}</div>
-                    <div class="chart-bar-container">
-                        <div class="chart-bar-fill" style="width: ${percentage}%"></div>
-                    </div>
-                    <div class="chart-value">${percentage}%</div>
-                `;
-                
-                chartContainer.appendChild(chartBar);
+            // إضافة خط الحمل الكلي فوق المكدس
+            datasets.push({
+                label: 'الحمل الكلي',
+                data: hourlyLoad,
+                borderColor: '#e74c3c',
+                backgroundColor: 'transparent',
+                borderWidth: 4,
+                borderDash: [5, 5],
+                fill: false,
+                tension: 0.35,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                pointBackgroundColor: '#e74c3c'
+            });
+
+            loadChart = new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed.y.toLocaleString() + ' واط';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'الساعة',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'الطاقة (واط)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            updateTotalChartLegend();
+        }
+
+        function drawCumulativeChart(cumulativeLoad) {
+            const ctx = document.getElementById('cumulative-chart-canvas');
+            if (!ctx) return;
+
+            if (cumulativeChart) cumulativeChart.destroy();
+
+            const labels = Array.from({ length: 24 }, (_, i) => {
+                const h = i % 12 || 12;
+                const ampm = i < 12 ? 'ص' : 'م';
+                return `${h} ${ampm}`;
+            });
+
+            cumulativeChart = new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'الطاقة التراكمية المستهلكة',
+                        data: cumulativeLoad,
+                        borderColor: '#9b59b6',
+                        backgroundColor: 'rgba(155, 89, 182, 0.2)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.35,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `الطاقة التراكمية: ${context.parsed.y.toLocaleString()} واط/ساعة`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'الساعة',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'الطاقة التراكمية (واط/ساعة)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            updateCumulativeChartLegend();
+        }
+
+        function drawComparisonChart(hourlyLoad, cumulativeLoad) {
+            const ctx = document.getElementById('comparison-chart-canvas');
+            if (!ctx) return;
+
+            if (comparisonChart) comparisonChart.destroy();
+
+            const labels = Array.from({ length: 24 }, (_, i) => {
+                const h = i % 12 || 12;
+                const ampm = i < 12 ? 'ص' : 'م';
+                return `${h} ${ampm}`;
+            });
+
+            // تحويل القيم التراكمية إلى كيلوواط/ساعة للتوضيح
+            const cumulativeKWh = cumulativeLoad.map(value => value / 1000);
+
+            comparisonChart = new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'الحمل اللحظي (واط)',
+                            data: hourlyLoad,
+                            backgroundColor: 'rgba(0, 90, 140, 0.7)',
+                            borderColor: '#005a8c',
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'الطاقة التراكمية (كيلوواط/ساعة)',
+                            data: cumulativeKWh,
+                            type: 'line',
+                            borderColor: '#9b59b6',
+                            backgroundColor: 'rgba(155, 89, 182, 0.2)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.35,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.datasetIndex === 0) {
+                                        label += context.parsed.y.toLocaleString() + ' واط';
+                                    } else {
+                                        label += context.parsed.y.toFixed(2) + ' كيلوواط/ساعة';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'الساعة',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'الحمل اللحظي (واط)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'الطاقة التراكمية (كيلوواط/ساعة)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            beginAtZero: true,
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    }
+                }
             });
         }
 
-        // إعادة تعيين الحساب
+        function updateTotalChartLegend() {
+            const legendContainer = document.getElementById('total-chart-legend');
+            if (!legendContainer) return;
+            
+            if (devices.length === 0) {
+                legendContainer.innerHTML = '';
+                return;
+            }
+            
+            let legendHTML = '';
+            devices.forEach((device, index) => {
+                legendHTML += `
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: ${device.color}"></div>
+                        <span>${device.name}</span>
+                    </div>
+                `;
+            });
+            
+            legendHTML += `
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e74c3c; border: 2px dashed #e74c3c"></div>
+                    <span>الحمل الكلي</span>
+                </div>
+            `;
+            
+            legendContainer.innerHTML = legendHTML;
+        }
+
+        function updateCumulativeChartLegend() {
+            const legendContainer = document.getElementById('cumulative-chart-legend');
+            if (!legendContainer) return;
+            
+            legendContainer.innerHTML = `
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #9b59b6"></div>
+                    <span>الطاقة التراكمية المستهلكة</span>
+                </div>
+            `;
+        }
+
+        function updateComparisonChartLegend() {
+            const legendContainer = document.getElementById('comparison-chart-legend');
+            if (!legendContainer) return;
+            
+            legendContainer.innerHTML = `
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #005a8c"></div>
+                    <span>الحمل اللحظي (واط)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #9b59b6"></div>
+                    <span>الطاقة التراكمية (كيلوواط/ساعة)</span>
+                </div>
+            `;
+        }
+
         document.getElementById('reset-btn').addEventListener('click', function() {
             if (confirm('هل تريد بدء حساب جديد؟ سيتم حذف جميع الأجهزة المضافة.')) {
                 devices = [];
@@ -849,43 +1689,125 @@
                 document.getElementById('add-device-form').reset();
                 document.getElementById('add-btn').innerHTML = '<i class="fas fa-plus"></i> إضافة جهاز';
                 document.getElementById('results').style.display = 'none';
+                
+                if (loadChart) loadChart.destroy();
+                if (cumulativeChart) cumulativeChart.destroy();
+                if (comparisonChart) comparisonChart.destroy();
+                
+                loadChart = null;
+                cumulativeChart = null;
+                comparisonChart = null;
+                
+                initializeTimeSlots();
+                updateTotalChartLegend();
+                updateCumulativeChartLegend();
+                updateComparisonChartLegend();
             }
         });
 
-        // إضافة بعض الأجهزة الافتراضية للتوضيح
+        // تبديل بين تبويبات الرسوم البيانية
+        document.querySelectorAll('.chart-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                switchTab(tabId);
+            });
+        });
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            
+            // تحديد التبويب النشط
+            document.querySelectorAll('.chart-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-tab') === tabId) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // تحديد محتوى التبويب النشط
+            document.querySelectorAll('.chart-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.getElementById(`${tabId}-chart`).classList.add('active');
+            
+            // إعادة رسم المخطط إذا كان بحاجة إلى تحديث
+            if (tabId === 'total-load' && loadChart) {
+                setTimeout(() => loadChart.resize(), 100);
+            } else if (tabId === 'cumulative' && cumulativeChart) {
+                setTimeout(() => cumulativeChart.resize(), 100);
+            } else if (tabId === 'comparison' && comparisonChart) {
+                setTimeout(() => comparisonChart.resize(), 100);
+            }
+        }
+
+        // إضافة أجهزة افتراضية للتوضيح
         function addSampleDevices() {
             if (devices.length === 0) {
                 devices = [
                     {
                         name: "ثلاجة",
                         wattage: 150,
-                        hours: 8,
                         quantity: 1,
-                        dailyConsumption: 1200
+                        timeSlots: [{ from: 0, to: 24 }],
+                        totalHours: 24,
+                        operatingHours: new Array(24).fill(1),
+                        dailyConsumption: 150 * 24,
+                        powerPerHour: 150,
+                        color: getDeviceColor(0)
                     },
                     {
                         name: "تلفاز LED",
                         wattage: 100,
-                        hours: 5,
                         quantity: 1,
-                        dailyConsumption: 500
+                        timeSlots: [{ from: 18, to: 23 }],
+                        totalHours: 5,
+                        operatingHours: Array.from({length: 24}, (_, i) => i >= 18 && i < 23 ? 1 : 0),
+                        dailyConsumption: 100 * 5,
+                        powerPerHour: 100,
+                        color: getDeviceColor(1)
                     },
                     {
                         name: "إضاءة LED",
                         wattage: 10,
-                        hours: 6,
                         quantity: 8,
-                        dailyConsumption: 480
+                        timeSlots: [{ from: 18, to: 24 }],
+                        totalHours: 6,
+                        operatingHours: Array.from({length: 24}, (_, i) => i >= 18 ? 1 : 0),
+                        dailyConsumption: 10 * 8 * 6,
+                        powerPerHour: 80,
+                        color: getDeviceColor(2)
                     }
                 ];
                 updateDeviceList();
             }
         }
 
-        // تهيئة الصفحة
+        // تحسين العرض للهواتف عند التحميل
+        function adjustForMobile() {
+            if (window.innerWidth <= 768) {
+                // إخفاء الأيقونات الزائدة في الهواتف لتحسين المساحة
+                const pageHeaderIcon = document.querySelector('.page-header h2 i');
+                if (pageHeaderIcon) {
+                    pageHeaderIcon.style.display = 'none';
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            // إضافة أجهزة افتراضية للتوضيح
+            // تهيئة فترات الوقت عند تحميل الصفحة
+            initializeTimeSlots();
+            
             addSampleDevices();
+            adjustForMobile();
+            
+            // إعادة ضبط التخطيط عند تغيير حجم النافذة
+            window.addEventListener('resize', function() {
+                if (loadChart) loadChart.resize();
+                if (cumulativeChart) cumulativeChart.resize();
+                if (comparisonChart) comparisonChart.resize();
+                adjustForMobile();
+            });
         });
     </script>
 </body>
