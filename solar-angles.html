@@ -724,6 +724,128 @@
             document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
         });
 
+        // حساب وقت الشروق والغروب (إرجاع الوقت كرقم وسلسلة)
+        function calculateSunriseSunset(lat, lng, date, isSunrise) {
+            const currentDate = new Date(date);
+            const startOfYear = new Date(currentDate.getFullYear(), 0, 0);
+            const dayOfYear = Math.floor((currentDate - startOfYear) / (1000 * 60 * 60 * 24));
+            
+            // حساب الميل الشمسي
+            const declination = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * (Math.PI / 180));
+            
+            // تحويل القيم إلى راديان
+            const latRad = lat * Math.PI / 180;
+            const decRad = declination * Math.PI / 180;
+            
+            // حساب زاوية الساعة للشروق/الغروب
+            const cosHourAngle = -Math.tan(latRad) * Math.tan(decRad);
+            
+            // التأكد من أن القيمة بين -1 و 1
+            let hourAngleCos = Math.max(-1, Math.min(1, cosHourAngle));
+            
+            // إذا كان cosHourAngle خارج النطاق، لا يوجد شروق/غروب (ليل/نهار قطبي)
+            let hourAngle;
+            if (hourAngleCos > 1) {
+                // لا يوجد شروق (ليل قطبي)
+                hourAngle = 0;
+            } else if (hourAngleCos < -1) {
+                // لا يوجد غروب (نهار قطبي)
+                hourAngle = Math.PI;
+            } else {
+                hourAngle = Math.acos(hourAngleCos);
+            }
+            
+            // تحويل زاوية الساعة إلى وقت
+            const hourAngleDeg = hourAngle * 180 / Math.PI;
+            
+            // حساب الوقت الشمسي للشروق أو الغروب
+            let solarTime;
+            if (isSunrise) {
+                solarTime = 12 - hourAngleDeg / 15;
+            } else {
+                solarTime = 12 + hourAngleDeg / 15;
+            }
+            
+            // حساب معادلة الزمن
+            const B = (2 * Math.PI * (dayOfYear - 81)) / 365;
+            const equationOfTime = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+            
+            // تصحيح خط الطول (الأردن في المنطقة الزمنية UTC+3، خط الطول القياسي 45°)
+            const longitudeCorrection = 4 * (45 - lng);
+            
+            // تحويل إلى وقت محلي
+            let localTime = solarTime + (longitudeCorrection - equationOfTime) / 60;
+            
+            // إضافة فرق المنطقة الزمنية (الأردن UTC+3)
+            localTime += 3;
+            
+            // ضبط الوقت بين 0 و 24
+            if (localTime >= 24) localTime -= 24;
+            if (localTime < 0) localTime += 24;
+            
+            // إذا كان لا يوجد شروق/غروب (ليل/نهار قطبي)
+            let timeString;
+            if (hourAngleCos > 1) {
+                timeString = isSunrise ? "لا يوجد شروق" : "--:--";
+            } else if (hourAngleCos < -1) {
+                timeString = isSunset ? "لا يوجد غروب" : "--:--";
+            } else {
+                const hours = Math.floor(localTime);
+                const minutes = Math.round((localTime - hours) * 60);
+                timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            }
+            
+            return {
+                timeString: timeString,
+                timeInHours: localTime
+            };
+        }
+
+        // حساب طول النهار
+        function calculateDayLength(sunriseTimeInHours, sunsetTimeInHours) {
+            // حساب الفرق في الساعات
+            let dayLengthHours = sunsetTimeInHours - sunriseTimeInHours;
+            
+            // إذا كان الغروب بعد الشروق بيوم آخر
+            if (dayLengthHours < 0) {
+                dayLengthHours += 24;
+            }
+            
+            const hours = Math.floor(dayLengthHours);
+            const minutes = Math.round((dayLengthHours - hours) * 60);
+            
+            return `${hours} ساعة ${minutes} دقيقة`;
+        }
+
+        // حساب وقت الظهيرة الشمسية
+        function calculateSolarNoon(lng, date) {
+            const currentDate = new Date(date);
+            const startOfYear = new Date(currentDate.getFullYear(), 0, 0);
+            const dayOfYear = Math.floor((currentDate - startOfYear) / (1000 * 60 * 60 * 24));
+            
+            // حساب معادلة الزمن
+            const B = (2 * Math.PI * (dayOfYear - 81)) / 365;
+            const equationOfTime = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+            
+            // تصحيح خط الطول (الأردن في المنطقة الزمنية UTC+3، خط الطول القياسي 45°)
+            const longitudeCorrection = 4 * (45 - lng);
+            
+            // حساب وقت الظهيرة الشمسية
+            let solarNoon = 12 - (equationOfTime + longitudeCorrection) / 60;
+            
+            // إضافة فرق المنطقة الزمنية (الأردن UTC+3)
+            solarNoon += 3;
+            
+            // ضبط الوقت بين 0 و 24
+            if (solarNoon >= 24) solarNoon -= 24;
+            if (solarNoon < 0) solarNoon += 24;
+            
+            const hours = Math.floor(solarNoon);
+            const minutes = Math.round((solarNoon - hours) * 60);
+            
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        }
+
         // حساب الزوايا الشمسية
         function calculateSolarAngles(lat, lng, date, time) {
             // تحويل التاريخ والوقت
@@ -755,12 +877,23 @@
             ) * 180 / Math.PI;
             
             // حساب زاوية السمت الشمسي
-            const azimuth = Math.acos(
-                (Math.sin(decRad) - Math.sin(latRad) * Math.sin(elevation * Math.PI / 180)) / 
-                (Math.cos(latRad) * Math.cos(elevation * Math.PI / 180))
-            ) * 180 / Math.PI;
-            
-            const azimuthFinal = hourAngle > 0 ? 360 - azimuth : azimuth;
+            let azimuth;
+            if (Math.abs(elevation - 90) < 0.0001) {
+                // عندما تكون الشمس في كبد السماء
+                azimuth = 180;
+            } else {
+                const cosAzimuth = (Math.sin(decRad) - Math.sin(latRad) * Math.sin(elevation * Math.PI / 180)) / 
+                                   (Math.cos(latRad) * Math.cos(elevation * Math.PI / 180));
+                
+                // التأكد من أن قيمة جيب التمام ضمن النطاق الصحيح
+                const cosAzimuthClamped = Math.max(-1, Math.min(1, cosAzimuth));
+                azimuth = Math.acos(cosAzimuthClamped) * 180 / Math.PI;
+                
+                // تحديد اتجاه السمت
+                if (hourAngle > 0) {
+                    azimuth = 360 - azimuth;
+                }
+            }
             
             // حساب زاوية الانحدار المثلى للألواح الشمسية
             const optimalTilt = Math.max(0, Math.min(60, Math.round(lat * 0.9 + 5)));
@@ -768,63 +901,28 @@
             // حساب أوقات الشروق والغروب
             const sunrise = calculateSunriseSunset(lat, lng, date, true);
             const sunset = calculateSunriseSunset(lat, lng, date, false);
-            const dayLength = calculateDayLength(sunset - sunrise);
+            
+            // حساب طول النهار
+            let dayLength;
+            if (sunrise.timeString === "لا يوجد شروق" || sunset.timeString === "لا يوجد غروب") {
+                dayLength = "0 ساعة 0 دقيقة";
+            } else {
+                dayLength = calculateDayLength(sunrise.timeInHours, sunset.timeInHours);
+            }
             
             // وقت الظهيرة الشمسية
             const solarNoon = calculateSolarNoon(lng, date);
             
             return {
                 elevation: Math.round(elevation * 10) / 10,
-                azimuth: Math.round(azimuthFinal * 10) / 10,
+                azimuth: Math.round(azimuth * 10) / 10,
                 optimalTilt: optimalTilt,
-                sunrise: sunrise,
-                sunset: sunset,
+                sunrise: sunrise.timeString,
+                sunset: sunset.timeString,
                 dayLength: dayLength,
                 solarNoon: solarNoon,
                 declination: Math.round(declination * 10) / 10
             };
-        }
-
-        // حساب الشروق والغروب
-        function calculateSunriseSunset(lat, lng, date, isSunrise) {
-            const dayOfYear = Math.floor((new Date(date) - new Date(new Date(date).getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-            const solarDeclination = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * (Math.PI / 180));
-            
-            const latRad = lat * Math.PI / 180;
-            const decRad = solarDeclination * Math.PI / 180;
-            
-            const hourAngle = Math.acos(-Math.tan(latRad) * Math.tan(decRad)) * 180 / Math.PI;
-            const time = isSunrise ? 12 - hourAngle / 15 : 12 + hourAngle / 15;
-            
-            // تحويل إلى توقيت الأردن (UTC+3)
-            const localTime = time + (3 - lng / 15);
-            
-            const hours = Math.floor(localTime);
-            const minutes = Math.round((localTime - hours) * 60);
-            
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-        }
-
-        // حساب طول النهار
-        function calculateDayLength(dayLengthHours) {
-            const hours = Math.floor(dayLengthHours);
-            const minutes = Math.round((dayLengthHours - hours) * 60);
-            return `${hours} ساعة ${minutes} دقيقة`;
-        }
-
-        // حساب وقت الظهيرة الشمسية
-        function calculateSolarNoon(lng, date) {
-            const dayOfYear = Math.floor((new Date(date) - new Date(new Date(date).getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-            const B = (360 / 365) * (dayOfYear - 81);
-            const equationOfTime = 9.87 * Math.sin(2 * B * Math.PI / 180) - 7.53 * Math.cos(B * Math.PI / 180) - 1.5 * Math.sin(B * Math.PI / 180);
-            
-            const timeCorrection = equationOfTime + 4 * (45 - lng);
-            const solarNoon = 12 - timeCorrection / 60;
-            
-            const hours = Math.floor(solarNoon);
-            const minutes = Math.round((solarNoon - hours) * 60);
-            
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
         }
 
         // تحديث النتائج
@@ -856,17 +954,17 @@
                 {
                     icon: 'fas fa-compass',
                     title: 'اتجاه الألواح',
-                    description: `وجّه الألواح نحو الجنوب بزاوية ${data.azimuth}°`
+                    description: `وجّه الألواح نحو الجنوب (180°) للاستفادة القصوى من أشعة الشمس`
                 },
                 {
                     icon: 'fas fa-sun',
                     title: 'أفضل وقت للإنتاج',
-                    description: `أعلى إنتاجية بين ${data.sunrise} و ${data.sunset}`
+                    description: `أعلى إنتاجية تكون عند الظهيرة الشمسية (${data.solarNoon})`
                 },
                 {
                     icon: 'fas fa-bolt',
                     title: 'نصيحة تركيب',
-                    description: 'استخدم هياكل قابلة للتعديل لتغيير الزاوية حسب الفصول'
+                    description: 'استخدم هياكل قابلة للتعديل لتغيير زاوية الميل حسب الفصول'
                 }
             ];
             
