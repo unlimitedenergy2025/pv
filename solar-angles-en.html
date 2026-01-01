@@ -856,37 +856,127 @@
             statusElement.textContent += ` (Near ${jordanCities[nearestCity].name})`;
         }
 
-        // Calculate solar angles
-        document.getElementById('solar-angle-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Calculate sunrise and sunset (return time as number and string)
+        function calculateSunriseSunset(lat, lng, date, isSunrise) {
+            const currentDate = new Date(date);
+            const startOfYear = new Date(currentDate.getFullYear(), 0, 0);
+            const dayOfYear = Math.floor((currentDate - startOfYear) / (1000 * 60 * 60 * 24));
             
-            const lat = parseFloat(document.getElementById('latitude').value);
-            const lng = parseFloat(document.getElementById('longitude').value);
-            const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value;
+            // Calculate solar declination
+            const declination = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * (Math.PI / 180));
             
-            if (!lat || !lng || !date || !time) {
-                alert('Please fill all required fields');
-                return;
+            // Convert values to radians
+            const latRad = lat * Math.PI / 180;
+            const decRad = declination * Math.PI / 180;
+            
+            // Calculate hour angle for sunrise/sunset
+            const cosHourAngle = -Math.tan(latRad) * Math.tan(decRad);
+            
+            // Ensure value is between -1 and 1
+            let hourAngleCos = Math.max(-1, Math.min(1, cosHourAngle));
+            
+            // If cosHourAngle is out of range, there is no sunrise/sunset (polar night/day)
+            let hourAngle;
+            if (hourAngleCos > 1) {
+                // No sunrise (polar night)
+                hourAngle = 0;
+            } else if (hourAngleCos < -1) {
+                // No sunset (polar day)
+                hourAngle = Math.PI;
+            } else {
+                hourAngle = Math.acos(hourAngleCos);
             }
             
-            // Check if location is in Jordan
-            if (lat < 29.0 || lat > 33.5 || lng < 34.5 || lng > 39.5) {
-                if (!confirm('Location is outside Jordan. Do you want to continue?')) {
-                    return;
-                }
+            // Convert hour angle to time
+            const hourAngleDeg = hourAngle * 180 / Math.PI;
+            
+            // Calculate solar time for sunrise or sunset
+            let solarTime;
+            if (isSunrise) {
+                solarTime = 12 - hourAngleDeg / 15;
+            } else {
+                solarTime = 12 + hourAngleDeg / 15;
             }
             
-            // Calculate solar angles
-            const solarData = calculateSolarAngles(lat, lng, date, time);
+            // Calculate equation of time
+            const B = (2 * Math.PI * (dayOfYear - 81)) / 365;
+            const equationOfTime = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
             
-            // Update results
-            updateResults(solarData);
+            // Longitude correction (Jordan is in UTC+3 time zone, standard longitude 45°)
+            const longitudeCorrection = 4 * (45 - lng);
             
-            // Show results
-            document.getElementById('results').style.display = 'block';
-            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-        });
+            // Convert to local time
+            let localTime = solarTime + (longitudeCorrection - equationOfTime) / 60;
+            
+            // Add time zone difference (Jordan UTC+3)
+            localTime += 3;
+            
+            // Adjust time between 0 and 24
+            if (localTime >= 24) localTime -= 24;
+            if (localTime < 0) localTime += 24;
+            
+            // If there is no sunrise/sunset (polar night/day)
+            let timeString;
+            if (hourAngleCos > 1) {
+                timeString = isSunrise ? "No sunrise" : "--:--";
+            } else if (hourAngleCos < -1) {
+                timeString = !isSunrise ? "No sunset" : "--:--";
+            } else {
+                const hours = Math.floor(localTime);
+                const minutes = Math.round((localTime - hours) * 60);
+                timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            }
+            
+            return {
+                timeString: timeString,
+                timeInHours: localTime
+            };
+        }
+
+        // Calculate day length
+        function calculateDayLength(sunriseTimeInHours, sunsetTimeInHours) {
+            // Calculate difference in hours
+            let dayLengthHours = sunsetTimeInHours - sunriseTimeInHours;
+            
+            // If sunset is after sunrise on another day
+            if (dayLengthHours < 0) {
+                dayLengthHours += 24;
+            }
+            
+            const hours = Math.floor(dayLengthHours);
+            const minutes = Math.round((dayLengthHours - hours) * 60);
+            
+            return `${hours} hours ${minutes} minutes`;
+        }
+
+        // Calculate solar noon time
+        function calculateSolarNoon(lng, date) {
+            const currentDate = new Date(date);
+            const startOfYear = new Date(currentDate.getFullYear(), 0, 0);
+            const dayOfYear = Math.floor((currentDate - startOfYear) / (1000 * 60 * 60 * 24));
+            
+            // Calculate equation of time
+            const B = (2 * Math.PI * (dayOfYear - 81)) / 365;
+            const equationOfTime = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+            
+            // Longitude correction (Jordan is in UTC+3 time zone, standard longitude 45°)
+            const longitudeCorrection = 4 * (45 - lng);
+            
+            // Calculate solar noon time
+            let solarNoon = 12 - (equationOfTime + longitudeCorrection) / 60;
+            
+            // Add time zone difference (Jordan UTC+3)
+            solarNoon += 3;
+            
+            // Adjust time between 0 and 24
+            if (solarNoon >= 24) solarNoon -= 24;
+            if (solarNoon < 0) solarNoon += 24;
+            
+            const hours = Math.floor(solarNoon);
+            const minutes = Math.round((solarNoon - hours) * 60);
+            
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        }
 
         // Calculate solar angles
         function calculateSolarAngles(lat, lng, date, time) {
@@ -919,12 +1009,23 @@
             ) * 180 / Math.PI;
             
             // Calculate solar azimuth angle
-            const azimuth = Math.acos(
-                (Math.sin(decRad) - Math.sin(latRad) * Math.sin(elevation * Math.PI / 180)) / 
-                (Math.cos(latRad) * Math.cos(elevation * Math.PI / 180))
-            ) * 180 / Math.PI;
-            
-            const azimuthFinal = hourAngle > 0 ? 360 - azimuth : azimuth;
+            let azimuth;
+            if (Math.abs(elevation - 90) < 0.0001) {
+                // When sun is at zenith
+                azimuth = 180;
+            } else {
+                const cosAzimuth = (Math.sin(decRad) - Math.sin(latRad) * Math.sin(elevation * Math.PI / 180)) / 
+                                   (Math.cos(latRad) * Math.cos(elevation * Math.PI / 180));
+                
+                // Ensure cosine value is within correct range
+                const cosAzimuthClamped = Math.max(-1, Math.min(1, cosAzimuth));
+                azimuth = Math.acos(cosAzimuthClamped) * 180 / Math.PI;
+                
+                // Determine azimuth direction
+                if (hourAngle > 0) {
+                    azimuth = 360 - azimuth;
+                }
+            }
             
             // Calculate optimal tilt angle for solar panels
             const optimalTilt = Math.max(0, Math.min(60, Math.round(lat * 0.9 + 5)));
@@ -932,64 +1033,61 @@
             // Calculate sunrise and sunset times
             const sunrise = calculateSunriseSunset(lat, lng, date, true);
             const sunset = calculateSunriseSunset(lat, lng, date, false);
-            const dayLength = calculateDayLength(sunset - sunrise);
+            
+            // Calculate day length
+            let dayLength;
+            if (sunrise.timeString === "No sunrise" || sunset.timeString === "No sunset") {
+                dayLength = "0 hours 0 minutes";
+            } else {
+                dayLength = calculateDayLength(sunrise.timeInHours, sunset.timeInHours);
+            }
             
             // Solar noon time
             const solarNoon = calculateSolarNoon(lng, date);
             
             return {
                 elevation: Math.round(elevation * 10) / 10,
-                azimuth: Math.round(azimuthFinal * 10) / 10,
+                azimuth: Math.round(azimuth * 10) / 10,
                 optimalTilt: optimalTilt,
-                sunrise: sunrise,
-                sunset: sunset,
+                sunrise: sunrise.timeString,
+                sunset: sunset.timeString,
                 dayLength: dayLength,
                 solarNoon: solarNoon,
                 declination: Math.round(declination * 10) / 10
             };
         }
 
-        // Calculate sunrise and sunset
-        function calculateSunriseSunset(lat, lng, date, isSunrise) {
-            const dayOfYear = Math.floor((new Date(date) - new Date(new Date(date).getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-            const solarDeclination = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * (Math.PI / 180));
+        // Calculate solar angles
+        document.getElementById('solar-angle-form').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            const latRad = lat * Math.PI / 180;
-            const decRad = solarDeclination * Math.PI / 180;
+            const lat = parseFloat(document.getElementById('latitude').value);
+            const lng = parseFloat(document.getElementById('longitude').value);
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
             
-            const hourAngle = Math.acos(-Math.tan(latRad) * Math.tan(decRad)) * 180 / Math.PI;
-            const time = isSunrise ? 12 - hourAngle / 15 : 12 + hourAngle / 15;
+            if (!lat || !lng || !date || !time) {
+                alert('Please fill all required fields');
+                return;
+            }
             
-            // Convert to Jordan time (UTC+3)
-            const localTime = time + (3 - lng / 15);
+            // Check if location is in Jordan
+            if (lat < 29.0 || lat > 33.5 || lng < 34.5 || lng > 39.5) {
+                if (!confirm('Location is outside Jordan. Do you want to continue?')) {
+                    return;
+                }
+            }
             
-            const hours = Math.floor(localTime);
-            const minutes = Math.round((localTime - hours) * 60);
+            // Calculate solar angles
+            const solarData = calculateSolarAngles(lat, lng, date, time);
             
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-        }
-
-        // Calculate day length
-        function calculateDayLength(dayLengthHours) {
-            const hours = Math.floor(dayLengthHours);
-            const minutes = Math.round((dayLengthHours - hours) * 60);
-            return `${hours} hours ${minutes} minutes`;
-        }
-
-        // Calculate solar noon time
-        function calculateSolarNoon(lng, date) {
-            const dayOfYear = Math.floor((new Date(date) - new Date(new Date(date).getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-            const B = (360 / 365) * (dayOfYear - 81);
-            const equationOfTime = 9.87 * Math.sin(2 * B * Math.PI / 180) - 7.53 * Math.cos(B * Math.PI / 180) - 1.5 * Math.sin(B * Math.PI / 180);
+            // Update results
+            updateResults(solarData);
             
-            const timeCorrection = equationOfTime + 4 * (45 - lng);
-            const solarNoon = 12 - timeCorrection / 60;
-            
-            const hours = Math.floor(solarNoon);
-            const minutes = Math.round((solarNoon - hours) * 60);
-            
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-        }
+            // Show results
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        });
 
         // Update results
         function updateResults(data) {
@@ -1020,17 +1118,17 @@
                 {
                     icon: 'fas fa-compass',
                     title: 'Panel Direction',
-                    description: `Face panels toward the South at ${data.azimuth}° angle`
+                    description: `Face panels towards South (180°) for maximum sun exposure`
                 },
                 {
                     icon: 'fas fa-sun',
                     title: 'Best Production Time',
-                    description: `Highest productivity between ${data.sunrise} and ${data.sunset}`
+                    description: `Highest productivity at solar noon (${data.solarNoon})`
                 },
                 {
                     icon: 'fas fa-bolt',
                     title: 'Installation Tip',
-                    description: 'Use adjustable structures to change angle according to seasons'
+                    description: 'Use adjustable structures to change tilt angle according to seasons'
                 }
             ];
             
